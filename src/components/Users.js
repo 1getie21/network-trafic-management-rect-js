@@ -171,6 +171,7 @@ const Users = () => {
             title: 'Id',
             dataIndex: 'id',
             key: 'id',
+            render: (text, record, index) => index + 1,
         },
         {
             title: 'First Name',

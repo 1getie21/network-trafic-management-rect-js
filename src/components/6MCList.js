@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
-    Button,
+    Button, Checkbox,
     Col,
     DatePicker,
     Divider,
@@ -47,7 +47,7 @@ const SixMCList = () => {
     const getAllData = () => {
         axiosInstance.get(API_URL + "/sixmclist")
             .then(response => {
-                    setData(response?.data?._embedded?.failedTrafficDtoses);
+                    setData(response?.data?.content);
                     setLoading(false);
                 },
                 error => {
@@ -59,8 +59,6 @@ const SixMCList = () => {
         axiosInstance.get(API_URL + "/sixmclist/" + id)
             .then(response => {
                     setDataById(response.data);
-                    response.data.fixedAt = dayjs(response.data.fixedAt);
-                    response.data.disConnectedAt = dayjs(response.data.disConnectedAt);
                     response.data.sites = response?.data?.sites?.id;
                     trForm.setFieldsValue(response.data);
 
@@ -121,6 +119,7 @@ const SixMCList = () => {
             );
     };
     const showDrawer = (id) => {
+        console.log("id=",id)
         setDataById(null);
         setOpen(true);
         trForm.resetFields();
@@ -132,6 +131,8 @@ const SixMCList = () => {
             setAddNewMode(false);
         }
     };
+
+
     const [sites, setSites] = useState([]);
     const getAllSites = () => {
         axiosInstance.get(API_URL + "/sites")
@@ -152,6 +153,7 @@ const SixMCList = () => {
         if (addNewMode) {
             addNewRecord(values);
         } else {
+            console.log("undefined")
             updateRecordById(values, dataById.id);
         }
     };
@@ -183,6 +185,7 @@ const SixMCList = () => {
             title: 'Id',
             dataIndex: 'id',
             key: 'id',
+            render: (text, record, index) => index + 1,
         },
 
         {
@@ -191,24 +194,7 @@ const SixMCList = () => {
             key: 'sites',
             render: sites => sites?.name,
         },
-        {
-            title: 'Date',
-            dataIndex: 'date',
-            key: 'date',
-            render: (text) => {
-                const date = new Date(text);
-                const options = {
-                    year: 'numeric',
-                    month: 'short',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit'
-                };
-                const formattedDate = date.toLocaleDateString('en-US', options);
-                return <span>{formattedDate}</span>;
-            },
-        },
+
         {
             title: 'Data Center',
             dataIndex: 'datacenter',
@@ -233,8 +219,8 @@ const SixMCList = () => {
 
         {
             title: 'Switch',
-            dataIndex: 'Switch',
-            key: 'Switch',
+            dataIndex: 'switch',
+            key: 'switch',
         },
 
         {
@@ -272,7 +258,7 @@ const SixMCList = () => {
                     <Popconfirm
                         title="Delete the task"
                         description="Are you sure to delete this task?"
-                        onConfirm={()=>confirm(record.id)}
+                        onConfirm={() => confirm(record.id)}
                         onCancel={cancel}
                         okText="Yes"
                         cancelText="No"
@@ -290,7 +276,7 @@ const SixMCList = () => {
             {contextHolder}
             <Row justify="end" style={{marginBottom: 16}}>
                 <Col>
-                    <Button onClick={() => showDrawer(undefined)}>Add New Traffic</Button>
+                    <Button onClick={() => showDrawer(undefined)}>Add New 6MClist</Button>
                 </Col>
             </Row>
             <Row>
@@ -327,97 +313,138 @@ const SixMCList = () => {
                             />
                         </Form.Item>
 
-                        <Form.Item
-                            label="Disconnected Sites"
-                            name="sites"
-                            rules={[{required: true, message: 'Please input site name!'}]}
-                        >
+
+                        <Form.Item label="datacenter" name="datacenter">
                             <Select
-                                allowClear
-                                style={{
-                                    width: '100%',
-                                }}
-                                placeholder="Please select"
-                                options={sites.map(sites => ({label: sites.name, value: sites.id}))}
+                                showSearch
+                                placeholder="Select a datacenter"
+                                optionFilterProp="children"
+                                options={[
+                                    {
+                                        value: 'Clean',
+                                        label: 'Clean',
+                                    },
+                                    {
+                                        value: 'Dirt',
+                                        label: 'Dirt',
+                                    },
+                                    {
+                                        value: 'cooling condition',
+                                        label: 'cooling condition',
+                                    },
+                                ]}
                             />
                         </Form.Item>
+                            <Form.Item label="fiber" name="fiber">
+                                <Select
+                                    showSearch
+                                    placeholder="Select a fiber"
+                                    optionFilterProp="children"
+                                    options={[
+                                        {
+                                            value: 'Labeled',
+                                            label: 'Labeled',
+                                        },
+                                        {
+                                            value: 'Transmission loss',
+                                            label: 'Transmission loss',
+                                        },
+                                    ]}
+                                />
+                            </Form.Item>
 
-                        <Form.Item
-                            label="date"
-                            name="date"
-                            rules={[{required: true, message: 'Please input link!'}]}
-                        >
-                            <DatePicker showTime/>
+                            <Form.Item
+                                label="rack"
+                                name="rack"
+                                rules={[{
+                                    required: true,
+                                    message: 'Please input rack !'
+                                }]}
+                            >
+                                <Input/>
+                            </Form.Item>
 
-                        </Form.Item>
-                        <Form.Item
-                            label="datacenter"
-                            name="datacenter"
-                            rules={[{required: true, message: 'Please input name!'}]}
-                        >
-                            <Input/>
-                        </Form.Item>
+                            <Form.Item label="opd" name="opd">
+                                <Select
+                                    showSearch
+                                    placeholder="Select a opd"
+                                    optionFilterProp="children"
+                                    options={[
+                                        {
+                                            value: 'Normal',
+                                            label: 'Normal',
+                                        },
+                                        {
+                                            value: 'Need Replacement',
+                                            label: 'Need Replacement',
+                                        },
+                                    ]}
+                                />
+                            </Form.Item>
 
-                        <Form.Item
-                            label="fiber"
-                            name="fiber"
-                            rules={[{required: true, message: 'Please input fixed date/time!'}]}
-                        >
+                            <Form.Item label="switch" name="switch">
+                                <Select
+                                    showSearch
+                                    placeholder="Select a opd"
+                                    optionFilterProp="children"
+                                    options={[
+                                        {
+                                            value: 'Normal',
+                                            label: 'Normal',
+                                        },
+                                        {
+                                            value: 'Abnormal',
+                                            label: 'Abnormal',
+                                        },
+                                    ]}/>
+                            </Form.Item>
+                            <Form.Item label="t9140" name="t9140">
+                                <Select
+                                    showSearch
+                                    placeholder="Select a opd"
+                                    optionFilterProp="children"
+                                    options={[
+                                        {
+                                            value: 'Normal',
+                                            label: 'Normal',
+                                        },
+                                        {
+                                            value: 'Abnormal',
+                                            label: 'Abnormal',
+                                        },
+                                    ]}/>
+                            </Form.Item>
+                            <Form.Item label="server" name="server">
+                                <Select
+                                    showSearch
+                                    placeholder="Select a opd"
+                                    optionFilterProp="children"
+                                    options={[
+                                        {
+                                            value: 'Normal',
+                                            label: 'Normal',
+                                        },
+                                        {
+                                            value: 'Abnormal',
+                                            label: 'Abnormal',
+                                        },
+                                    ]}/>
+                            </Form.Item>
 
-                        </Form.Item>
-                        <Form.Item
-                            label="rack"
-                            name="rack"
-                            rules={[{required: true, message: 'Please input The time when it was discontinued !'}]}
-                        >
-                            <Input/>
-                        </Form.Item>
-
-                        <Form.Item
-                            label="opd"
-                            name="opd"
-                            rules={[{required: true, message: 'Please input reason!'}]}
-                        >
-                            <Input/>
-                        </Form.Item>
-
-                        <Form.Item
-                            label="Switch"
-                            name="Switch"
-                            rules={[{required: true, message: 'Please input reason!'}]}
-                        >
-                            <Input/>
-                        </Form.Item>
-
-                        <Form.Item
-                            label="t9140"
-                            name="t9140"
-                            rules={[{required: true, message: 'Please input reason!'}]}
-                        >
-                            <Input/>
-                        </Form.Item>
-                        <Form.Item
-                            label="server"
-                            name="server"
-                            rules={[{required: true, message: 'Please input reason!'}]}
-                        >
-                            <Input/>
-                        </Form.Item>
-
-                        <Form.Item
-                            label="routine"
-                            name="routine"
-                            rules={[{required: true, message: 'Please input reason!'}]}
-                        >
-                            <Input/>
-                        </Form.Item>
-                        {/*<Button type="primary" htmlType="submit" form={form}>Submit</Button>*/}
-                        <SubmitButton form={trForm}>Submit</SubmitButton>
+                            <Form.Item
+                                label="routine"
+                                name="routine"
+                                rules={[{required: true, message: 'Please input routine!'}]}
+                            >
+                                <Input/>
+                            </Form.Item>
+                            {/*<Button type="primary" htmlType="submit" form={form}>Submit</Button>*/}
+                            <SubmitButton form={trForm}>Submit</SubmitButton>
                     </Form>
-                )}
-            </Drawer>
-        </>
-    );
-};
+                    )}
+                    </Drawer>
+                    </>
+                    );
+                };
 
-export default SixMCList;
+                export default SixMCList;

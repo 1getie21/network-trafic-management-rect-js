@@ -17,7 +17,7 @@ if (listOfRoles && listOfRoles.includes('ROLE_ADMIN')) {
 
 ListOfItems.push(
     // getItem('Users', 'Users', <UserOutlined />),
-    getItem('Traffics', 'Traffics', <FundOutlined/>),
+    getItem('Daily-Traffic', 'Traffics', <FundOutlined/>),
     getItem('failed-traffics', 'failed-traffics', <FallOutlined/>),
     getItem('Add site', 'sites', <UserOutlined/>),
     getItem('Request-Form', 'request', <UserOutlined/>),

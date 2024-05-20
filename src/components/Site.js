@@ -117,10 +117,15 @@ const Site = () => {
     }, []);
     const columns = [
         {
-            title: 'Id',
-            dataIndex: 'id',
-            key: 'id',
+            title: '#',
+            key: 'index',
+            render: (text, record, index) => index + 1,
         },
+        // {
+        //     title: 'Id',
+        //     dataIndex: 'id',
+        //     key: 'id',
+        // },
         {
             title: 'Site Name',
             dataIndex: 'name',
@@ -183,14 +188,14 @@ const Site = () => {
                         <Form.Item
                             label="Name"
                             name="name"
-                            rules={[{required: true, message: 'Please input last name!'}]}
+                            rules={[{required: true, message: 'Please input sites name!'}]}
                         >
                             <Input/>
                         </Form.Item>
                         <Form.Item
                             label="Url"
                             name="url"
-                            rules={[{required: true, message: 'Please input email!'}]}
+                            rules={[{required: true, message: 'Please input url!'}]}
                         >
                             <Input/>
                         </Form.Item>

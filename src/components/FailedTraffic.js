@@ -26,6 +26,11 @@ const FailedTraffics = () => {
     const API_URL = "http://localhost:8080";
     const [trForm] = Form.useForm();
 
+    const [sites, setSites] = useState([]);
+    const [page, setPage] = useState(0);
+    const [sitesLoading, setSitesLoading] = useState(false);
+    const [hasMoreSites, setHasMoreSites] = useState(true);
+
     const SubmitButton = ({form: trafficForm, children}) => {
         const [submittable, setSubmittable] = React.useState(false);
         const values = Form.useWatch([], trafficForm);
@@ -55,6 +60,7 @@ const FailedTraffics = () => {
                     openNotificationWithIcon('error', 'Error', error?.message)
                 });
     };
+
     const getDataById = (id) => {
         axiosInstance.get(API_URL + "/failed-traffics/" + id)
             .then(response => {
@@ -63,8 +69,6 @@ const FailedTraffics = () => {
                     response.data.disConnectedAt = dayjs(response.data.disConnectedAt);
                     response.data.sites = response?.data?.sites?.id;
                     trForm.setFieldsValue(response.data);
-
-
                 },
                 error => {
                     openNotificationWithIcon('error', 'Error', error?.message)
@@ -78,9 +82,7 @@ const FailedTraffics = () => {
         });
     };
 
-
     const addNewRecord = (values) => {
-
         axiosInstance.post(API_URL + "/failed-traffics", values)
             .then(response => {
                 openNotificationWithIcon('success', 'Success', 'New Recorded Is added successfully.')
@@ -99,6 +101,7 @@ const FailedTraffics = () => {
                 }
             })
     };
+
     const updateRecordById = (data, id) => {
         axiosInstance.put(API_URL + "/failed-traffics/" + id, data)
             .then(response => {
@@ -120,6 +123,7 @@ const FailedTraffics = () => {
                 }
             );
     };
+
     const showDrawer = (id) => {
         setDataById(null);
         setOpen(true);
@@ -132,18 +136,37 @@ const FailedTraffics = () => {
             setAddNewMode(false);
         }
     };
-    const [sites, setSites] = useState([]);
-    const getAllSites = () => {
-        axiosInstance.get(API_URL + "/sites")
-            .then(response => {
-                    console.log("sitesDtoses", response)
-                    const s = response?.data?._embedded?.sitesDtoses;
-                    setSites(s);
-                },
 
+    const getAllSites = (page) => {
+        setSitesLoading(true);
+        axiosInstance.get(API_URL + "/sites?page=" + page + "&size=" + 10)
+            .then(response => {
+                    const newSites = response?.data?._embedded?.sitesDtoses;
+                    const totalPage = response?.data?.page?.totalPages;
+                    setSites(prevSites => [...prevSites, ...newSites]);
+                    setSitesLoading(false);
+                    if (page == totalPage - 1) {
+                        setHasMoreSites(false);
+                    }
+
+                },
                 error => {
+                    setSitesLoading(false);
                     openNotificationWithIcon('error', 'Error', error?.message)
+                })
+    };
+
+    const handlePopupScroll = (event) => {
+        const {target} = event;
+        if (target.scrollTop + target.offsetHeight === target.scrollHeight) {
+            if (hasMoreSites && !sitesLoading) {
+                setPage(prevPage => {
+                    const nextPage = prevPage + 1;
+                    getAllSites(nextPage);
+                    return nextPage;
                 });
+            }
+        }
     };
 
     const onSubmitClick = (values) => {
@@ -162,8 +185,9 @@ const FailedTraffics = () => {
 
     useEffect(() => {
         getAllData();
-        getAllSites();
+        getAllSites(page);
     }, []); // empty dependency array means this effect runs only once, similar to componentDidMount
+
     const confirm = (id) => {
         axiosInstance.delete(API_URL + "/failed-traffics/" + id)
             .then(response => {
@@ -183,8 +207,8 @@ const FailedTraffics = () => {
             title: 'Id',
             dataIndex: 'id',
             key: 'id',
+            render: (text, record, index) => index + 1,
         },
-
         {
             title: 'Disconnected Sites',
             dataIndex: 'sites',
@@ -213,9 +237,7 @@ const FailedTraffics = () => {
                 const formattedDate = date.toLocaleDateString('en-US', options);
                 return <span>{formattedDate}</span>;
             },
-
         },
-
         {
             title: 'Name of reporter',
             dataIndex: 'createdBy',
@@ -226,7 +248,6 @@ const FailedTraffics = () => {
             dataIndex: 'reportedTo',
             key: 'reportedTo',
         },
-
         {
             title: 'Fixed At',
             dataIndex: 'fixedAt',
@@ -262,47 +283,39 @@ const FailedTraffics = () => {
                 const formattedDate = date.toLocaleDateString('en-US', options);
                 return <span>{formattedDate}</span>;
             },
-
-        }, {
+        },
+        {
             title: 'Failed time length',
             dataIndex: 'failureLength',
             key: 'failureLength',
-
         },
         {
             title: 'Reason for down',
             dataIndex: 'failedReason',
             key: 'failedReason',
         },
-
         {
             title: 'Action',
             key: 'action',
             render: (text, record) => (
                 <span>
-                {/* eslint-disable jsx-a11y/anchor-is-valid */}
-                    <a onClick={() => showDrawer(record.id)}>Update</a>
-                    {/* eslint-enable jsx-a11y/anchor-is-valid */}
-
-                    <Divider type="vertical"/>
-
-                    {/* eslint-disable jsx-a11y/anchor-is-valid */}
-                    <Popconfirm
-                        title="Delete the task"
-                        description="Are you sure to delete this task?"
-                        onConfirm={()=>confirm(record.id)}
-                        onCancel={cancel}
-                        okText="Yes"
-                        cancelText="No"
-                    >
-    <Button danger>Delete</Button>
-  </Popconfirm>
-                    {/*<a onClick={() => deleteById(record.id)}>Delete</a>*/}
-                    {/* eslint-enable jsx-a11y/anchor-is-valid */}
-                </span>
+                   <a onClick={() => showDrawer(record.id)}>Update</a>
+                   <Divider type="vertical"/>
+                   <Popconfirm
+                       title="Delete the task"
+                       description="Are you sure to delete this task?"
+                       onConfirm={() => confirm(record.id)}
+                       onCancel={cancel}
+                       okText="Yes"
+                       cancelText="No"
+                   >
+                       <Button danger>Delete</Button>
+                   </Popconfirm>
+               </span>
             ),
         },
     ];
+
     return (
         <>
             {contextHolder}
@@ -329,7 +342,6 @@ const FailedTraffics = () => {
                         onFinish={onSubmitClick}
                         onFinishFailed={onFinishFailed}
                     >
-
                         <Form.Item
                             label="Disconnected Sites"
                             name="sites"
@@ -342,6 +354,8 @@ const FailedTraffics = () => {
                                 }}
                                 placeholder="Please select"
                                 options={sites.map(sites => ({label: sites.name, value: sites.id}))}
+                                onPopupScroll={handlePopupScroll}
+                                loading={sitesLoading}
                             />
                         </Form.Item>
                         <Form.Item
@@ -358,11 +372,10 @@ const FailedTraffics = () => {
                         >
                             <Input/>
                         </Form.Item>
-
                         <Form.Item
                             label="fixedAt"
                             name="fixedAt"
-                            rules={[{required: true, message: 'Please input fixed date/time!'}]}
+                            rules={[{required: true, message: 'Please input fixed time!'}]}
                         >
                             <DatePicker showTime/>
                         </Form.Item>
@@ -380,7 +393,6 @@ const FailedTraffics = () => {
                         >
                             <Input/>
                         </Form.Item>
-                        {/*<Button type="primary" htmlType="submit" form={form}>Submit</Button>*/}
                         <SubmitButton form={trForm}>Submit</SubmitButton>
                     </Form>
                 )}

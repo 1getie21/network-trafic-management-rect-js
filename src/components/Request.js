@@ -59,8 +59,6 @@ const Request = () => {
         axiosInstance.get(API_URL + "/request/" + id)
             .then(response => {
                     setDataById(response.data);
-                    response.data.fixedAt = dayjs(response.data.fixedAt);
-                    response.data.disConnectedAt = dayjs(response.data.disConnectedAt);
                     trForm.setFieldsValue(response.data);
 
 
@@ -76,13 +74,6 @@ const Request = () => {
             description: description,
         });
     };
-    const [checkBoxValues, setCheckBoxValues] = useState([]); // State to store checkbox selections
-
-    const handleCheckboxChange = (value) => {
-        setCheckBoxValues(value); // Update state with selected checkbox values
-    };
-
-
     const addNewRecord = (values) => {
 
         axiosInstance.post(API_URL + "/request", values)
@@ -91,7 +82,7 @@ const Request = () => {
                 getAllData();
                 setOpen(false);
                 setDataById(null);
-                values.checkBoxValues = checkBoxValues;
+
             }, error => {
                 if (error?.response?.data?.apierror?.subErrors?.length > 0) {
                     openNotificationWithIcon('error', 'Error '
@@ -112,7 +103,6 @@ const Request = () => {
                     getAllData();
                     setOpen(false);
                     setDataById(null);
-                    data.checkBoxValues = checkBoxValues;
                 }
                 , error => {
                     if (error?.response?.data?.apierror?.subErrors?.length > 0) {
@@ -173,6 +163,7 @@ const Request = () => {
             title: 'Id',
             dataIndex: 'id',
             key: 'id',
+            render: (text, record, index) => index + 1,
         },
         {
             title: 'FName',
@@ -183,19 +174,6 @@ const Request = () => {
             title: 'Phone',
             dataIndex: 'phone',
             key: 'phone',
-            render: (text) => {
-                const date = new Date(text);
-                const options = {
-                    year: 'numeric',
-                    month: 'short',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit'
-                };
-                const formattedDate = date.toLocaleDateString('en-US', options);
-                return <span>{formattedDate}</span>;
-            },
 
         },
         {
@@ -215,13 +193,13 @@ const Request = () => {
             key: 'organization',
         },
         {
-            title: 'S.Categories',
-            dataIndex: 'service',
-            key: 'service',
+            title: 'Service Categories',
+            dataIndex: 'categories',
+            key: 'categories',
         },
 
         {
-            title: 'Contact',
+            title: 'Contact-Person',
             dataIndex: 'contact',
             key: 'contact',
 
@@ -229,12 +207,12 @@ const Request = () => {
 
 
         {
-            title: 'S.Description',
+            title: 'Service Description',
             dataIndex: 'description',
             key: 'description',
         },
         {
-            title: 'S.Detail',
+            title: 'Service Detail',
             dataIndex: 'detail',
             key: 'detail',
         },
@@ -272,7 +250,7 @@ const Request = () => {
             {contextHolder}
             <Row justify="end" style={{marginBottom: 16}}>
                 <Col>
-                    <Button onClick={() => showDrawer(undefined)}>Add New Traffic</Button>
+                    <Button onClick={() => showDrawer(undefined)}>Add New Recored</Button>
                 </Col>
             </Row>
             <Row>
@@ -297,64 +275,95 @@ const Request = () => {
                         <Form.Item
                             label="fname"
                             name="fname"
-                            rules={[{required: true, message: 'Please input link!'}]}
+                            rules={[{required: true, message: 'Please input fname!'}]}
                         >
                             <Input/>
                         </Form.Item>
-
+                        <Form.Item
+                            label="phone"
+                            name="phone"
+                            rules={[{ required: true, message: 'Please input phone!' }]}
+                        >
+                            <Input addonBefore="+251" />
+                        </Form.Item>
                         <Form.Item
                             label="email"
                             name="email"
-                            rules={[{required: true, message: 'Please input fixed date/time!'}]}
+                            rules={[{required: true, message: 'Please input email!'}]}
                         >
                             <Input/>
                         </Form.Item>
 
-                        { // Add checkboxes within the Drawer or desired form section
-                            (addNewMode || dataById) && (
-                                <Form.Item label="requester">
-                                    <Checkbox.Group onChange={handleCheckboxChange}>
-                                        <Checkbox value="INSA CERT">INSA CERT ☐</Checkbox>
-                                        <Checkbox value="INSA / OPERATION">INSA / OPERATION ☐</Checkbox>
-                                        <Checkbox value="Federal government">Federal government ☐</Checkbox>
-                                    </Checkbox.Group>
-                                </Form.Item>
-                            )
-                        }
+
+                        <Form.Item label="requester" name="requester">
+                            <Select
+                                showSearch
+                                placeholder="Select a requester"
+                                optionFilterProp="children"
+                                options={[
+                                    {
+                                        value: 'INSA CERT',
+                                        label: 'INSA CERT',
+                                    },
+                                    {
+                                        value: 'INSA / OPERATION',
+                                        label: 'INSA / OPERATION',
+                                    },
+                                    {
+                                        value: 'Federal government',
+                                        label: 'Federal government',
+                                    },
+                                ]}
+                            />
+                        </Form.Item>
 
                         <Form.Item
                             label="organization"
                             name="organization"
-                            rules={[{required: true, message: 'Please input name!'}]}
+                            rules={[{required: true, message: 'Please input organization!'}]}
                         >
                             <Input/>
                         </Form.Item>
 
-                        <Form.Item
-                            label="categories"
-                            name="categories"
-                            rules={[{required: true, message: 'Please input The time when it was discontinued !'}]}
-                        >
-                            <Input/>
+                        <Form.Item label="categories" name="categories">
+                            <Select
+                                showSearch
+                                placeholder="Select a from categories"
+                                optionFilterProp="children"
+                                options={[
+                                    {
+                                        value: 'Service One',
+                                        label: 'Service One',
+                                    },
+                                    {
+                                        value: 'Service Two',
+                                        label: 'Service Two',
+                                    },
+                                    {
+                                        value: 'Service Three',
+                                        label: 'Service Three',
+                                    },
+                                ]}
+                            />
                         </Form.Item>
                         <Form.Item
                             label="contact"
                             name="contact"
-                            rules={[{required: true, message: 'Please input reason!'}]}
+                            rules={[{required: true, message: 'Please input contact!'}]}
                         >
                             <Input/>
                         </Form.Item>
                         <Form.Item
                             label="description"
                             name="description"
-                            rules={[{required: true, message: 'Please input reason!'}]}
+                            rules={[{required: true, message: 'Please input description!'}]}
                         >
                             <Input/>
                         </Form.Item>
                         <Form.Item
                             label="detail"
                             name="detail"
-                            rules={[{required: true, message: 'Please input reason!'}]}
+                            rules={[{required: true, message: 'Please input detail!'}]}
                         >
                             <Input/>
                         </Form.Item>

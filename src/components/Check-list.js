@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {
     Button,
     Col,
-    DatePicker,
     Divider,
     Drawer,
     Form,
@@ -26,6 +25,16 @@ const CheckList = () => {
     const API_URL = "http://localhost:8080";
     const [trForm] = Form.useForm();
 
+    const handleCalculateAvgNBP = (npbValues) => {
+        const avgNBP = calculateAvgNBP(npbValues);
+        if (avgNBP !== null) {
+            console.log("Average NBP:", avgNBP);
+            // You can use this calculated avgNBP for further processing
+        } else {
+            console.warn("Invalid NBP data. Please ensure valid numeric values are provided.");
+        }
+    };
+
     const SubmitButton = ({form: trafficForm, children}) => {
         const [submittable, setSubmittable] = React.useState(false);
         const values = Form.useWatch([], trafficForm);
@@ -45,9 +54,9 @@ const CheckList = () => {
     };
 
     const getAllData = () => {
-        axiosInstance.get(API_URL + "/CheckList")
+        axiosInstance.get(API_URL + "/check_list")
             .then(response => {
-                    setData(response?.data?._embedded?.CheckListDtoses);
+                    setData(response?.data?._embedded?.  checkListDtoses);
                     setLoading(false);
                 },
                 error => {
@@ -56,11 +65,9 @@ const CheckList = () => {
                 });
     };
     const getDataById = (id) => {
-        axiosInstance.get(API_URL + "/CheckList/" + id)
+        axiosInstance.get(API_URL + "/check_list/" + id)
             .then(response => {
                     setDataById(response.data);
-                    response.data.fixedAt = dayjs(response.data.fixedAt);
-                    response.data.disConnectedAt = dayjs(response.data.disConnectedAt);
                     response.data.sites = response?.data?.sites?.id;
                     trForm.setFieldsValue(response.data);
 
@@ -71,6 +78,8 @@ const CheckList = () => {
                 });
     };
 
+
+
     const openNotificationWithIcon = (type, messageTitle, description) => {
         api[type]({
             message: messageTitle,
@@ -78,10 +87,27 @@ const CheckList = () => {
         });
     };
 
+    const calculateAvgNBP = (npbValues) => {
+        // Input validation (optional, but recommended)
+        if (!Array.isArray(npbValues) || !npbValues.length) {
+            return null; // Or throw an error if you prefer
+        }
+
+        // Ensure all values are numbers
+        const validNbpValues = npbValues.filter(value => typeof value === 'number');
+        if (validNbpValues.length !== npbValues.length) {
+            console.warn('Non-numeric values encountered in NBP data. Only numbers will be used for calculation.');
+        }
+
+        const sumNbp = validNbpValues.reduce((acc, value) => acc + value, 0);
+        const avgNBP = sumNbp / validNbpValues.length;
+
+        return avgNBP;
+    };
 
     const addNewRecord = (values) => {
 
-        axiosInstance.post(API_URL + "/CheckList", values)
+        axiosInstance.post(API_URL + "/check_list", values)
             .then(response => {
                 openNotificationWithIcon('success', 'Success', 'New Recorded Is added successfully.')
                 getAllData();
@@ -100,7 +126,7 @@ const CheckList = () => {
             })
     };
     const updateRecordById = (data, id) => {
-        axiosInstance.put(API_URL + "/CheckList/" + id, data)
+        axiosInstance.put(API_URL + "/check_list/" + id, data)
             .then(response => {
                     openNotificationWithIcon('success', 'Success', 'Data Is updated successfully.')
                     getAllData();
@@ -120,6 +146,7 @@ const CheckList = () => {
                 }
             );
     };
+
     const showDrawer = (id) => {
         setDataById(null);
         setOpen(true);
@@ -165,7 +192,7 @@ const CheckList = () => {
         getAllSites();
     }, []); // empty dependency array means this effect runs only once, similar to componentDidMount
     const confirm = (id) => {
-        axiosInstance.delete(API_URL + "/CheckList/" + id)
+        axiosInstance.delete(API_URL + "/check_list/" + id)
             .then(response => {
                     openNotificationWithIcon('success', 'Success', 'Data Is deleted successfully.')
                     getAllData();
@@ -183,6 +210,7 @@ const CheckList = () => {
             title: 'Id',
             dataIndex: 'id',
             key: 'id',
+            render: (text, record, index) => index + 1,
         },
 
         {
@@ -192,20 +220,20 @@ const CheckList = () => {
             render: sites => sites?.name,
         },
         {
-            title: 'link-type',
-            dataIndex: 'LinkType',
-            key: 'LinkType',
+            title: 'Link-type',
+            dataIndex: 'linkType',
+            key: 'linkType',
         },
         {
             title: 'Download(Gbps)',
-            dataIndex: 'Download',
-            key: 'Download',
+            dataIndex: 'download',
+            key: 'download',
 
         },
         {
             title: 'Upload(Gbps)',
-            dataIndex: 'Upload',
-            key: 'Upload',
+            dataIndex: 'upload',
+            key: 'upload',
         },
 
         {
@@ -215,14 +243,14 @@ const CheckList = () => {
         },
         {
             title: 'No, NPB',
-            dataIndex: 'NPB',
-            key: 'NPB',
+            dataIndex: 'npb',
+            key: 'npb',
         },
 
         {
             title: 'Avg process NBP',
-            dataIndex: 'AvgNBP',
-            key: 'AvgNBP',
+            dataIndex: 'avgNBP',
+            key: 'avgNBP',
 
         },
 
@@ -259,7 +287,7 @@ const CheckList = () => {
             {contextHolder}
             <Row justify="end" style={{marginBottom: 16}}>
                 <Col>
-                    <Button onClick={() => showDrawer(undefined)}>Add New Traffic</Button>
+                    <Button onClick={() => showDrawer(undefined)}>Add New Checklist</Button>
                 </Col>
             </Row>
             <Row>
@@ -274,6 +302,7 @@ const CheckList = () => {
                 visible={open}
             >
                 {(addNewMode || dataById) && (
+
                     <Form
                         form={trForm} name="validateOnly"
                         layout="vertical"
@@ -297,7 +326,7 @@ const CheckList = () => {
                         </Form.Item>
                         <Form.Item
                             label="LinkType"
-                            name="LinkType"
+                            name="linkType"
                             rules={[{required: true, message: 'Please input link!'}]}
                         >
                             <Input/>
@@ -305,37 +334,29 @@ const CheckList = () => {
 
                         <Form.Item
                             label="Download"
-                            name="Download"
-                            rules={[{required: true, message: 'Please input fixed date/time!'}]}
+                            name="download"
+                            rules={[{required: true, message: 'Please input download!'}]}
                         >
                             <Input/>
                         </Form.Item>
                         <Form.Item
                             label="Upload"
-                            name="Upload"
-                            rules={[{required: true, message: 'Please input name!'}]}
+                            name="upload"
+                            rules={[{required: true, message: 'Please input Upload!'}]}
                         >
                             <Input/>
                         </Form.Item>
 
                         <Form.Item
-                            label="createdBy"
-                            name="createdBy"
-                            rules={[{required: true, message: 'Please input name!'}]}
-                        >
-                            <Input/>
-                        </Form.Item>
-
-                        <Form.Item
-                            label="NPB"
-                            name="NPB"
-                            rules={[{required: true, message: 'Please input The time when it was discontinued !'}]}
+                            label="npb"
+                            name="npb"
+                            rules={[{required: true, message: 'Please input npb !'}]}
                         >
                             <Input/>
                         </Form.Item>
                         <Form.Item
-                            label="AvgNBP"
-                            name="AvgNBP"
+                            label="avgNBP"
+                            name="avgNBP"
                             rules={[{required: true, message: 'Please input reason!'}]}
                         >
                             <Input/>
@@ -344,6 +365,15 @@ const CheckList = () => {
                         <SubmitButton form={trForm}>Submit</SubmitButton>
                     </Form>
                 )}
+
+            {/* ... (your table and form elements) */}
+            <Button onClick={() => {
+                // Extract NBP values from your form or data source
+                const npbValues = [/* your NBP values here */];
+                handleCalculateAvgNBP(npbValues);
+            }}>
+                Calculate Avg NBP
+            </Button>
             </Drawer>
         </>
     );

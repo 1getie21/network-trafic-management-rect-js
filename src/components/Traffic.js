@@ -176,9 +176,10 @@ const Traffics = () => {
             title: 'Id',
             dataIndex: 'id',
             key: 'id',
+            render: (text, record, index) => index + 1,
         },
         {
-            title: 'sites',
+            title: 'Sites',
             dataIndex: 'sites',
             key: 'sites',
             render: sites=>sites?.name,
@@ -189,7 +190,7 @@ const Traffics = () => {
             key: 'eightTime',
         },
         {
-            title: 'eightTimeTraffic',
+            title: 'TotalTimeTraffic',
             dataIndex: 'eightTimeTraffic',
             key: 'eightTimeTraffic',
         },
@@ -199,7 +200,7 @@ const Traffics = () => {
             key: 'fortiethTime',
         },
         {
-            title: 'fortiethTimeTraffic',
+            title: 'TotalTimeTraffic',
             dataIndex: 'fortiethTimeTraffic',
             key: 'fortiethTimeTraffic',
         },
@@ -209,7 +210,7 @@ const Traffics = () => {
             key: 'eighteenTime',
         },
         {
-            title: 'eighteenTimeTraffic',
+            title: 'TotalTimeTraffic',
             dataIndex: 'eighteenTimeTraffic',
             key: 'eighteenTimeTraffic',
 
@@ -229,6 +230,7 @@ const Traffics = () => {
                     month: 'short',
                     day: '2-digit',
                     hour: '2-digit',
+
                     minute: '2-digit',
                     second: '2-digit'
                 };
@@ -238,9 +240,9 @@ const Traffics = () => {
 
         },
         {
-            title: 'Description',
-            dataIndex: 'description',
-            key: 'description',
+            title: 'Remark',
+            dataIndex: 'remark',
+            key: 'remark',
         },
 
         {
@@ -313,28 +315,28 @@ const Traffics = () => {
                         <Form.Item
                             label="eightTimeTraffic"
                             name="eightTimeTraffic"
-                            rules={[{required: true, message: 'Please input last name!'}]}
+                            rules={[{required: true, message: 'Please input 8:00 TimeTraffic!'}]}
                         >
                                 <Input/>
                         </Form.Item>
                         <Form.Item
                             label="fortiethTimeTraffic"
                             name="fortiethTimeTraffic"
-                            rules={[{required: true, message: 'Please input username!'}]}
+                            rules={[{required: true, message: 'Please input 14:00 TimeTraffic!'}]}
                         >
                             <Input/>
                         </Form.Item>
                         <Form.Item
                             label="eighteenTimeTraffic"
                             name="eighteenTimeTraffic"
-                            rules={[{required: true, message: 'Please input username!'}]}
+                            rules={[{required: true, message: 'Please input 18:00 TimeTraffic!'}]}
                         >
                             <Input/>
                         </Form.Item>
                         <Form.Item
-                            label="description"
-                            name="description"
-                            rules={[{required: true, message: 'Please input username!'}]}
+                            label="remark"
+                            name="remark"
+                            rules={[{required: true, message: 'Please input remark!'}]}
                         >
                             <Input/>
                         </Form.Item>
