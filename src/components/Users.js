@@ -10,7 +10,7 @@ const Users = () => {
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    const API_URL ="http://localhost:8080";
+    const API_URL ="http://localhost:7070";
     const [form] = Form.useForm();
 
     const SubmitButton = ({form, children}) => {

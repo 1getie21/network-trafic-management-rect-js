@@ -1,7 +1,6 @@
 // AuthService.js
 import axios from 'axios';
-
-const API_URL = 'http://localhost:8080';
+const API_URL = 'http://localhost:7070';
 const TOKEN_KEY = 'auth-token';
 const USER_KEY = 'auth-user';
 

@@ -9,7 +9,7 @@ const Traffics = () => {
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    const API_URL = "http://localhost:8080";
+    const API_URL = "http://localhost:7070";
     const [trForm] = Form.useForm();
 
     const SubmitButton = ({form: trafficForm, children}) => {
@@ -327,7 +327,7 @@ const Traffics = () => {
                             <Input/>
                         </Form.Item>
                         <Form.Item
-                            label="eighteenTimeTraffic"
+                            label="eighteenTime"
                             name="eighteenTimeTraffic"
                             rules={[{required: true, message: 'Please input 18:00 TimeTraffic!'}]}
                         >

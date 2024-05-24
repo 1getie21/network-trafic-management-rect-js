@@ -22,6 +22,7 @@ ListOfItems.push(
     getItem('Add site', 'sites', <UserOutlined/>),
     getItem('Request-Form', 'request', <UserOutlined/>),
     getItem('Check-List', 'CheckList', <UserOutlined/>),
+    getItem('Daily-Traffic2', 'f-traffics', <UserOutlined/>),
         getItem('6Month-Check-List', 'sixmclist', <UserOutlined/>),
 );
 

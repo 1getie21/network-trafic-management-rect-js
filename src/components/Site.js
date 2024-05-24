@@ -10,7 +10,7 @@ const Site = () => {
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
     const cancel = (e) => {};
-    const apiUrl = "http://localhost:8080";
+    const apiUrl = "http://localhost:7070";
 
     const openNotificationWithIcon = (type, messageTitle, description) => {
         api[type]({

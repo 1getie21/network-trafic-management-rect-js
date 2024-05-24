@@ -1,17 +1,6 @@
-import React, {useEffect, useState} from 'react';
-import {
-    Button,
-    Col,
-    Divider,
-    Drawer,
-    Form,
-    Input,
-    notification,
-    Popconfirm,
-    Row,
-    Select,
-    Table
-} from "antd";
+import React, { useEffect, useState } from 'react';
+import { InputNumber } from 'antd';
+import { Button, Col, Divider, Drawer, Form, Input, notification, Popconfirm, Row, Select, Table } from "antd";
 import axiosInstance from "../auth/authHeader";
 import dayjs from "dayjs";
 
@@ -22,20 +11,10 @@ const CheckList = () => {
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    const API_URL = "http://localhost:8080";
+    const API_URL = "http://localhost:7070";
     const [trForm] = Form.useForm();
 
-    const handleCalculateAvgNBP = (npbValues) => {
-        const avgNBP = calculateAvgNBP(npbValues);
-        if (avgNBP !== null) {
-            console.log("Average NBP:", avgNBP);
-            // You can use this calculated avgNBP for further processing
-        } else {
-            console.warn("Invalid NBP data. Please ensure valid numeric values are provided.");
-        }
-    };
-
-    const SubmitButton = ({form: trafficForm, children}) => {
+    const SubmitButton = ({ form: trafficForm, children }) => {
         const [submittable, setSubmittable] = React.useState(false);
         const values = Form.useWatch([], trafficForm);
         React.useEffect(() => {
@@ -56,7 +35,7 @@ const CheckList = () => {
     const getAllData = () => {
         axiosInstance.get(API_URL + "/check_list")
             .then(response => {
-                    setData(response?.data?._embedded?.  checkListDtoses);
+                    setData(response?.data?._embedded?.checkListDtoses);
                     setLoading(false);
                 },
                 error => {
@@ -64,21 +43,18 @@ const CheckList = () => {
                     openNotificationWithIcon('error', 'Error', error?.message)
                 });
     };
+
     const getDataById = (id) => {
         axiosInstance.get(API_URL + "/check_list/" + id)
             .then(response => {
                     setDataById(response.data);
                     response.data.sites = response?.data?.sites?.id;
                     trForm.setFieldsValue(response.data);
-
-
                 },
                 error => {
                     openNotificationWithIcon('error', 'Error', error?.message)
                 });
     };
-
-
 
     const openNotificationWithIcon = (type, messageTitle, description) => {
         api[type]({
@@ -87,26 +63,7 @@ const CheckList = () => {
         });
     };
 
-    const calculateAvgNBP = (npbValues) => {
-        // Input validation (optional, but recommended)
-        if (!Array.isArray(npbValues) || !npbValues.length) {
-            return null; // Or throw an error if you prefer
-        }
-
-        // Ensure all values are numbers
-        const validNbpValues = npbValues.filter(value => typeof value === 'number');
-        if (validNbpValues.length !== npbValues.length) {
-            console.warn('Non-numeric values encountered in NBP data. Only numbers will be used for calculation.');
-        }
-
-        const sumNbp = validNbpValues.reduce((acc, value) => acc + value, 0);
-        const avgNBP = sumNbp / validNbpValues.length;
-
-        return avgNBP;
-    };
-
     const addNewRecord = (values) => {
-
         axiosInstance.post(API_URL + "/check_list", values)
             .then(response => {
                 openNotificationWithIcon('success', 'Success', 'New Recorded Is added successfully.')
@@ -115,33 +72,34 @@ const CheckList = () => {
                 setDataById(null);
             }, error => {
                 if (error?.response?.data?.apierror?.subErrors?.length > 0) {
-                    openNotificationWithIcon('error', 'Error '
-                        , error?.response?.data?.apierror?.message
-                        + " " + error?.response?.data?.apierror?.subErrors[0]?.field + " " + error?.response?.data?.apierror?.subErrors[0]?.message)
+                    openNotificationWithIcon('error', 'Error ',
+                        error?.response?.data?.apierror?.message +
+                        " " + error?.response?.data?.apierror?.subErrors[0]?.field + " " + error?.response?.data?.apierror?.subErrors[0]?.message)
                 } else {
                     openNotificationWithIcon('error',
-                        'Error ~' + error?.response?.data?.apierror?.status
-                        , error?.response?.data?.apierror?.message)
+                        'Error ~' + error?.response?.data?.apierror?.status,
+                        error?.response?.data?.apierror?.message)
                 }
             })
     };
-    const updateRecordById = (data, id) => {
-        axiosInstance.put(API_URL + "/check_list/" + id, data)
+
+    const updateRecordById = (values, id) => {
+        axiosInstance.put(API_URL + "/check_list/" + id, values)
             .then(response => {
                     openNotificationWithIcon('success', 'Success', 'Data Is updated successfully.')
                     getAllData();
                     setOpen(false);
                     setDataById(null);
-                }
-                , error => {
+                },
+                error => {
                     if (error?.response?.data?.apierror?.subErrors?.length > 0) {
-                        openNotificationWithIcon('error', 'Error '
-                            , error?.response?.data?.apierror?.message
-                            + " " + error?.response?.data?.apierror?.subErrors[0]?.field + " " + error?.response?.data?.apierror?.subErrors[0]?.message)
+                        openNotificationWithIcon('error', 'Error ',
+                            error?.response?.data?.apierror?.message +
+                            " " + error?.response?.data?.apierror?.subErrors[0]?.field + " " + error?.response?.data?.apierror?.subErrors[0]?.message)
                     } else {
                         openNotificationWithIcon('error',
-                            'Error ~' + error?.response?.data?.apierror?.status
-                            , error?.response?.data?.apierror?.message)
+                            'Error ~' + error?.response?.data?.apierror?.status,
+                            error?.response?.data?.apierror?.message)
                     }
                 }
             );
@@ -159,27 +117,32 @@ const CheckList = () => {
             setAddNewMode(false);
         }
     };
+
     const [sites, setSites] = useState([]);
     const getAllSites = () => {
         axiosInstance.get(API_URL + "/sites")
             .then(response => {
-                    console.log("sitesDtoses", response)
                     const s = response?.data?._embedded?.sitesDtoses;
                     setSites(s);
                 },
-
                 error => {
                     openNotificationWithIcon('error', 'Error', error?.message)
                 });
     };
 
     const onSubmitClick = (values) => {
-        values.sites = {"id": values.sites}
-        console.log("values=", values)
-        if (addNewMode) {
-            addNewRecord(values);
+        values.sites = {"id": values.sites};
+        const npbTrials = [values.npbone, values.npbtwo, values.npbthree];
+        if (npbTrials.every(trial => !isNaN(trial))) {
+            const avgNBP = npbTrials.reduce((acc, curr) => acc + curr, 0) / npbTrials.length;
+            values.avgNBP = avgNBP.toFixed(2);
+            if (addNewMode) {
+                addNewRecord(values);
+            } else {
+                updateRecordById(values, dataById.id);
+            }
         } else {
-            updateRecordById(values, dataById.id);
+            openNotificationWithIcon('error', 'Error', 'Please enter valid numbers for NPB trials.');
         }
     };
 
@@ -190,7 +153,8 @@ const CheckList = () => {
     useEffect(() => {
         getAllData();
         getAllSites();
-    }, []); // empty dependency array means this effect runs only once, similar to componentDidMount
+    }, []);
+
     const confirm = (id) => {
         axiosInstance.delete(API_URL + "/check_list/" + id)
             .then(response => {
@@ -204,6 +168,10 @@ const CheckList = () => {
 
     const cancel = (e) => {
     };
+
+
+
+
 
     const columns = [
         {
@@ -235,16 +203,18 @@ const CheckList = () => {
             dataIndex: 'upload',
             key: 'upload',
         },
-
         {
             title: 'Name of reporter',
             dataIndex: 'createdBy',
             key: 'createdBy',
         },
+
+
         {
-            title: 'No, NPB',
-            dataIndex: 'npb',
-            key: 'npb',
+            title: 'Total process NBP',
+            dataIndex: 'nbpTotal',
+            key: 'nbpTotal',
+
         },
 
         {
@@ -333,47 +303,53 @@ const CheckList = () => {
                         </Form.Item>
 
                         <Form.Item
-                            label="Download"
+                            label="download"
                             name="download"
-                            rules={[{required: true, message: 'Please input download!'}]}
+                            rules={[
+                                { required: true, message: 'Please input download!' },
+                                { pattern: /^[0-9]+(\.[0-9]+)?$/, message: 'Please enter a valid number for download!' }
+                            ]}
                         >
-                            <Input/>
+                            <Input />
                         </Form.Item>
                         <Form.Item
-                            label="Upload"
+                            label="upload"
                             name="upload"
-                            rules={[{required: true, message: 'Please input Upload!'}]}
+                            rules={[
+                                { required: true, message: 'Please input Upload!' },
+                                { pattern: /^[0-9]+(\.[0-9]+)?$/, message: 'Please enter a valid number for upload!' }
+                            ]}
                         >
-                            <Input/>
+                            <Input />
+                        </Form.Item>
+                        NBP Trial
+                        <Form.Item
+                            label="NBP Trial 1"
+                            name="npbone"
+                            rules={[{ required: true, message: 'Please input NBP Trial 1!' }]}
+                        >
+                            <InputNumber min={0} step={0.1} />
+                        </Form.Item>
+                        <Form.Item
+                            label="NBP Trial 2"
+                            name="npbtwo"
+                            rules={[{ required: true, message: 'Please input NBP Trial 2!' }]}
+                        >
+                            <InputNumber min={0} step={0.1} />
+                        </Form.Item>
+                        <Form.Item
+                            label="NBP Trial 3"
+                            name="npbthree"
+                            rules={[{ required: true, message: 'Please input NBP Trial 3!' }]}
+                        >
+                            <InputNumber min={0} step={0.1} />
                         </Form.Item>
 
-                        <Form.Item
-                            label="npb"
-                            name="npb"
-                            rules={[{required: true, message: 'Please input npb !'}]}
-                        >
-                            <Input/>
-                        </Form.Item>
-                        <Form.Item
-                            label="avgNBP"
-                            name="avgNBP"
-                            rules={[{required: true, message: 'Please input reason!'}]}
-                        >
-                            <Input/>
-                        </Form.Item>
                         {/*<Button type="primary" htmlType="submit" form={form}>Submit</Button>*/}
                         <SubmitButton form={trForm}>Submit</SubmitButton>
                     </Form>
                 )}
 
-            {/* ... (your table and form elements) */}
-            <Button onClick={() => {
-                // Extract NBP values from your form or data source
-                const npbValues = [/* your NBP values here */];
-                handleCalculateAvgNBP(npbValues);
-            }}>
-                Calculate Avg NBP
-            </Button>
             </Drawer>
         </>
     );

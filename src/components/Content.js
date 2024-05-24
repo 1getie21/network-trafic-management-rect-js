@@ -9,6 +9,7 @@ import Site from "./Site";
 import CheckList from "./Check-list";
 import Request from "./Request";
 import SixMCList from "./6MCList";
+import Ftraffics from "./Ftrafics";
 
 const listOfRoles = AuthService?.getRoles();
 function Content() {
@@ -32,6 +33,8 @@ function Content() {
             <Route path="/request" element={<Request/>}></Route>
             <Route path="/sixmclist" element={<SixMCList/>}></Route>
             <Route path="/sites" element={<Site/>}></Route>
+            <Route path="/f-traffics" element={<Ftraffics/>}></Route>
+
         </Routes>
     </div>)
 }
