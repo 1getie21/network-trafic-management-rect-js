@@ -23,7 +23,8 @@ const Request = () => {
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    const API_URL = "http://localhost:7070";
+    // const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+    const API_URL = "http://localhost:8080";
     const [trForm] = Form.useForm();
 
     const SubmitButton = ({form: trafficForm, children}) => {
@@ -130,6 +131,7 @@ const Request = () => {
         }
     };
     const onSubmitClick = (values) => {
+        console.log("values=",values)
         if (addNewMode) {
             addNewRecord(values);
         } else {
@@ -259,7 +261,7 @@ const Request = () => {
                 </Col>
             </Row>
             <Drawer
-                title="Basic Drawer"
+                title="Add New Request"
                 placement="right"
                 onClose={() => setOpen(false)}
                 visible={open}
@@ -325,23 +327,23 @@ const Request = () => {
                             <Input/>
                         </Form.Item>
 
-                        <Form.Item label="categories" name="categories">
+                        <Form.Item label="service categories" name=" categories">
                             <Select
                                 showSearch
                                 placeholder="Select a from categories"
                                 optionFilterProp="children"
                                 options={[
                                     {
-                                        value: 'Service One',
-                                        label: 'Service One',
+                                        value: 'Service Monitor',
+                                        label: 'Service Monitor',
                                     },
                                     {
-                                        value: 'Service Two',
-                                        label: 'Service Two',
+                                        value: 'Service Mirror',
+                                        label: 'Service Mirror',
                                     },
                                     {
-                                        value: 'Service Three',
-                                        label: 'Service Three',
+                                        value: 'Service Block',
+                                        label: 'Service Block',
                                     },
                                 ]}
                             />
@@ -354,18 +356,34 @@ const Request = () => {
                             <Input/>
                         </Form.Item>
                         <Form.Item
-                            label="description"
+                            label="Description"
                             name="description"
-                            rules={[{required: true, message: 'Please input description!'}]}
+
                         >
-                            <Input/>
+                            <Input.TextArea placeholder="Enter text or upload a file"/>
                         </Form.Item>
+
+                        {/* Option to upload a file */}
                         <Form.Item
-                            label="detail"
-                            name="detail"
-                            rules={[{required: true, message: 'Please input detail!'}]}
+                            label="Upload Description File"
+                            name="descriptionFile"
                         >
-                            <Input/>
+                            <Input type="file"/>
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Detail"
+                            name="detail"
+                        >
+                            <Input.TextArea placeholder="Enter text or upload a file"/>
+                        </Form.Item>
+
+                        {/* Option to upload a file */}
+                        <Form.Item
+                            label="Upload Detail File"
+                            name="detailFile"
+                        >
+                            <Input type="file"/>
                         </Form.Item>
                         {/*<Button type="primary" htmlType="submit" form={form}>Submit</Button>*/}
                         <SubmitButton form={trForm}>Submit</SubmitButton>

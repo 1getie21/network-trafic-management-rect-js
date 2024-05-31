@@ -10,7 +10,10 @@ const Site = () => {
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
     const cancel = (e) => {};
-    const apiUrl = "http://localhost:7070";
+
+    // const apiUrl = "http://localhost:8080";
+    const apiUrl = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+
 
     const openNotificationWithIcon = (type, messageTitle, description) => {
         api[type]({
@@ -173,7 +176,7 @@ const Site = () => {
                 </Col>
             </Row>
             <Drawer
-                title="Basic Drawer"
+                title="New site"
                 placement="right"
                 onClose={() => setOpen(false)}
                 visible={open}
@@ -195,7 +198,6 @@ const Site = () => {
                         <Form.Item
                             label="Url"
                             name="url"
-                            rules={[{required: true, message: 'Please input url!'}]}
                         >
                             <Input/>
                         </Form.Item>

@@ -9,7 +9,7 @@ const Traffics = () => {
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    const API_URL = "http://localhost:7070";
+    const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [trForm] = Form.useForm();
 
     const SubmitButton = ({form: trafficForm, children}) => {

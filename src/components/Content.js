@@ -26,14 +26,14 @@ function Content() {
             <Route path="/traffics" element={<Traffic/>}></Route>
 
 
-
+            <Route path="/f-traffics" element={<Ftraffics/>}></Route>
             <Route path="/failed-traffics" element={<FailedTraffic/>}></Route>
-            <Route path="/" element={<Traffic/>}></Route>>
+           {/*<Route path="/" element={<Traffic/>}></Route>>*/}
             <Route path="/CheckList" element={<CheckList/>}></Route>
             <Route path="/request" element={<Request/>}></Route>
             <Route path="/sixmclist" element={<SixMCList/>}></Route>
             <Route path="/sites" element={<Site/>}></Route>
-            <Route path="/f-traffics" element={<Ftraffics/>}></Route>
+
 
         </Routes>
     </div>)

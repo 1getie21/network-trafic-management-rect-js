@@ -11,7 +11,7 @@ const CheckList = () => {
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    const API_URL = "http://localhost:7070";
+    const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [trForm] = Form.useForm();
 
     const SubmitButton = ({ form: trafficForm, children }) => {
@@ -132,9 +132,9 @@ const CheckList = () => {
 
     const onSubmitClick = (values) => {
         values.sites = {"id": values.sites};
-        const npbTrials = [values.npbone, values.npbtwo, values.npbthree];
-        if (npbTrials.every(trial => !isNaN(trial))) {
-            const avgNBP = npbTrials.reduce((acc, curr) => acc + curr, 0) / npbTrials.length;
+        const npbProcess = [values.npbone, values.npbtwo, values.npbthree];
+        if (npbProcess.every(process => !isNaN(process))) {
+            const avgNBP = npbProcess.reduce((acc, curr) => acc + curr, 0) / npbProcess.length;
             values.avgNBP = avgNBP.toFixed(2);
             if (addNewMode) {
                 addNewRecord(values);
@@ -142,7 +142,7 @@ const CheckList = () => {
                 updateRecordById(values, dataById.id);
             }
         } else {
-            openNotificationWithIcon('error', 'Error', 'Please enter valid numbers for NPB trials.');
+            openNotificationWithIcon('error', 'Error', 'Please enter valid numbers for NPB process.');
         }
     };
 
@@ -257,7 +257,7 @@ const CheckList = () => {
             {contextHolder}
             <Row justify="end" style={{marginBottom: 16}}>
                 <Col>
-                    <Button onClick={() => showDrawer(undefined)}>Add New Checklist</Button>
+                    <Button onClick={() => showDrawer(undefined)}>Add New Record</Button>
                 </Col>
             </Row>
             <Row>
@@ -266,7 +266,7 @@ const CheckList = () => {
                 </Col>
             </Row>
             <Drawer
-                title="Basic Drawer"
+                title="Add New List"
                 placement="right"
                 onClose={() => setOpen(false)}
                 visible={open}
@@ -322,25 +322,25 @@ const CheckList = () => {
                         >
                             <Input />
                         </Form.Item>
-                        NBP Trial
+                        NBP Process
                         <Form.Item
-                            label="NBP Trial 1"
+                            label="NBP 1"
                             name="npbone"
-                            rules={[{ required: true, message: 'Please input NBP Trial 1!' }]}
+                            rules={[{ required: true, message: 'Please input NBP process 1!' }]}
                         >
                             <InputNumber min={0} step={0.1} />
                         </Form.Item>
                         <Form.Item
-                            label="NBP Trial 2"
+                            label="NBP 2"
                             name="npbtwo"
-                            rules={[{ required: true, message: 'Please input NBP Trial 2!' }]}
+                            rules={[{ required: true, message: 'Please input NBP process 2!' }]}
                         >
                             <InputNumber min={0} step={0.1} />
                         </Form.Item>
                         <Form.Item
-                            label="NBP Trial 3"
+                            label="NBP 3"
                             name="npbthree"
-                            rules={[{ required: true, message: 'Please input NBP Trial 3!' }]}
+                            rules={[{ required: true, message: 'Please input NBP process 3!' }]}
                         >
                             <InputNumber min={0} step={0.1} />
                         </Form.Item>

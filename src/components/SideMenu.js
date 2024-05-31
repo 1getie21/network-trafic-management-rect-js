@@ -1,29 +1,33 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Menu } from "antd";
-import {FallOutlined, FundOutlined, MenuUnfoldOutlined, UserOutlined} from "@ant-design/icons";
+import React, {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {Menu} from "antd";
+import {
+    CheckOutlined,
+    CheckSquareOutlined, DashboardOutlined, DisconnectOutlined, FileAddOutlined, FormOutlined,
+    MenuUnfoldOutlined, SecurityScanOutlined, UserAddOutlined,
+
+} from "@ant-design/icons";
 import AuthService from "../auth/AuthService ";
-import SixMCList from "./6MCList";
 
 const listOfRoles = AuthService?.getRoles();
 
 const ListOfItems = [
-    getItem('Collapse', 'Collapse', <MenuUnfoldOutlined />)
+    getItem('Collapse', 'Collapse', <MenuUnfoldOutlined/>)
 ];
 
 if (listOfRoles && listOfRoles.includes('ROLE_ADMIN')) {
-    ListOfItems.push(getItem('Users', 'Users', <UserOutlined />));
+    ListOfItems.push(getItem('Users', 'Users', <UserAddOutlined/>));
 }
 
 ListOfItems.push(
     // getItem('Users', 'Users', <UserOutlined />),
-    getItem('Daily-Traffic', 'Traffics', <FundOutlined/>),
-    getItem('failed-traffics', 'failed-traffics', <FallOutlined/>),
-    getItem('Add site', 'sites', <UserOutlined/>),
-    getItem('Request-Form', 'request', <UserOutlined/>),
-    getItem('Check-List', 'CheckList', <UserOutlined/>),
-    getItem('Daily-Traffic2', 'f-traffics', <UserOutlined/>),
-        getItem('6Month-Check-List', 'sixmclist', <UserOutlined/>),
+    // getItem('Daily-Traffic', 'Traffics', <CheckOutlined/>),
+    getItem('daily-traffic-monitoring', 'f-traffics', <DashboardOutlined/>),
+    getItem('failed-traffics', 'failed-traffics', <DisconnectOutlined/>),
+    getItem('Add site', 'sites', <FileAddOutlined/>),
+    getItem('traffic-request', 'request', <FormOutlined/>),
+    getItem('T.Processing checklist', 'CheckList', <CheckSquareOutlined/>),
+    getItem('6Month-SSM-checklist', 'sixmclist', <SecurityScanOutlined/>),
 );
 
 function getItem(label, key, icon, children, type) {
@@ -57,8 +61,8 @@ function SideMenu() {
             }}
         >
             <Menu
-                style={{ height: '100%' }}
-                onClick={({ key }) => {
+                style={{height: '100%'}}
+                onClick={({key}) => {
                     if (key === "Collapse") {
                         toggleCollapsed(key);
                     } else {
