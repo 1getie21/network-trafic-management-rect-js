@@ -4,7 +4,6 @@ import React from "react";
 import Traffic from "./Traffic";
 import AuthService from "../auth/AuthService ";
 import FailedTraffic from "./FailedTraffic";
-import Course from "./Site";
 import Site from "./Site";
 import CheckList from "./Check-list";
 import Request from "./Request";

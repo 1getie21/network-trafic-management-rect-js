@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { InputNumber } from 'antd';
 import { Button, Col, Divider, Drawer, Form, Input, notification, Popconfirm, Row, Select, Table } from "antd";
 import axiosInstance from "../auth/authHeader";
-import dayjs from "dayjs";
+
 
 const CheckList = () => {
     const [data, setData] = useState([]);

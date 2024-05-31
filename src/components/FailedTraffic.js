@@ -145,7 +145,7 @@ const FailedTraffics = () => {
                     const totalPage = response?.data?.page?.totalPages;
                     setSites(prevSites => [...prevSites, ...newSites]);
                     setSitesLoading(false);
-                    if (page == totalPage - 1) {
+                    if (page === totalPage - 1) {
                         setHasMoreSites(false);
                     }
 

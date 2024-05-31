@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {
-    Button, Checkbox,
+    Button,
     Col,
-    DatePicker,
     Divider,
     Drawer,
     Form,
@@ -14,7 +13,7 @@ import {
     Table
 } from "antd";
 import axiosInstance from "../auth/authHeader";
-import dayjs from "dayjs";
+import {CloudDownloadOutlined} from "@ant-design/icons";
 
 const Request = () => {
     const [data, setData] = useState([]);
@@ -26,7 +25,15 @@ const Request = () => {
     // const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const API_URL = "http://localhost:8080";
     const [trForm] = Form.useForm();
+    const [selectedFile1, setSelectedFile1] = useState(null);
+    const [selectedFile2, setSelectedFile2] = useState(null);
 
+    const handleFileChange = (event) => {
+        setSelectedFile1(event.target.files[0]);
+    };
+    const handleFileChange2 = (event) => {
+        setSelectedFile2(event.target.files[0]);
+    };
     const SubmitButton = ({form: trafficForm, children}) => {
         const [submittable, setSubmittable] = React.useState(false);
         const values = Form.useWatch([], trafficForm);
@@ -76,7 +83,14 @@ const Request = () => {
         });
     };
     const addNewRecord = (values) => {
-
+        const formData = new FormData();
+        formData.append('file', selectedFile1);
+        formData.append('file2', selectedFile2);
+        axiosInstance.post(API_URL + '/files', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
         axiosInstance.post(API_URL + "/request", values)
             .then(response => {
                 openNotificationWithIcon('success', 'Success', 'New Recorded Is added successfully.')
@@ -131,7 +145,8 @@ const Request = () => {
         }
     };
     const onSubmitClick = (values) => {
-        console.log("values=",values)
+        values.detailFile = selectedFile2?.name
+        values.descriptionFile = selectedFile1?.name
         if (addNewMode) {
             addNewRecord(values);
         } else {
@@ -200,6 +215,7 @@ const Request = () => {
             key: 'categories',
         },
 
+
         {
             title: 'Contact-Person',
             dataIndex: 'contact',
@@ -212,11 +228,43 @@ const Request = () => {
             title: 'Service Description',
             dataIndex: 'description',
             key: 'description',
+            render: (text, record) => (
+                <>
+                    {(record?.description || record?.descriptionFile) && (
+                        <>
+                            {record?.description && (
+                                <p>{record.description}</p>
+                            )}
+                            {record?.descriptionFile && (
+                                <a target="_blank" href={API_URL + "/files/" + record.descriptionFile}>
+                                    <CloudDownloadOutlined/>
+                                </a>
+                            )}
+                        </>
+                    )}
+                </>
+            ),
         },
         {
             title: 'Service Detail',
             dataIndex: 'detail',
             key: 'detail',
+            render: (text, record) => (
+                <>
+                    {(record?.detail || record?.detailFile) && (
+                        <>
+                            {record?.detail && (
+                                <p>{record.detail}</p>
+                            )}
+                            {record?.detailFile && (
+                                <a target="_blank" href={API_URL + "/files/" + record.detailFile}>
+                                    <CloudDownloadOutlined/>
+                                </a>
+                            )}
+                        </>
+                    )}
+                </>
+            ),
         },
 
         {
@@ -224,7 +272,14 @@ const Request = () => {
             key: 'action',
             render: (text, record) => (
                 <span>
-                {/* eslint-disable jsx-a11y/anchor-is-valid */}
+                        <a target="_blank"
+                           href={API_URL + "/files/" + record?.descriptionFile}>{record?.descriptionFile}
+                        </a> ,
+                    <a target="_blank"
+                       href={API_URL + "/files/" + record?.detailFile}>{record?.detailFile}
+                        </a>
+                        <Divider type="vertical"/>
+                    {/* eslint-disable jsx-a11y/anchor-is-valid */}
                     <a onClick={() => showDrawer(record.id)}>Update</a>
                     {/* eslint-enable jsx-a11y/anchor-is-valid */}
 
@@ -234,16 +289,16 @@ const Request = () => {
                     <Popconfirm
                         title="Delete the task"
                         description="Are you sure to delete this task?"
-                        onConfirm={()=>confirm(record.id)}
+                        onConfirm={() => confirm(record.id)}
                         onCancel={cancel}
                         okText="Yes"
                         cancelText="No"
                     >
-    <Button danger>Delete</Button>
-  </Popconfirm>
+                        <Button danger>Delete</Button>
+                        </Popconfirm>
                     {/*<a onClick={() => deleteById(record.id)}>Delete</a>*/}
                     {/* eslint-enable jsx-a11y/anchor-is-valid */}
-                </span>
+                        </span>
             ),
         },
     ];
@@ -284,14 +339,20 @@ const Request = () => {
                         <Form.Item
                             label="phone"
                             name="phone"
-                            rules={[{ required: true, message: 'Please input phone!' }]}
+
+                            rules={[{required: true, message: 'Please input phone!'},
+                                {pattern: /^[0-9]+?$/, message: 'Please enter a valid phone !'}
+                            ]}
                         >
-                            <Input addonBefore="+251" />
+                            <Input addonBefore="+251"/>
                         </Form.Item>
                         <Form.Item
                             label="email"
                             name="email"
-                            rules={[{required: true, message: 'Please input email!'}]}
+                            rules={[
+                                {required: true, message: 'Please input your email!'},
+                                {type: 'email', message: 'Please enter a valid email address!'},
+                            ]}
                         >
                             <Input/>
                         </Form.Item>
@@ -327,10 +388,14 @@ const Request = () => {
                             <Input/>
                         </Form.Item>
 
-                        <Form.Item label="service categories" name=" categories">
+                        <Form.Item
+                            label="categories"
+                            name="categories"  // Corrected the name from " categories" to "categories"
+                            rules={[{required: true, message: 'Please select a category!'}]}  // Add validation rule
+                        >
                             <Select
                                 showSearch
-                                placeholder="Select a from categories"
+                                placeholder="Select a category"
                                 optionFilterProp="children"
                                 options={[
                                     {
@@ -368,7 +433,7 @@ const Request = () => {
                             label="Upload Description File"
                             name="descriptionFile"
                         >
-                            <Input type="file"/>
+                            <Input onChange={handleFileChange} type="file"/>
                         </Form.Item>
 
                         <Form.Item
@@ -383,7 +448,7 @@ const Request = () => {
                             label="Upload Detail File"
                             name="detailFile"
                         >
-                            <Input type="file"/>
+                            <Input onChange={handleFileChange2} type="file"/>
                         </Form.Item>
                         {/*<Button type="primary" htmlType="submit" form={form}>Submit</Button>*/}
                         <SubmitButton form={trForm}>Submit</SubmitButton>
