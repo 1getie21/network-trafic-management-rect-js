@@ -241,7 +241,7 @@ const Users = () => {
                 </Col>
             </Row>
             <Drawer
-                title="Basic Drawer"
+                title="Add New User"
                 placement="right"
                 onClose={() => setOpenDrawer(false)}
                 visible={open}

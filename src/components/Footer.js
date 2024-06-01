@@ -12,7 +12,7 @@ function Footer() {
             }}>
                 <br/>
             <div>
-                system sc
+                system teamop
             </div>
                 <br/>
             <div>

@@ -1,9 +1,12 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {Menu} from "antd";
-import {FallOutlined, FundOutlined, MenuUnfoldOutlined, UserOutlined} from "@ant-design/icons";
+import {
+    CheckSquareOutlined, DashboardOutlined, DisconnectOutlined, FileAddOutlined, FormOutlined,
+    MenuUnfoldOutlined, SecurityScanOutlined, UserAddOutlined,
+
+} from "@ant-design/icons";
 import AuthService from "../auth/AuthService ";
-import SixMCList from "./6MCList";
 
 const listOfRoles = AuthService?.getRoles();
 
@@ -12,18 +15,24 @@ const ListOfItems = [
 ];
 
 if (listOfRoles && listOfRoles.includes('ROLE_ADMIN')) {
-    ListOfItems.push(getItem('Users', 'Users', <UserOutlined/>));
+    ListOfItems.push(getItem('Users', 'Users', <UserAddOutlined/>));
 }
-
+if (listOfRoles && listOfRoles.includes('ROLE_ADMIN') || listOfRoles.includes('ROLE_MEMBER')) {
+    ListOfItems.push(
+        getItem('daily-traffic-monitoring', 'f-traffics', <UserAddOutlined/>),
+        getItem('failed-traffics', 'failed-traffics', <DisconnectOutlined/>),
+        getItem('Add site', 'sites', <FileAddOutlined/>),
+        getItem('traffic-request', 'request', <FormOutlined/>),
+        getItem('T.Processing checklist', 'CheckList', <CheckSquareOutlined/>),
+        getItem('6Month-SSM-checklist', 'sixmclist', <SecurityScanOutlined/>)
+        );
+}
 ListOfItems.push(
-    // getItem('Users', 'Users', <UserOutlined />),
-    getItem('Daily-Traffic', 'Traffics', <FundOutlined/>),
-    getItem('failed-traffics', 'failed-traffics', <FallOutlined/>),
-    getItem('f-traffics', 'f-traffics', <FallOutlined/>),
-    getItem('Add site', 'sites', <UserOutlined/>),
-    getItem('Request-Form', 'request', <UserOutlined/>),
-    getItem('Check-List', 'CheckList', <UserOutlined/>),
-    getItem('6Month-Check-List', 'sixmclist', <UserOutlined/>),
+    // getItem('failed-traffics', 'failed-traffics', <DisconnectOutlined/>),
+    // getItem('Add site', 'sites', <FileAddOutlined/>),
+    getItem('traffic-request', 'request', <FormOutlined/>),
+    // getItem('T.Processing checklist', 'CheckList', <CheckSquareOutlined/>),
+    // getItem('6Month-SSM-checklist', 'sixmclist', <SecurityScanOutlined/>),
 );
 
 function getItem(label, key, icon, children, type) {

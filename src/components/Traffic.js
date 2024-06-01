@@ -327,7 +327,7 @@ const Traffics = () => {
                             <Input/>
                         </Form.Item>
                         <Form.Item
-                            label="eighteenTimeTraffic"
+                            label="eighteenTime"
                             name="eighteenTimeTraffic"
                             rules={[{required: true, message: 'Please input 18:00 TimeTraffic!'}]}
                         >

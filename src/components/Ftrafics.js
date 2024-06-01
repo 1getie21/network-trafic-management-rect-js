@@ -11,7 +11,26 @@ const Ftraffics = () => {
     const [api, contextHolder] = notification.useNotification();
     const API_URL = "http://localhost:8080";
     const [trForm] = Form.useForm();
+    const [trSearchForm] = Form.useForm();
 
+    const SubmitSearchButton = ({form: trafficSearchForm, children}) => {
+        const [submittable, setSubmittable] = React.useState(false);
+        const [searchSubmittable, setsearchSubmittable] = React.useState(false);
+        const values = Form.useWatch([], trafficSearchForm);
+        React.useEffect(() => {
+            trafficSearchForm.validateFields({
+                validateOnly: true,
+            })
+                .then(() => setsearchSubmittable(true))
+                .catch(() => setsearchSubmittable(false));
+        }, [trafficSearchForm, values]);
+
+        return (
+            <Button type="primary" htmlType="submit" disabled={!searchSubmittable}>
+                {children}
+            </Button>
+        );
+    };
     const SubmitButton = ({form: trafficForm, children}) => {
         const [submittable, setSubmittable] = React.useState(false);
         const values = Form.useWatch([], trafficForm);
@@ -31,7 +50,7 @@ const Ftraffics = () => {
     };
 
     const getAllData = () => {
-        axiosInstance.get(API_URL+"/f-traffics")
+        axiosInstance.get(API_URL + "/f-traffics")
             .then(response => {
                     setData(response?.data?._embedded?.fTrafficDtoses);
                     setLoading(false);
@@ -45,7 +64,7 @@ const Ftraffics = () => {
         axiosInstance.get(API_URL + "/f-traffics/" + id)
             .then(response => {
                     setDataById(response.data)
-                    response.data.sites=response?.data?.sites?.id;
+                    response.data.sites = response?.data?.sites?.id;
                     trForm.setFieldsValue(response.data);
                 },
                 error => {
@@ -71,20 +90,23 @@ const Ftraffics = () => {
 
     const cancel = (e) => {
     };
+
     const addNewRecord = (values) => {
         // Ensure only specific members are accepted in the values object
-        const acceptedMembers = ['eightTimeTraffic', 'fortiethTimeTraffic', 'eighteenTimeTraffic'];
-        const filteredValues = Object.fromEntries(
-            Object.entries(values).filter(([key]) => acceptedMembers.includes(key))
-        );
+        // const acceptedMembers = ['timeValues'];
+        // const filteredValues = Object.fromEntries(
+        //     Object.entries(values).filter(([key]) => acceptedMembers.includes(key))
+        // );
+        //
+        // // Validate input values to have two decimal places
+        // for (const [key, value] of Object.entries(filteredValues)) {
+        //     if (acceptedMembers.includes(key) && !/^\d+(\.\d{2})?$/.test(value)) {
+        //         openNotificationWithIcon('error', 'Error', `Please enter a valid number with places for ${key}`);
+        //         return;
+        //     }
+        // }
 
-        // Validate input values to have two decimal places
-        for (const [key, value] of Object.entries(filteredValues)) {
-            if (acceptedMembers.includes(key) && !/^\d+(\.\d{2})?$/.test(value)) {
-                openNotificationWithIcon('error', 'Error', `Please enter a valid number with places for ${key}`);
-                return;
-            }
-        }
+
         axiosInstance.post(API_URL + "/f-traffics", values)
             .then(response => {
                 openNotificationWithIcon('success', 'Success', 'New Recorded Is added successfully.')
@@ -136,18 +158,17 @@ const Ftraffics = () => {
             setAddNewMode(false);
         }
     };
-const handleCHange=(value)=>{
-    axiosInstance.get(API_URL+"/f-traffics/tr/"+value)
-        .then(response => {
-            console.log("response=",response?.data?._embedded?.fTrafficDtoses)
-                setData(response?.data?._embedded?.fTrafficDtoses);
-                setLoading(false);
-            },
-            error => {
-                setLoading(false);
-                openNotificationWithIcon('error', 'Error', error?.message)
-            });
-}
+    const handleCHange = (value) => {
+        axiosInstance.get(API_URL + "/f-traffics/tr/" + value)
+            .then(response => {
+                    setData(response?.data?._embedded?.fTrafficDtoses);
+                    setLoading(false);
+                },
+                error => {
+                    setLoading(false);
+                    openNotificationWithIcon('error', 'Error', error?.message)
+                });
+    }
     const [sites, setSites] = useState([]);
     const getAllSites = () => {
         axiosInstance.get(API_URL + "/sites")
@@ -161,17 +182,27 @@ const handleCHange=(value)=>{
                     openNotificationWithIcon('error', 'Error', error?.message)
                 });
     };
-    const onSubmitClick = (values) => {
-
+    const onSearchSubmitClick = (values) => {
         values.sites = {"id": values.sites}
-        console.log("values=",values)
+        console.log("values=", values)
         if (addNewMode) {
             addNewRecord(values);
         } else {
             updateRecordById(values, dataById.id);
         }
     };
-
+    const onSearchFinishFailed = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+    };
+    const onSubmitClick = (values) => {
+        values.sites = {"id": values.sites}
+        console.log("values=", values)
+        if (addNewMode) {
+            addNewRecord(values);
+        } else {
+            updateRecordById(values, dataById.id);
+        }
+    };
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
@@ -193,7 +224,7 @@ const handleCHange=(value)=>{
             title: 'Sites',
             dataIndex: 'sites',
             key: 'sites',
-            render: sites=>sites?.name,
+            render: sites => sites?.name,
         },
         {
             title: 'Time Trafic',
@@ -201,12 +232,12 @@ const handleCHange=(value)=>{
             key: 'trafficTimeName',
         },
         {
-            title: 'VAlue',
+            title: 'Total Time Traffic Value',
             dataIndex: 'timeValues',
             key: 'timeValues',
-        }, 
-        
-        
+        },
+
+
         {
             title: 'Created By',
             dataIndex: 'createdBy',
@@ -250,7 +281,7 @@ const handleCHange=(value)=>{
                     <Popconfirm
                         title="Delete the task"
                         description="Are you sure to delete this task?"
-                        onConfirm={()=>confirm(record.id)}
+                        onConfirm={() => confirm(record.id)}
                         onCancel={cancel}
                         okText="Yes"
                         cancelText="No"
@@ -269,26 +300,61 @@ const handleCHange=(value)=>{
         <>
             {contextHolder}
             <Row justify="end" style={{marginBottom: 16}}>
-                <Select
-                    onChange={handleCHange}
-                    showSearch
-                    placeholder="Select a time traffic"
-                    optionFilterProp="children"
-                    options={[
-                        {
-                            value: '8 O\'clock',
-                            label: '8 O\'clock',
-                        },
-                        {
-                            value: '14 O\'clock',
-                            label: '14 O\'clock',
-                        },
-                        {
-                            value: '18 O\'clock',
-                            label: '18 O\'clock',
-                        },
-                    ]}
-                />
+                <Col>
+                    <Form
+                        name="validateOnly"
+                        layout="horizontal"
+                        onFinish={onSearchSubmitClick}
+                        onFinishFailed={onSearchFinishFailed}
+                    >
+                        <Row>
+                            <Col>
+                                <Form.Item
+                                    label="From"
+                                    name="from"
+                                >
+                                    <input/>
+                                </Form.Item>
+                            </Col>
+                            <Col>
+                                <Form.Item
+                                    label="To"
+                                    name="to"
+                                >
+                                    <input/>
+                                </Form.Item>
+                            </Col>
+                            <Col>
+                                <Form.Item>
+                                    {/*<Button type="primary" htmlType="submit" form={form}>Submit</Button>*/}
+                                    <SubmitSearchButton form={trSearchForm}>Submit</SubmitSearchButton>
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                    </Form>
+                </Col>
+                <Col>
+                    <Select
+                        onChange={handleCHange}
+                        showSearch
+                        placeholder="Select a time traffic"
+                        optionFilterProp="children"
+                        options={[
+                            {
+                                value: '8 O\'clock',
+                                label: '8 O\'clock',
+                            },
+                            {
+                                value: '14 O\'clock',
+                                label: '14 O\'clock',
+                            },
+                            {
+                                value: '18 O\'clock',
+                                label: '18 O\'clock',
+                            },
+                        ]}
+                    />
+                </Col>
                 <Col>
                     <Button onClick={() => showDrawer(undefined)}>Add New Traffic</Button>
                 </Col>
@@ -299,7 +365,7 @@ const handleCHange=(value)=>{
                 </Col>
             </Row>
             <Drawer
-                title="Basic Drawer"
+                title="Add New Traffic"
                 placement="right"
                 onClose={() => setOpen(false)}
                 visible={open}
@@ -351,7 +417,9 @@ const handleCHange=(value)=>{
                         <Form.Item
                             label="Values"
                             name="timeValues"
-                            rules={[{required: true, message: 'Please input  !'}]}
+                            rules={[{required: true, message: 'Please input Values !'},
+                                {pattern: /^[0-9]+(\.[0-9]+)?$/, message: 'Please enter a valid number for Values !'}
+                            ]}
                         >
                             <Input/>
                         </Form.Item>

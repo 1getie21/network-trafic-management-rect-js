@@ -4,13 +4,11 @@ import React from "react";
 import Traffic from "./Traffic";
 import AuthService from "../auth/AuthService ";
 import FailedTraffic from "./FailedTraffic";
-import Course from "./Site";
 import Site from "./Site";
 import CheckList from "./Check-list";
 import Request from "./Request";
 import SixMCList from "./6MCList";
-import Ftrafics from "./Ftrafics";
-
+import Ftraffics from "./Ftrafics";
 
 const listOfRoles = AuthService?.getRoles();
 
@@ -25,16 +23,22 @@ function Content() {
             {listOfRoles && listOfRoles.includes("ROLE_ADMIN") && (
                 <Route path="/users" element={<Users/>}/>
             )}
-            <Route path="/traffics" element={<Traffic/>}></Route>
-            <Route path="/f-traffics" element={<Ftrafics/>}></Route>
-
-
-            <Route path="/failed-traffics" element={<FailedTraffic/>}></Route>
-            <Route path="/" element={<Traffic/>}></Route>>
-            <Route path="/CheckList" element={<CheckList/>}></Route>
+            {listOfRoles && listOfRoles.includes("ROLE_ADMIN") || listOfRoles.includes("ROLE_MEMBER") && (
+                <Route path="/f-traffics" element={<Ftraffics/>}></Route>
+            )}
+            {listOfRoles && listOfRoles.includes("ROLE_ADMIN") || listOfRoles.includes("ROLE_MEMBER") && (
+                <Route path="/failed-traffics" element={<FailedTraffic/>}></Route>
+            )}
+            {listOfRoles && listOfRoles.includes("ROLE_ADMIN") || listOfRoles.includes("ROLE_MEMBER") && (
+                <Route path="/CheckList" element={<CheckList/>}></Route>
+            )}
+            {listOfRoles && listOfRoles.includes("ROLE_ADMIN") || listOfRoles.includes("ROLE_MEMBER") && (
+                <Route path="/sixmclist" element={<SixMCList/>}></Route>
+            )}
+            {listOfRoles && listOfRoles.includes("ROLE_ADMIN") || listOfRoles.includes("ROLE_MEMBER") && (
+                <Route path="/sites" element={<Site/>}></Route>
+            )}
             <Route path="/request" element={<Request/>}></Route>
-            <Route path="/sixmclist" element={<SixMCList/>}></Route>
-            <Route path="/sites" element={<Site/>}></Route>
         </Routes>
     </div>)
 }

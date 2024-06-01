@@ -69,7 +69,8 @@ const Request = () => {
                     setDataById(response.data);
                     trForm.setFieldsValue(response.data);
 
-
+                    setSelectedFile1(null); // Clear selectedFile1
+                    setSelectedFile2(null); // Clear selectedFile2
                 },
                 error => {
                     openNotificationWithIcon('error', 'Error', error?.message)
@@ -82,11 +83,30 @@ const Request = () => {
             description: description,
         });
     };
+    const handleRequestError = (error) => {
+        if (error?.response?.data?.apierror?.subErrors?.length > 0) {
+            openNotificationWithIcon(
+                'error',
+                'Error ',
+                error?.response?.data?.apierror?.message +
+                " " + error?.response?.data?.apierror?.subErrors[0]?.field +
+                " " + error?.response?.data?.apierror?.subErrors[0]?.message
+            );
+        } else if (error?.response?.data?.apierror?.status !== undefined) {
+            openNotificationWithIcon(
+                'error',
+                'Error ~' + error?.response?.data?.apierror?.status,
+                error?.response?.data?.apierror?.message
+            );
+        } else {
+            openNotificationWithIcon('error', 'Error', error?.message || 'Unknown Error');
+        }
+    };
     const addNewRecord = (values) => {
         const formData = new FormData();
         formData.append('file', selectedFile1);
         formData.append('file2', selectedFile2);
-        axiosInstance.post(API_URL + '/files', formData, {
+        axiosInstance.post('http://localhost:8080/files', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -111,26 +131,34 @@ const Request = () => {
                 }
             })
     };
-    const updateRecordById = (data, id) => {
-        axiosInstance.put(API_URL + "/request/" + id, data)
-            .then(response => {
-                    openNotificationWithIcon('success', 'Success', 'Data Is updated successfully.')
-                    getAllData();
-                    setOpen(false);
-                    setDataById(null);
-                }
-                , error => {
-                    if (error?.response?.data?.apierror?.subErrors?.length > 0) {
-                        openNotificationWithIcon('error', 'Error '
-                            , error?.response?.data?.apierror?.message
-                            + " " + error?.response?.data?.apierror?.subErrors[0]?.field + " " + error?.response?.data?.apierror?.subErrors[0]?.message)
-                    } else {
-                        openNotificationWithIcon('error',
-                            'Error ~' + error?.response?.data?.apierror?.status
-                            , error?.response?.data?.apierror?.message)
-                    }
-                }
-            );
+    const updateRecordById = (values, id) => {
+        const formData = new FormData();
+        if (selectedFile1) {
+            formData.append('file', selectedFile1);
+        }
+        if (selectedFile2) {
+            formData.append('file2', selectedFile2);
+        }
+        axiosInstance.post('http://localhost:8080/files', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        })
+            .then(() => {
+                axiosInstance.put(API_URL + "/request/" + id, values)
+                    .then(response => {
+                        openNotificationWithIcon('success', 'Success', 'Data Is updated successfully.');
+                        getAllData();
+                        setOpen(false);
+                        setDataById(null);
+                    })
+                    .catch(error => {
+                        handleRequestError(error);
+                    });
+            })
+            .catch(error => {
+                handleRequestError(error);
+            });
     };
     const showDrawer = (id) => {
         setDataById(null);
@@ -147,12 +175,16 @@ const Request = () => {
     const onSubmitClick = (values) => {
         values.detailFile = selectedFile2?.name
         values.descriptionFile = selectedFile1?.name
+        // console.log("selectedFile1=", selectedFile1?.name)
+        // console.log("selectedFile2=", selectedFile2?.name)
+        // console.log("values=", values)
         if (addNewMode) {
             addNewRecord(values);
         } else {
             updateRecordById(values, dataById.id);
         }
     };
+
 
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
@@ -237,7 +269,7 @@ const Request = () => {
                             )}
                             {record?.descriptionFile && (
                                 <a target="_blank" href={API_URL + "/files/" + record.descriptionFile}>
-                                    <CloudDownloadOutlined/>
+                                    <CloudDownloadOutlined />
                                 </a>
                             )}
                         </>
@@ -258,7 +290,7 @@ const Request = () => {
                             )}
                             {record?.detailFile && (
                                 <a target="_blank" href={API_URL + "/files/" + record.detailFile}>
-                                    <CloudDownloadOutlined/>
+                                    <CloudDownloadOutlined />
                                 </a>
                             )}
                         </>
@@ -341,7 +373,7 @@ const Request = () => {
                             name="phone"
 
                             rules={[{required: true, message: 'Please input phone!'},
-                                {pattern: /^[0-9]+?$/, message: 'Please enter a valid phone !'}
+                                { pattern: /^[0-9]+?$/, message: 'Please enter a valid phone !' }
                             ]}
                         >
                             <Input addonBefore="+251"/>
@@ -350,8 +382,8 @@ const Request = () => {
                             label="email"
                             name="email"
                             rules={[
-                                {required: true, message: 'Please input your email!'},
-                                {type: 'email', message: 'Please enter a valid email address!'},
+                                { required: true, message: 'Please input your email!' },
+                                { type: 'email', message: 'Please enter a valid email address!' },
                             ]}
                         >
                             <Input/>
@@ -391,7 +423,7 @@ const Request = () => {
                         <Form.Item
                             label="categories"
                             name="categories"  // Corrected the name from " categories" to "categories"
-                            rules={[{required: true, message: 'Please select a category!'}]}  // Add validation rule
+                            rules={[{ required: true, message: 'Please select a category!' }]}  // Add validation rule
                         >
                             <Select
                                 showSearch
@@ -433,7 +465,7 @@ const Request = () => {
                             label="Upload Description File"
                             name="descriptionFile"
                         >
-                            <Input onChange={handleFileChange} type="file"/>
+                            <Input onChange={handleFileChange} type="file" value={selectedFile1 ? selectedFile1.name : ''} />
                         </Form.Item>
 
                         <Form.Item
@@ -448,7 +480,7 @@ const Request = () => {
                             label="Upload Detail File"
                             name="detailFile"
                         >
-                            <Input onChange={handleFileChange2} type="file"/>
+                            <Input onChange={handleFileChange2} type="file" value={selectedFile2 ? selectedFile2.name : ''} />
                         </Form.Item>
                         {/*<Button type="primary" htmlType="submit" form={form}>Submit</Button>*/}
                         <SubmitButton form={trForm}>Submit</SubmitButton>

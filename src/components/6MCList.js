@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {
-    Button, Checkbox,
+    Button,
     Col,
-    DatePicker,
     Divider,
     Drawer,
     Form,
@@ -187,7 +186,26 @@ const SixMCList = () => {
             key: 'id',
             render: (text, record, index) => index + 1,
         },
+        {
+            title: 'Created At',
+            dataIndex: 'createdAt',
+            key: 'createdAt',
+            render: (text) => {
+                const date = new Date(text);
+                const options = {
+                    year: 'numeric',
+                    month: 'short',
+                    day: '2-digit',
+                    hour: '2-digit',
 
+                    minute: '2-digit',
+                    second: '2-digit'
+                };
+                const formattedDate = date.toLocaleDateString('en-US', options);
+                return <span>{formattedDate}</span>;
+            },
+
+        },
         {
             title: 'Sites',
             dataIndex: 'sites',
@@ -276,7 +294,7 @@ const SixMCList = () => {
             {contextHolder}
             <Row justify="end" style={{marginBottom: 16}}>
                 <Col>
-                    <Button onClick={() => showDrawer(undefined)}>Add New 6MClist</Button>
+                    <Button onClick={() => showDrawer(undefined)}>Add New Record</Button>
                 </Col>
             </Row>
             <Row>
@@ -285,7 +303,7 @@ const SixMCList = () => {
                 </Col>
             </Row>
             <Drawer
-                title="Basic Drawer"
+                title="Add New Report"
                 placement="right"
                 onClose={() => setOpen(false)}
                 visible={open}

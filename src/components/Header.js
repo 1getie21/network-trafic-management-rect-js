@@ -6,8 +6,9 @@ import AuthService from "../auth/AuthService ";
 
 const Header = () => {
     const [openDrawer, setOpenDrawer] = useState(false);
-    const isLoggedIn = AuthService.getCurrentUser(); 
-    const API_URL = 'http://localhost:8080';
+    const isLoggedIn = AuthService.getCurrentUser();
+    const API_URL ="http://localhost:8080";
+
     const handleLogout = () => {
         AuthService.logout();
     };

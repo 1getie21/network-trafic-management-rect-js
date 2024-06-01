@@ -127,7 +127,6 @@ const FailedTraffics = () => {
     const showDrawer = (id) => {
         setDataById(null);
         setOpen(true);
-        getAllSites(page);
         trForm.resetFields();
         if (id === undefined) {
             setAddNewMode(true);
@@ -142,16 +141,16 @@ const FailedTraffics = () => {
         setSitesLoading(true);
         axiosInstance.get(API_URL + "/sites?page=" + page + "&size=" + 10)
             .then(response => {
-                    const newSites = response?.data?._embedded?.sitesDtoses;
+                    const newSites = response?.data?._embedded?.sitesDtoses; 
                     if (newSites) {
                         const totalPage = response?.data?.page?.totalPages;
                         setSites(prevSites => [...prevSites, ...newSites]);
                         setSitesLoading(false);
-                        if (page == totalPage - 1) {
-                            console.log("newSites=", newSites)
+                        if (page === totalPage - 1) {
                             setHasMoreSites(false);
                         }
                     }
+
                 },
                 error => {
                     setSitesLoading(false);
@@ -188,6 +187,7 @@ const FailedTraffics = () => {
 
     useEffect(() => {
         getAllData();
+        getAllSites(page);
     }, []); // empty dependency array means this effect runs only once, similar to componentDidMount
 
     const confirm = (id) => {
@@ -332,7 +332,7 @@ const FailedTraffics = () => {
                 </Col>
             </Row>
             <Drawer
-                title="Basic Drawer"
+                title="Add New F.traffic"
                 placement="right"
                 onClose={() => setOpen(false)}
                 visible={open}
@@ -355,7 +355,7 @@ const FailedTraffics = () => {
                                     width: '100%',
                                 }}
                                 placeholder="Please select"
-                                options={sites?.map(sites => ({label: sites.name, value: sites.id}))}
+                                options={sites?.map(sites => ({label: sites?.name, value: sites?.id}))}
                                 onPopupScroll={handlePopupScroll}
                                 loading={sitesLoading}
                             />

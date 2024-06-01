@@ -9,9 +9,11 @@ const Site = () => {
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    const cancel = (e) => {
-    };
+    const cancel = (e) => {};
+
+    // const apiUrl = "http://localhost:8080";
     const apiUrl = "http://localhost:8080";
+
 
     const openNotificationWithIcon = (type, messageTitle, description) => {
         api[type]({
@@ -46,7 +48,10 @@ const Site = () => {
     const deleteById = (id) => {
         axiosInstance.delete(apiUrl + "/sites/" + id)
             .then(response => {
-                    openNotificationWithIcon('success', 'Success', 'Data Is added successfully.')
+                    api.open({
+                        message: 'Success',
+                        description: 'Data Is deleted successfully.'
+                    });
                     getAllData();
                 },
                 error => {
@@ -58,7 +63,10 @@ const Site = () => {
     const addNewRecord = (values) => {
         axiosInstance.post(apiUrl + "/sites", values)
             .then(response => {
-                    openNotificationWithIcon('success', 'Success', 'Data Is added successfully.')
+                    api.open({
+                        message: 'Success',
+                        description: 'New Site Is added successfully.'
+                    });
                     getAllData();
                     setOpen(false);
                     setDataById(null);
@@ -72,7 +80,10 @@ const Site = () => {
     const updateRecordById = (data, id) => {
         axiosInstance.put(apiUrl + "/sites/" + id, data)
             .then(response => {
-                    openNotificationWithIcon('success', 'Success', 'Data Is updated successfully.')
+                    api.open({
+                        message: 'Success',
+                        description: 'Data Is updated successfully.'
+                    });
                     getAllData();
                     setOpen(false);
                     setDataById(null);
@@ -144,7 +155,7 @@ const Site = () => {
                          onCancel={cancel}
                          okText="Yes"
                          cancelText="No">
-                        <a>Delete</a>
+                        <Button danger>Delete</Button>
                       </Popconfirm>
                 </span>
             ),
@@ -165,7 +176,7 @@ const Site = () => {
                 </Col>
             </Row>
             <Drawer
-                title="Basic Drawer"
+                title="New site"
                 placement="right"
                 onClose={() => setOpen(false)}
                 visible={open}
@@ -187,7 +198,6 @@ const Site = () => {
                         <Form.Item
                             label="Url"
                             name="url"
-                            rules={[{required: true, message: 'Please input url!'}]}
                         >
                             <Input/>
                         </Form.Item>
