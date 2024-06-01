@@ -141,7 +141,7 @@ const FailedTraffics = () => {
         setSitesLoading(true);
         axiosInstance.get(API_URL + "/sites?page=" + page + "&size=" + 10)
             .then(response => {
-                    const newSites = response?.data?._embedded?.sitesDtoses; 
+                    const newSites = response?.data?._embedded?.sitesDtoses;
                     if (newSites) {
                         const totalPage = response?.data?.page?.totalPages;
                         setSites(prevSites => [...prevSites, ...newSites]);
@@ -317,6 +317,7 @@ const FailedTraffics = () => {
             ),
         },
     ];
+
 
     return (
         <>
