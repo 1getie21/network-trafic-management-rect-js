@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Menu } from "antd";
+import React, {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {Menu} from "antd";
 import {FallOutlined, FundOutlined, MenuUnfoldOutlined, UserOutlined} from "@ant-design/icons";
 import AuthService from "../auth/AuthService ";
 import SixMCList from "./6MCList";
@@ -8,21 +8,22 @@ import SixMCList from "./6MCList";
 const listOfRoles = AuthService?.getRoles();
 
 const ListOfItems = [
-    getItem('Collapse', 'Collapse', <MenuUnfoldOutlined />)
+    getItem('Collapse', 'Collapse', <MenuUnfoldOutlined/>)
 ];
 
 if (listOfRoles && listOfRoles.includes('ROLE_ADMIN')) {
-    ListOfItems.push(getItem('Users', 'Users', <UserOutlined />));
+    ListOfItems.push(getItem('Users', 'Users', <UserOutlined/>));
 }
 
 ListOfItems.push(
     // getItem('Users', 'Users', <UserOutlined />),
     getItem('Daily-Traffic', 'Traffics', <FundOutlined/>),
     getItem('failed-traffics', 'failed-traffics', <FallOutlined/>),
+    getItem('f-traffics', 'f-traffics', <FallOutlined/>),
     getItem('Add site', 'sites', <UserOutlined/>),
     getItem('Request-Form', 'request', <UserOutlined/>),
     getItem('Check-List', 'CheckList', <UserOutlined/>),
-        getItem('6Month-Check-List', 'sixmclist', <UserOutlined/>),
+    getItem('6Month-Check-List', 'sixmclist', <UserOutlined/>),
 );
 
 function getItem(label, key, icon, children, type) {
@@ -56,8 +57,8 @@ function SideMenu() {
             }}
         >
             <Menu
-                style={{ height: '100%' }}
-                onClick={({ key }) => {
+                style={{height: '100%'}}
+                onClick={({key}) => {
                     if (key === "Collapse") {
                         toggleCollapsed(key);
                     } else {

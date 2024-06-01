@@ -1,16 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
-    Button,
-    Col,
-    Divider,
-    Drawer,
-    Form,
-    Input,
-    notification,
-    Popconfirm,
-    Row,
-    Select,
-    Table
+    Button, Col, Divider, Drawer, Form, Input, notification, Popconfirm, Row, Select, Table
 } from "antd";
 import axiosInstance from "../auth/authHeader";
 import dayjs from "dayjs";
@@ -56,7 +46,7 @@ const CheckList = () => {
     const getAllData = () => {
         axiosInstance.get(API_URL + "/check_list")
             .then(response => {
-                    setData(response?.data?._embedded?.  checkListDtoses);
+                    setData(response?.data?._embedded?.checkListDtoses);
                     setLoading(false);
                 },
                 error => {
@@ -70,16 +60,12 @@ const CheckList = () => {
                     setDataById(response.data);
                     response.data.sites = response?.data?.sites?.id;
                     trForm.setFieldsValue(response.data);
-
-
                 },
                 error => {
                     openNotificationWithIcon('error', 'Error', error?.message)
                 });
     };
-
-
-
+    
     const openNotificationWithIcon = (type, messageTitle, description) => {
         api[type]({
             message: messageTitle,
@@ -148,6 +134,7 @@ const CheckList = () => {
     };
 
     const showDrawer = (id) => {
+        getAllSites();
         setDataById(null);
         setOpen(true);
         trForm.resetFields();
@@ -163,7 +150,6 @@ const CheckList = () => {
     const getAllSites = () => {
         axiosInstance.get(API_URL + "/sites")
             .then(response => {
-                    console.log("sitesDtoses", response)
                     const s = response?.data?._embedded?.sitesDtoses;
                     setSites(s);
                 },
@@ -189,7 +175,6 @@ const CheckList = () => {
 
     useEffect(() => {
         getAllData();
-        getAllSites();
     }, []); // empty dependency array means this effect runs only once, similar to componentDidMount
     const confirm = (id) => {
         axiosInstance.delete(API_URL + "/check_list/" + id)
@@ -269,7 +254,7 @@ const CheckList = () => {
                     <Popconfirm
                         title="Delete the task"
                         description="Are you sure to delete this task?"
-                        onConfirm={()=>confirm(record.id)}
+                        onConfirm={() => confirm(record.id)}
                         onCancel={cancel}
                         okText="Yes"
                         cancelText="No"
@@ -321,7 +306,7 @@ const CheckList = () => {
                                     width: '100%',
                                 }}
                                 placeholder="Please select"
-                                options={sites.map(sites => ({label: sites.name, value: sites.id}))}
+                                options={sites?.map(sites => ({label: sites?.name, value: sites?.id}))}
                             />
                         </Form.Item>
                         <Form.Item
@@ -366,14 +351,14 @@ const CheckList = () => {
                     </Form>
                 )}
 
-            {/* ... (your table and form elements) */}
-            <Button onClick={() => {
-                // Extract NBP values from your form or data source
-                const npbValues = [/* your NBP values here */];
-                handleCalculateAvgNBP(npbValues);
-            }}>
-                Calculate Avg NBP
-            </Button>
+                {/* ... (your table and form elements) */}
+                <Button onClick={() => {
+                    // Extract NBP values from your form or data source
+                    const npbValues = [/* your NBP values here */];
+                    handleCalculateAvgNBP(npbValues);
+                }}>
+                    Calculate Avg NBP
+                </Button>
             </Drawer>
         </>
     );

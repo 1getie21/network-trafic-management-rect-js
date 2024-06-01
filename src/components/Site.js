@@ -9,7 +9,8 @@ const Site = () => {
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    const cancel = (e) => {};
+    const cancel = (e) => {
+    };
     const apiUrl = "http://localhost:8080";
 
     const openNotificationWithIcon = (type, messageTitle, description) => {
@@ -45,10 +46,7 @@ const Site = () => {
     const deleteById = (id) => {
         axiosInstance.delete(apiUrl + "/sites/" + id)
             .then(response => {
-                    api.open({
-                        message: 'Success',
-                        description: 'Data Is deleted successfully.'
-                    });
+                    openNotificationWithIcon('success', 'Success', 'Data Is added successfully.')
                     getAllData();
                 },
                 error => {
@@ -60,10 +58,7 @@ const Site = () => {
     const addNewRecord = (values) => {
         axiosInstance.post(apiUrl + "/sites", values)
             .then(response => {
-                    api.open({
-                        message: 'Success',
-                        description: 'New Site Is added successfully.'
-                    });
+                    openNotificationWithIcon('success', 'Success', 'Data Is added successfully.')
                     getAllData();
                     setOpen(false);
                     setDataById(null);
@@ -77,10 +72,7 @@ const Site = () => {
     const updateRecordById = (data, id) => {
         axiosInstance.put(apiUrl + "/sites/" + id, data)
             .then(response => {
-                    api.open({
-                        message: 'Success',
-                        description: 'Data Is updated successfully.'
-                    });
+                    openNotificationWithIcon('success', 'Success', 'Data Is updated successfully.')
                     getAllData();
                     setOpen(false);
                     setDataById(null);
@@ -152,7 +144,7 @@ const Site = () => {
                          onCancel={cancel}
                          okText="Yes"
                          cancelText="No">
-                        <Button danger>Delete</Button>
+                        <a>Delete</a>
                       </Popconfirm>
                 </span>
             ),

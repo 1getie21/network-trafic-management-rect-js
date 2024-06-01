@@ -9,8 +9,11 @@ import Site from "./Site";
 import CheckList from "./Check-list";
 import Request from "./Request";
 import SixMCList from "./6MCList";
+import Ftrafics from "./Ftrafics";
+
 
 const listOfRoles = AuthService?.getRoles();
+
 function Content() {
     return (<div
         style={{
@@ -20,10 +23,10 @@ function Content() {
     >
         <Routes>
             {listOfRoles && listOfRoles.includes("ROLE_ADMIN") && (
-                <Route path="/users" element={<Users />} />
+                <Route path="/users" element={<Users/>}/>
             )}
             <Route path="/traffics" element={<Traffic/>}></Route>
-
+            <Route path="/f-traffics" element={<Ftrafics/>}></Route>
 
 
             <Route path="/failed-traffics" element={<FailedTraffic/>}></Route>

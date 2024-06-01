@@ -309,8 +309,8 @@ const SixMCList = () => {
                                     width: '100%',
                                 }}
                                 placeholder="Please select"
-                                options={sites.map(sites => ({label: sites.name, value: sites.id}))}
-                            />
+                                options={sites?.map(sites => ({label: sites.name, value: sites.id}))}
+                            /> 
                         </Form.Item>
 
 
