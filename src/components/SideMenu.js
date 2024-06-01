@@ -19,6 +19,7 @@ if (listOfRoles && listOfRoles.includes('ROLE_ADMIN')) {
 }
 if (listOfRoles && listOfRoles.includes('ROLE_ADMIN') || listOfRoles.includes('ROLE_MEMBER')) {
     ListOfItems.push(
+
         getItem('daily-traffic-monitoring', 'f-traffics', <UserAddOutlined/>),
         getItem('failed-traffics', 'failed-traffics', <DisconnectOutlined/>),
         getItem('Add site', 'sites', <FileAddOutlined/>),
