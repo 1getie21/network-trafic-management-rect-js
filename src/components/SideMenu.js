@@ -17,6 +17,7 @@ const ListOfItems = [
 if (listOfRoles && listOfRoles.includes('ROLE_ADMIN')) {
     ListOfItems.push(getItem('Users', 'Users', <UserAddOutlined/>));
 }
+
 if (listOfRoles && listOfRoles.includes('ROLE_ADMIN') || listOfRoles.includes('ROLE_MEMBER')) {
     ListOfItems.push(
         getItem('daily-traffic-monitoring', 'f-traffics', <UserAddOutlined/>),
