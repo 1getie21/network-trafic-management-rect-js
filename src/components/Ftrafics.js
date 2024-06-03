@@ -1,6 +1,22 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Col, Divider, Drawer, Form, Input, notification, Popconfirm, Row, Select, Table} from "antd";
+import {
+    Button,
+    Col,
+    Divider,
+    Drawer,
+    Form,
+    Input,
+    notification,
+    Popconfirm,
+    Row,
+    Select,
+    Table,
+    DatePicker,
+    Collapse
+} from "antd";
 import axiosInstance from "../auth/authHeader";
+
+const {RangePicker} = DatePicker;
 
 const Ftraffics = () => {
     const [data, setData] = useState([]);
@@ -13,31 +29,11 @@ const Ftraffics = () => {
     const [trForm] = Form.useForm();
     const [trSearchForm] = Form.useForm();
 
-    const SubmitSearchButton = ({form: trafficSearchForm, children}) => {
-        const [submittable, setSubmittable] = React.useState(false);
-        const [searchSubmittable, setsearchSubmittable] = React.useState(false);
-        const values = Form.useWatch([], trafficSearchForm);
-        React.useEffect(() => {
-            trafficSearchForm.validateFields({
-                validateOnly: true,
-            })
-                .then(() => setsearchSubmittable(true))
-                .catch(() => setsearchSubmittable(false));
-        }, [trafficSearchForm, values]);
-
-        return (
-            <Button type="primary" htmlType="submit" disabled={!searchSubmittable}>
-                {children}
-            </Button>
-        );
-    };
     const SubmitButton = ({form: trafficForm, children}) => {
-        const [submittable, setSubmittable] = React.useState(false);
+        const [submittable, setSubmittable] = useState(false);
         const values = Form.useWatch([], trafficForm);
-        React.useEffect(() => {
-            trafficForm.validateFields({
-                validateOnly: true,
-            })
+        useEffect(() => {
+            trafficForm.validateFields({validateOnly: true})
                 .then(() => setSubmittable(true))
                 .catch(() => setSubmittable(false));
         }, [trafficForm, values]);
@@ -48,7 +44,21 @@ const Ftraffics = () => {
             </Button>
         );
     };
+    const SubmitSearchButton = ({form: trafficSearchForm, children}) => {
+        const [searchSubmittable, setSearchSubmittable] = useState(false);
+        const values = Form.useWatch([], trafficSearchForm);
+        useEffect(() => {
+            trafficSearchForm.validateFields({validateOnly: true})
+                .then(() => setSearchSubmittable(true))
+                .catch(() => setSearchSubmittable(false));
+        }, [trafficSearchForm, values]);
 
+        return (
+            <Button type="primary" htmlType="submit" disabled={!searchSubmittable}>
+                {children}
+            </Button>
+        );
+    };
     const getAllData = () => {
         axiosInstance.get(API_URL + "/f-traffics")
             .then(response => {
@@ -57,95 +67,79 @@ const Ftraffics = () => {
                 },
                 error => {
                     setLoading(false);
-                    openNotificationWithIcon('error', 'Error', error?.message)
+                    openNotificationWithIcon('error', 'Error', error?.message);
                 });
     };
+
     const getDataById = (id) => {
         axiosInstance.get(API_URL + "/f-traffics/" + id)
             .then(response => {
-                    setDataById(response.data)
+                    setDataById(response.data);
                     response.data.sites = response?.data?.sites?.id;
                     trForm.setFieldsValue(response.data);
                 },
                 error => {
-                    openNotificationWithIcon('error', 'Error', error?.message)
+                    openNotificationWithIcon('error', 'Error', error?.message);
                 });
     };
+
     const openNotificationWithIcon = (type, messageTitle, description) => {
         api[type]({
             message: messageTitle,
             description: description,
         });
     };
+
     const confirm = (id) => {
         axiosInstance.delete(API_URL + "/f-traffics/" + id)
             .then(response => {
-                    openNotificationWithIcon('success', 'Success', 'Data Is deleted successfully.')
+                    openNotificationWithIcon('success', 'Success', 'Data Is deleted successfully.');
                     getAllData();
                 },
                 error => {
-                    openNotificationWithIcon('error', 'Error', error?.message)
-                })
+                    openNotificationWithIcon('error', 'Error', error?.message);
+                });
     };
 
     const cancel = (e) => {
     };
 
     const addNewRecord = (values) => {
-        // Ensure only specific members are accepted in the values object
-        // const acceptedMembers = ['timeValues'];
-        // const filteredValues = Object.fromEntries(
-        //     Object.entries(values).filter(([key]) => acceptedMembers.includes(key))
-        // );
-        //
-        // // Validate input values to have two decimal places
-        // for (const [key, value] of Object.entries(filteredValues)) {
-        //     if (acceptedMembers.includes(key) && !/^\d+(\.\d{2})?$/.test(value)) {
-        //         openNotificationWithIcon('error', 'Error', `Please enter a valid number with places for ${key}`);
-        //         return;
-        //     }
-        // }
-
-
         axiosInstance.post(API_URL + "/f-traffics", values)
             .then(response => {
-                openNotificationWithIcon('success', 'Success', 'New Recorded Is added successfully.')
-                getAllData();
-                setOpen(false);
-                setDataById(null);
-            }, error => {
-                if (error?.response?.data?.apierror?.subErrors?.length > 0) {
-                    openNotificationWithIcon('error', 'Error '
-                        , error?.response?.data?.apierror?.message
-                        + " " + error?.response?.data?.apierror?.subErrors[0]?.field + " " + error?.response?.data?.apierror?.subErrors[0]?.message)
-                } else {
-                    openNotificationWithIcon('error',
-                        'Error ~' + error?.response?.data?.apierror?.status
-                        , error?.response?.data?.apierror?.message)
-                }
-            })
-    };
-    const updateRecordById = (data, id) => {
-        axiosInstance.put(API_URL + "/f-traffics/" + id, data)
-            .then(response => {
-                    openNotificationWithIcon('success', 'Success', 'Data Is updated successfully.')
+                    openNotificationWithIcon('success', 'Success', 'New Recorded Is added successfully.');
                     getAllData();
                     setOpen(false);
                     setDataById(null);
-                }
-                , error => {
+                },
+                error => {
                     if (error?.response?.data?.apierror?.subErrors?.length > 0) {
-                        openNotificationWithIcon('error', 'Error '
-                            , error?.response?.data?.apierror?.message
-                            + " " + error?.response?.data?.apierror?.subErrors[0]?.field + " " + error?.response?.data?.apierror?.subErrors[0]?.message)
+                        openNotificationWithIcon('error', 'Error ', error?.response?.data?.apierror?.message
+                            + " " + error?.response?.data?.apierror?.subErrors[0]?.field + " " + error?.response?.data?.apierror?.subErrors[0]?.message);
                     } else {
-                        openNotificationWithIcon('error',
-                            'Error ~' + error?.response?.data?.apierror?.status
-                            , error?.response?.data?.apierror?.message)
+                        openNotificationWithIcon('error', 'Error ~' + error?.response?.data?.apierror?.status, error?.response?.data?.apierror?.message);
                     }
-                }
-            );
+                });
     };
+
+    const updateRecordById = (data, id) => {
+        axiosInstance.put(API_URL + "/f-traffics/" + id, data)
+            .then(response => {
+                    openNotificationWithIcon('success', 'Success', 'Data Is updated successfully.');
+                    getAllData();
+                    setOpen(false);
+                    setDataById(null);
+                },
+                error => {
+                    if (error?.response?.data?.apierror?.subErrors?.length > 0) {
+                        openNotificationWithIcon('error', 'Error ', error?.response?.data?.apierror?.message
+                            + " " + error?.response?.data?.apierror?.subErrors[0]?.field + " " + error?.response?.data?.apierror?.subErrors[0]?.message);
+                    } else {
+                        openNotificationWithIcon('error', 'Error ~' + error?.response?.data?.apierror?.status, error?.response?.data?.apierror?.message);
+                    }
+                });
+    };
+
     const showDrawer = (id) => {
         setDataById(null);
         setOpen(true);
@@ -158,6 +152,7 @@ const Ftraffics = () => {
             setAddNewMode(false);
         }
     };
+
     const handleCHange = (value) => {
         axiosInstance.get(API_URL + "/f-traffics/tr/" + value)
             .then(response => {
@@ -166,43 +161,51 @@ const Ftraffics = () => {
                 },
                 error => {
                     setLoading(false);
-                    openNotificationWithIcon('error', 'Error', error?.message)
+                    openNotificationWithIcon('error', 'Error', error?.message);
                 });
-    }
+    };
+
     const [sites, setSites] = useState([]);
+
     const getAllSites = () => {
         axiosInstance.get(API_URL + "/sites")
             .then(response => {
-                    console.log("response", response)
                     const s = response?.data?._embedded?.sitesDtoses;
                     setSites(s);
                 },
-
                 error => {
-                    openNotificationWithIcon('error', 'Error', error?.message)
+                    openNotificationWithIcon('error', 'Error', error?.message);
                 });
     };
+
     const onSearchSubmitClick = (values) => {
-        values.sites = {"id": values.sites}
-        console.log("values=", values)
-        if (addNewMode) {
-            addNewRecord(values);
-        } else {
-            updateRecordById(values, dataById.id);
-        }
+        const fromDate = values.from[0].format('YYYY-MM-DD');
+        const toDate = values.from[1].format('YYYY-MM-DD');
+
+        axiosInstance.get(`${API_URL}/f-traffics/${fromDate}/${toDate}`)
+            .then(response => {
+                setData(response?.data?._embedded?.fTrafficDtoses);
+                setLoading(false);
+            })
+            .catch(error => {
+                setLoading(false);
+                openNotificationWithIcon('error', 'Error', error?.message);
+            });
     };
+
     const onSearchFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
+
     const onSubmitClick = (values) => {
-        values.sites = {"id": values.sites}
-        console.log("values=", values)
+        values.sites = {"id": values.sites};
         if (addNewMode) {
             addNewRecord(values);
         } else {
             updateRecordById(values, dataById.id);
         }
     };
+
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
@@ -210,8 +213,7 @@ const Ftraffics = () => {
     useEffect(() => {
         getAllData();
         getAllSites();
-    }, []); // empty dependency array means this effect runs only once, similar to componentDidMount
-
+    }, []);
 
     const columns = [
         {
@@ -236,13 +238,12 @@ const Ftraffics = () => {
             dataIndex: 'timeValues',
             key: 'timeValues',
         },
-
-
         {
             title: 'Created By',
             dataIndex: 'createdBy',
             key: 'createdBy',
-        }, {
+        },
+        {
             title: 'Created At',
             dataIndex: 'createdAt',
             key: 'createdAt',
@@ -253,30 +254,24 @@ const Ftraffics = () => {
                     month: 'short',
                     day: '2-digit',
                     hour: '2-digit',
-
                     minute: '2-digit',
                     second: '2-digit'
                 };
                 const formattedDate = date.toLocaleDateString('en-US', options);
                 return <span>{formattedDate}</span>;
             },
-
         },
         {
             title: 'Remark',
             dataIndex: 'remark',
             key: 'remark',
         },
-
         {
             title: 'Action',
             key: 'action',
             render: (text, record) => (
                 <span>
-                {/* eslint-disable jsx-a11y/anchor-is-valid */}
                     <a onClick={() => showDrawer(record.id)}>Update</a>
-                    {/* eslint-enable jsx-a11y/anchor-is-valid */}
-
                     <Divider type="vertical"/>
                     <Popconfirm
                         title="Delete the task"
@@ -286,76 +281,83 @@ const Ftraffics = () => {
                         okText="Yes"
                         cancelText="No"
                     >
-    <Button danger>Delete</Button>
-  </Popconfirm>
-
-                    {/* eslint-disable jsx-a11y/anchor-is-valid*/}
-                    {/*<a onClick={() => deleteById(record.id)}>Delete</a>*/}
-                    {/* eslint-enable jsx-a11y/anchor-is-valid */}
+                        <Button danger>Delete</Button>
+                    </Popconfirm>
                 </span>
             ),
         },
     ];
+
     return (
         <>
             {contextHolder}
             <Row justify="end" style={{marginBottom: 16}}>
-                <Col>
-                    <Form
-                        name="validateOnly"
-                        layout="horizontal"
-                        onFinish={onSearchSubmitClick}
-                        onFinishFailed={onSearchFinishFailed}
-                    >
-                        <Row>
-                            <Col>
-                                <Form.Item
-                                    label="From"
-                                    name="from"
-                                >
-                                    <input/>
-                                </Form.Item>
-                            </Col>
-                            <Col>
-                                <Form.Item
-                                    label="To"
-                                    name="to"
-                                >
-                                    <input/>
-                                </Form.Item>
-                            </Col>
-                            <Col>
-                                <Form.Item>
-                                    {/*<Button type="primary" htmlType="submit" form={form}>Submit</Button>*/}
-                                    <SubmitSearchButton form={trSearchForm}>Submit</SubmitSearchButton>
-                                </Form.Item>
-                            </Col>
-                        </Row>
-                    </Form>
-                </Col>
-                <Col>
-                    <Select
-                        onChange={handleCHange}
-                        showSearch
-                        placeholder="Select a time traffic"
-                        optionFilterProp="children"
-                        options={[
+                <Col span={10}>
+                    <Collapse
+                        items={[
                             {
-                                value: '8 O\'clock',
-                                label: '8 O\'clock',
-                            },
-                            {
-                                value: '14 O\'clock',
-                                label: '14 O\'clock',
-                            },
-                            {
-                                value: '18 O\'clock',
-                                label: '18 O\'clock',
+                                key: '1',
+                                label: 'FIlter By Date Range',
+                                children:
+                                    <Form
+                                        name="validateOnly"
+                                        layout="horizontal"
+                                        onFinish={onSearchSubmitClick}
+                                        onFinishFailed={onSearchFinishFailed}
+                                    >
+                                        <Row>
+                                            <Col>
+                                                <Form.Item
+                                                    name="from"
+                                                    rules={[
+                                                        {
+                                                            type: 'array',
+                                                            required: true,
+                                                            message: 'Please select the date range!'
+                                                        }
+                                                    ]}
+                                                >
+                                                    <RangePicker />
+                                                </Form.Item>
+                                            </Col>
+                                            <Col>
+                                                <Form.Item>
+                                                    <Button type="primary" htmlType="submit">Submit</Button>
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    </Form>
+                                ,
                             },
                         ]}
                     />
                 </Col>
-                <Col>
+                <Col span={1}></Col>
+                <Col span={9}>
+                    <Collapse
+                        items={[
+                            {
+                                key: '1',
+                                label: 'FIlter By Traffic TIme NAme',
+                                children:
+                                    <Select
+                                        onChange={handleCHange}
+                                        showSearch
+                                        placeholder="Select a time traffic"
+                                        optionFilterProp="children"
+                                        options={[
+                                            {value: '8 O\'clock', label: '8 O\'clock'},
+                                            {value: '14 O\'clock', label: '14 O\'clock'},
+                                            {value: '18 O\'clock', label: '18 O\'clock'},
+                                        ]}
+                                    />
+                                ,
+                            },
+                        ]}
+                    />
+
+                </Col>
+                <Col span={4}>
                     <Button onClick={() => showDrawer(undefined)}>Add New Traffic</Button>
                 </Col>
             </Row>
@@ -383,9 +385,7 @@ const Ftraffics = () => {
                         >
                             <Select
                                 allowClear
-                                style={{
-                                    width: '100%',
-                                }}
+                                style={{width: '100%'}}
                                 placeholder="Please select"
                                 options={sites?.map(sites => ({label: sites.name, value: sites.id}))}
                             />
@@ -398,26 +398,17 @@ const Ftraffics = () => {
                                 placeholder="Select a time trafic"
                                 optionFilterProp="children"
                                 options={[
-                                    {
-                                        value: '8 O\'clock',
-                                        label: '8 O\'clock',
-                                    },
-                                    {
-                                        value: '14 O\'clock',
-                                        label: '14 O\'clock',
-                                    },
-                                    {
-                                        value: '18 O\'clock',
-                                        label: '18 O\'clock',
-                                    },
+                                    {value: '8 O\'clock', label: '8 O\'clock'},
+                                    {value: '14 O\'clock', label: '14 O\'clock'},
+                                    {value: '18 O\'clock', label: '18 O\'clock'},
                                 ]}
                             />
                         </Form.Item>
-
                         <Form.Item
                             label="Values"
                             name="timeValues"
-                            rules={[{required: true, message: 'Please input Values !'},
+                            rules={[
+                                {required: true, message: 'Please input Values !'},
                                 {pattern: /^[0-9]+(\.[0-9]+)?$/, message: 'Please enter a valid number for Values !'}
                             ]}
                         >
@@ -431,7 +422,6 @@ const Ftraffics = () => {
                             <Input/>
                         </Form.Item>
                         <Form.Item>
-                            {/*<Button type="primary" htmlType="submit" form={form}>Submit</Button>*/}
                             <SubmitButton form={trForm}>Submit</SubmitButton>
                         </Form.Item>
                     </Form>

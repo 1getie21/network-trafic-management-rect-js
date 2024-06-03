@@ -318,7 +318,6 @@ const FailedTraffics = () => {
         },
     ];
 
-
     return (
         <>
             {contextHolder}
