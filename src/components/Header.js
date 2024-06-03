@@ -7,7 +7,7 @@ import AuthService from "../auth/AuthService ";
 const Header = () => {
     const [openDrawer, setOpenDrawer] = useState(false);
     const isLoggedIn = AuthService.getCurrentUser();
-    const API_URL ="http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+    const API_URL ="http://localhost:8080";
 
     const handleLogout = () => {
         AuthService.logout();

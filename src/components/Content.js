@@ -11,31 +11,33 @@ import SixMCList from "./6MCList";
 import Ftraffics from "./Ftrafics";
 
 const listOfRoles = AuthService?.getRoles();
+
+// Content component
 function Content() {
-    return (<div
-        style={{
-            width: '100%',
-            margin: '10px'
-        }}
-    >
-        <Routes>
-            {listOfRoles && listOfRoles.includes("ROLE_ADMIN") && (
-                <Route path="/users" element={<Users />} />
-            )}
-            <Route path="/traffics" element={<Traffic/>}></Route>
-
-
-            <Route path="/f-traffics" element={<Ftraffics/>}></Route>
-            <Route path="/failed-traffics" element={<FailedTraffic/>}></Route>
-           {/*<Route path="/" element={<Traffic/>}></Route>>*/}
-            <Route path="/CheckList" element={<CheckList/>}></Route>
-            <Route path="/request" element={<Request/>}></Route>
-            <Route path="/sixmclist" element={<SixMCList/>}></Route>
-            <Route path="/sites" element={<Site/>}></Route>
-
-
-        </Routes>
-    </div>)
+    return (
+        <div
+            style={{
+                width: '100%',
+                margin: '10px'
+            }}
+        >
+            <Routes>
+                {listOfRoles && (listOfRoles.includes("ROLE_ADMIN") || listOfRoles.includes("ROLE_MEMBER")) && (
+                    <>
+                        <Route path="/f-traffics" element={<Ftraffics/>}></Route>
+                        <Route path="/failed-traffics" element={<FailedTraffic/>}></Route>
+                        <Route path="/CheckList" element={<CheckList/>}></Route>
+                        <Route path="/sixmclist" element={<SixMCList/>}></Route>
+                        <Route path="/sites" element={<Site/>}></Route>
+                    </>
+                )}
+                {listOfRoles && listOfRoles.includes("ROLE_ADMIN") && (
+                    <Route path="/users" element={<Users/>}/>
+                )}
+                <Route path="/request" element={<Request/>}></Route>
+            </Routes>
+        </div>
+    );
 }
 
 export default Content;

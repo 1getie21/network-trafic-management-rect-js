@@ -23,7 +23,7 @@ const FailedTraffics = () => {
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+    const API_URL = "http://localhost:8080";
     const [trForm] = Form.useForm();
 
     const [sites, setSites] = useState([]);
@@ -142,11 +142,13 @@ const FailedTraffics = () => {
         axiosInstance.get(API_URL + "/sites?page=" + page + "&size=" + 10)
             .then(response => {
                     const newSites = response?.data?._embedded?.sitesDtoses;
-                    const totalPage = response?.data?.page?.totalPages;
-                    setSites(prevSites => [...prevSites, ...newSites]);
-                    setSitesLoading(false);
-                    if (page === totalPage - 1) {
-                        setHasMoreSites(false);
+                    if (newSites) {
+                        const totalPage = response?.data?.page?.totalPages;
+                        setSites(prevSites => [...prevSites, ...newSites]);
+                        setSitesLoading(false);
+                        if (page === totalPage - 1) {
+                            setHasMoreSites(false);
+                        }
                     }
 
                 },
@@ -353,7 +355,7 @@ const FailedTraffics = () => {
                                     width: '100%',
                                 }}
                                 placeholder="Please select"
-                                options={sites.map(sites => ({label: sites.name, value: sites.id}))}
+                                options={sites?.map(sites => ({label: sites?.name, value: sites?.id}))}
                                 onPopupScroll={handlePopupScroll}
                                 loading={sitesLoading}
                             />
