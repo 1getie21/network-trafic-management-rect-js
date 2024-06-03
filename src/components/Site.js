@@ -22,7 +22,7 @@ const Site = () => {
         });
     };
     const getAllData = () => {
-        axiosInstance.get(apiUrl + "/sites")
+        axiosInstance.get(API_URL + "/sites")
             .then(response => {
                     setData(response?.data?._embedded?.sitesDtoses);
                     setLoading(false);
@@ -35,7 +35,7 @@ const Site = () => {
     };
 
     const getDataById = (id) => {
-        axiosInstance.get(apiUrl + "/sites/" + id)
+        axiosInstance.get(API_URL + "/sites/" + id)
             .then(response => {
                     setDataById(response?.data);
                 },
@@ -46,7 +46,7 @@ const Site = () => {
     };
 
     const deleteById = (id) => {
-        axiosInstance.delete(apiUrl + "/sites/" + id)
+        axiosInstance.delete(API_URL + "/sites/" + id)
             .then(response => {
                     api.open({
                         message: 'Success',
@@ -61,7 +61,7 @@ const Site = () => {
     };
 
     const addNewRecord = (values) => {
-        axiosInstance.post(apiUrl + "/sites", values)
+        axiosInstance.post(API_URL + "/sites", values)
             .then(response => {
                     api.open({
                         message: 'Success',
@@ -78,7 +78,7 @@ const Site = () => {
             );
     };
     const updateRecordById = (data, id) => {
-        axiosInstance.put(apiUrl + "/sites/" + id, data)
+        axiosInstance.put(API_URL + "/sites/" + id, data)
             .then(response => {
                     api.open({
                         message: 'Success',
