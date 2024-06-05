@@ -225,7 +225,7 @@ const FailedTraffics = () => {
             key: 'failedLinkType',
         },
         {
-            title: 'Reported time',
+            title: 'ReportededAt',
             dataIndex: 'createdAt',
             key: 'createdAt',
             render: (text) => {
@@ -243,7 +243,7 @@ const FailedTraffics = () => {
             },
         },
         {
-            title: 'Name of reporter',
+            title: 'Reporter',
             dataIndex: 'createdBy',
             key: 'createdBy',
         },
@@ -271,7 +271,7 @@ const FailedTraffics = () => {
             },
         },
         {
-            title: 'The time when it was failed',
+            title: 'FailedAt',
             dataIndex: 'disConnectedAt',
             key: 'disConnectedAt',
             render: (text) => {
@@ -289,7 +289,7 @@ const FailedTraffics = () => {
             },
         },
         {
-            title: 'Failed time length',
+            title: 'Failed length',
             dataIndex: 'failureLength',
             key: 'failureLength',
         },
@@ -303,9 +303,8 @@ const FailedTraffics = () => {
             key: 'action',
             render: (text, record) => (
                 <span>
-                   <a onClick={() => showDrawer(record.id)}>
-                       
-<EditOutlined/>
+                   <a onClick={() => showDrawer(record.id)}> 
+                    <EditOutlined/>
                    </a>
                    <Divider type="vertical"/>
                    <Popconfirm
