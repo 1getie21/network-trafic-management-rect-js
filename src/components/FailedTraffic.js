@@ -15,6 +15,7 @@ import {
 } from "antd";
 import axiosInstance from "../auth/authHeader";
 import dayjs from "dayjs";
+import {CloudDownloadOutlined, EditOutlined, DeleteOutlined} from "@ant-design/icons";
 
 const FailedTraffics = () => {
     const [data, setData] = useState([]);
@@ -302,7 +303,10 @@ const FailedTraffics = () => {
             key: 'action',
             render: (text, record) => (
                 <span>
-                   <a onClick={() => showDrawer(record.id)}>Update</a>
+                   <a onClick={() => showDrawer(record.id)}>
+                       
+<EditOutlined/>
+                   </a>
                    <Divider type="vertical"/>
                    <Popconfirm
                        title="Delete the task"
@@ -312,7 +316,9 @@ const FailedTraffics = () => {
                        okText="Yes"
                        cancelText="No"
                    >
-                       <Button danger>Delete</Button>
+                       <a danger>
+                        <DeleteOutlined/>
+                       </a>
                    </Popconfirm>
                </span>
             ),

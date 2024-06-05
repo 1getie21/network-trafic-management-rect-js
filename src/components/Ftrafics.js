@@ -16,7 +16,7 @@ import {
 } from "antd";
 import axiosInstance from "../auth/authHeader";
 
-import {CloudDownloadOutlined} from "@ant-design/icons";
+import {CloudDownloadOutlined, EditOutlined, DeleteOutlined} from "@ant-design/icons";
 
 const {RangePicker} = DatePicker;
 
@@ -184,7 +184,7 @@ const Ftraffics = () => {
     const onSearchSubmitClick = (values) => {
         const fromDate = values.from[0].format('YYYY-MM-DD');
         const toDate = values.from[1].format('YYYY-MM-DD');
-        setDate('/'+fromDate+'/'+toDate);
+        setDate('/' + fromDate + '/' + toDate);
         axiosInstance.get(`${API_URL}/f-traffics/${fromDate}/${toDate}`)
             .then(response => {
                 setData(response?.data?._embedded?.fTrafficDtoses);
@@ -274,7 +274,9 @@ const Ftraffics = () => {
             key: 'action',
             render: (text, record) => (
                 <span>
-                    <a onClick={() => showDrawer(record.id)}>Update</a>
+                    <a onClick={() => showDrawer(record.id)}>
+                        <EditOutlined/>
+                    </a>
                     <Divider type="vertical"/>
                     <Popconfirm
                         title="Delete the task"
@@ -284,7 +286,9 @@ const Ftraffics = () => {
                         okText="Yes"
                         cancelText="No"
                     >
-                        <Button danger>Delete</Button>
+                        <a danger>
+                        <DeleteOutlined/>
+                        </a>
                     </Popconfirm>
                 </span>
             ),
@@ -330,7 +334,7 @@ const Ftraffics = () => {
                                             </Col>
                                             <Col>
                                                 <Form.Item>
-                                                    <a target="_blank" href={API_URL + "/api/pdf"+date}>
+                                                    <a target="_blank" href={API_URL + "/api/pdf" + date}>
                                                         <CloudDownloadOutlined/>
                                                     </a>
                                                 </Form.Item>

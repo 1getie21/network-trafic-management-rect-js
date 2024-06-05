@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {Button, Col, Divider, Drawer, Form, Input, notification, Popconfirm, Row, Select, Table} from "antd";
 import axiosInstance from "../auth/authHeader";
 
+import {CloudDownloadOutlined, EditOutlined, DeleteOutlined} from "@ant-design/icons";
+
 const Users = () => {
     const [data, setData] = useState([]);
     const [role, setRole] = useState([]);
@@ -206,20 +208,24 @@ const Users = () => {
             render: (text, record) => (
                 <span>
                 {/* eslint-disable jsx-a11y/anchor-is-valid */}
-                    <a onClick={() => showUserDrawer(record.id)}>Update</a>
+                    <a onClick={() => showUserDrawer(record.id)}>
+                        <EditOutlined/>
+                    </a>
                     {/* eslint-enable jsx-a11y/anchor-is-valid */}
 
                     <Divider type="vertical"/>
                            <Popconfirm
                                title="Delete the task"
                                description="Are you sure to delete this task?"
-                               onConfirm={()=>confirm(record.id)}
+                               onConfirm={() => confirm(record.id)}
                                onCancel={cancel}
                                okText="Yes"
                                cancelText="No"
                            >
-    <Button danger>Delete</Button>
-  </Popconfirm>
+                    <a danger>
+                         <DeleteOutlined/>
+                    </a>
+                </Popconfirm>
 
                     {/* eslint-disable jsx-a11y/anchor-is-valid */}
                     {/*<a onClick={() => deleteById(record.id)}>Delete</a>*/}

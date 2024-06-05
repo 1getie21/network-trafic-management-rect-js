@@ -15,6 +15,8 @@ import {
 import axiosInstance from "../auth/authHeader";
 import dayjs from "dayjs";
 
+import {CloudDownloadOutlined, EditOutlined, DeleteOutlined} from "@ant-design/icons";
+
 const SixMCList = () => {
     const [data, setData] = useState([]);
     const [dataById, setDataById] = useState(null);
@@ -119,7 +121,7 @@ const SixMCList = () => {
             );
     };
     const showDrawer = (id) => {
-        console.log("id=",id)
+        console.log("id=", id)
         setDataById(null);
         setOpen(true);
         trForm.resetFields();
@@ -268,7 +270,9 @@ const SixMCList = () => {
             render: (text, record) => (
                 <span>
                 {/* eslint-disable jsx-a11y/anchor-is-valid */}
-                    <a onClick={() => showDrawer(record.id)}>Update</a>
+                    <a onClick={() => showDrawer(record.id)}>
+                        <EditOutlined/>
+                    </a>
                     {/* eslint-enable jsx-a11y/anchor-is-valid */}
 
                     <Divider type="vertical"/>
@@ -282,7 +286,9 @@ const SixMCList = () => {
                         okText="Yes"
                         cancelText="No"
                     >
-    <Button danger>Delete</Button>
+    <a danger>
+        <DeleteOutlined/>
+    </a>
   </Popconfirm>
                     {/*<a onClick={() => deleteById(record.id)}>Delete</a>*/}
                     {/* eslint-enable jsx-a11y/anchor-is-valid */}
@@ -329,7 +335,7 @@ const SixMCList = () => {
                                 }}
                                 placeholder="Please select"
                                 options={sites?.map(sites => ({label: sites.name, value: sites.id}))}
-                            /> 
+                            />
                         </Form.Item>
 
 
@@ -354,116 +360,116 @@ const SixMCList = () => {
                                 ]}
                             />
                         </Form.Item>
-                            <Form.Item label="fiber" name="fiber">
-                                <Select
-                                    showSearch
-                                    placeholder="Select a fiber"
-                                    optionFilterProp="children"
-                                    options={[
-                                        {
-                                            value: 'Labeled',
-                                            label: 'Labeled',
-                                        },
-                                        {
-                                            value: 'Transmission loss',
-                                            label: 'Transmission loss',
-                                        },
-                                    ]}
-                                />
-                            </Form.Item>
+                        <Form.Item label="fiber" name="fiber">
+                            <Select
+                                showSearch
+                                placeholder="Select a fiber"
+                                optionFilterProp="children"
+                                options={[
+                                    {
+                                        value: 'Labeled',
+                                        label: 'Labeled',
+                                    },
+                                    {
+                                        value: 'Transmission loss',
+                                        label: 'Transmission loss',
+                                    },
+                                ]}
+                            />
+                        </Form.Item>
 
-                            <Form.Item
-                                label="rack"
-                                name="rack"
-                                rules={[{
-                                    required: true,
-                                    message: 'Please input rack !'
-                                }]}
-                            >
-                                <Input/>
-                            </Form.Item>
+                        <Form.Item
+                            label="rack"
+                            name="rack"
+                            rules={[{
+                                required: true,
+                                message: 'Please input rack !'
+                            }]}
+                        >
+                            <Input/>
+                        </Form.Item>
 
-                            <Form.Item label="opd" name="opd">
-                                <Select
-                                    showSearch
-                                    placeholder="Select a opd"
-                                    optionFilterProp="children"
-                                    options={[
-                                        {
-                                            value: 'Normal',
-                                            label: 'Normal',
-                                        },
-                                        {
-                                            value: 'Need Replacement',
-                                            label: 'Need Replacement',
-                                        },
-                                    ]}
-                                />
-                            </Form.Item>
+                        <Form.Item label="opd" name="opd">
+                            <Select
+                                showSearch
+                                placeholder="Select a opd"
+                                optionFilterProp="children"
+                                options={[
+                                    {
+                                        value: 'Normal',
+                                        label: 'Normal',
+                                    },
+                                    {
+                                        value: 'Need Replacement',
+                                        label: 'Need Replacement',
+                                    },
+                                ]}
+                            />
+                        </Form.Item>
 
-                            <Form.Item label="switch" name="switch">
-                                <Select
-                                    showSearch
-                                    placeholder="Select a opd"
-                                    optionFilterProp="children"
-                                    options={[
-                                        {
-                                            value: 'Normal',
-                                            label: 'Normal',
-                                        },
-                                        {
-                                            value: 'Abnormal',
-                                            label: 'Abnormal',
-                                        },
-                                    ]}/>
-                            </Form.Item>
-                            <Form.Item label="t9140" name="t9140">
-                                <Select
-                                    showSearch
-                                    placeholder="Select a opd"
-                                    optionFilterProp="children"
-                                    options={[
-                                        {
-                                            value: 'Normal',
-                                            label: 'Normal',
-                                        },
-                                        {
-                                            value: 'Abnormal',
-                                            label: 'Abnormal',
-                                        },
-                                    ]}/>
-                            </Form.Item>
-                            <Form.Item label="server" name="server">
-                                <Select
-                                    showSearch
-                                    placeholder="Select a opd"
-                                    optionFilterProp="children"
-                                    options={[
-                                        {
-                                            value: 'Normal',
-                                            label: 'Normal',
-                                        },
-                                        {
-                                            value: 'Abnormal',
-                                            label: 'Abnormal',
-                                        },
-                                    ]}/>
-                            </Form.Item>
+                        <Form.Item label="switch" name="switch">
+                            <Select
+                                showSearch
+                                placeholder="Select a opd"
+                                optionFilterProp="children"
+                                options={[
+                                    {
+                                        value: 'Normal',
+                                        label: 'Normal',
+                                    },
+                                    {
+                                        value: 'Abnormal',
+                                        label: 'Abnormal',
+                                    },
+                                ]}/>
+                        </Form.Item>
+                        <Form.Item label="t9140" name="t9140">
+                            <Select
+                                showSearch
+                                placeholder="Select a opd"
+                                optionFilterProp="children"
+                                options={[
+                                    {
+                                        value: 'Normal',
+                                        label: 'Normal',
+                                    },
+                                    {
+                                        value: 'Abnormal',
+                                        label: 'Abnormal',
+                                    },
+                                ]}/>
+                        </Form.Item>
+                        <Form.Item label="server" name="server">
+                            <Select
+                                showSearch
+                                placeholder="Select a opd"
+                                optionFilterProp="children"
+                                options={[
+                                    {
+                                        value: 'Normal',
+                                        label: 'Normal',
+                                    },
+                                    {
+                                        value: 'Abnormal',
+                                        label: 'Abnormal',
+                                    },
+                                ]}/>
+                        </Form.Item>
 
-                            <Form.Item
-                                label="routine"
-                                name="routine"
-                                rules={[{required: true, message: 'Please input routine!'}]}
-                            >
-                                <Input/>
-                            </Form.Item>
-                            {/*<Button type="primary" htmlType="submit" form={form}>Submit</Button>*/}
-                            <SubmitButton form={trForm}>Submit</SubmitButton>
+                        <Form.Item
+                            label="routine"
+                            name="routine"
+                            rules={[{required: true, message: 'Please input routine!'}]}
+                        >
+                            <Input/>
+                        </Form.Item>
+                        {/*<Button type="primary" htmlType="submit" form={form}>Submit</Button>*/}
+                        <SubmitButton form={trForm}>Submit</SubmitButton>
                     </Form>
-                    )}
-                    </Drawer>
-                    </>
-                    );
-                };
+                )}
+            </Drawer>
+        </>
+    );
+};
 
-                export default SixMCList;
+export default SixMCList;

@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Button, Col, Divider, Drawer, Form, Input, notification, Popconfirm, Row, Table} from "antd";
 import axiosInstance from "../auth/authHeader";
 
+import {CloudDownloadOutlined, EditOutlined, DeleteOutlined} from "@ant-design/icons";
 const Site = () => {
     const [data, setData] = useState([]);
     const [dataById, setDataById] = useState(null);
@@ -161,8 +162,10 @@ const Site = () => {
             key: 'action',
             render: (text, record) => (
                 <span>
-                    {/* eslint-disable jsx-a11y/anchor-is-valid */}
-                    <a onClick={() => showDrawer(record.id)}>Update</a>
+                    {/* eslint-disable jsx-a11y/anchor-is-valid */} 
+                    <a onClick={() => showDrawer(record.id)}>
+                        <EditOutlined/>
+                    </a>
                     {/* eslint-enable jsx-a11y/anchor-is-valid */}
                     <Divider type="vertical"/>
                      <Popconfirm
@@ -172,7 +175,9 @@ const Site = () => {
                          onCancel={cancel}
                          okText="Yes"
                          cancelText="No">
-                        <Button danger>Delete</Button>
+                        <a danger>
+                        <DeleteOutlined/>
+                        </a>
                       </Popconfirm>
                 </span>
             ),
