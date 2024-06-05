@@ -1,18 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
-    Button,
-    Col,
-    Divider,
-    Drawer,
-    Form,
-    Input,
-    notification,
-    Popconfirm,
-    Row,
-    Select,
-    Table,
-    DatePicker,
-    Collapse
+    Button, Col, Divider, Drawer, Form, Input, notification, Popconfirm, Row, Select, Table, DatePicker, Collapse
 } from "antd";
 import axiosInstance from "../auth/authHeader";
 
@@ -294,8 +282,8 @@ const Ftraffics = () => {
     return (
         <>
             {contextHolder}
-            <Row justify="end" style={{marginBottom: 16}}>
-                <Col span={10}>
+            <Row gutter={[16, 16]} justify="end" style={{marginBottom: 14}}>
+                <Col span={6}>
                     <Collapse
                         items={[
                             {
@@ -328,22 +316,49 @@ const Ftraffics = () => {
                                                     <Button type="primary" htmlType="submit">Submit</Button>
                                                 </Form.Item>
                                             </Col>
+                                            {/*<Col>*/}
+                                            {/*    <Form.Item>*/}
+                                            {/*        <a target="_blank" href={API_URL + "/api/pdf"+date}>*/}
+                                            {/*            <CloudDownloadOutlined/>*/}
+                                            {/*        </a>*/}
+                                            {/*    </Form.Item>*/}
+                                            {/*</Col>*/}
+                                        </Row>
+                                    </Form>
+                            },
+                        ]}
+                    />
+                </Col>
+                <Col span={6}>
+                    <Collapse
+                        items={[
+                            {
+                                key: '1',
+                                label: 'Download File',
+                                children: (
+                                    <Form
+                                        name="validateOnly"
+                                        layout="horizontal"
+                                        onFinish={onSearchSubmitClick}
+                                        onFinishFailed={onSearchFinishFailed}
+                                    >
+                                        <Row>
                                             <Col>
-                                                <Form.Item>
-                                                    <a target="_blank" href={API_URL + "/api/pdf"+date}>
+                                                <Form.Item name="download-file"> {/* Add a name for the Form.Item */}
+                                                    <a target="_blank" href={API_URL + "/api/pdf" + date}>
                                                         <CloudDownloadOutlined/>
                                                     </a>
                                                 </Form.Item>
                                             </Col>
                                         </Row>
                                     </Form>
-                                ,
+                                )
                             },
                         ]}
                     />
                 </Col>
                 <Col span={1}></Col>
-                <Col span={9}>
+                <Col span={6}>
                     <Collapse
                         items={[
                             {
@@ -372,7 +387,7 @@ const Ftraffics = () => {
                 </Col>
             </Row>
             <Row>
-                <Col span={24}>
+                <Col span={20}>
                     <Table loading={loading} columns={columns} dataSource={data} rowKey="id"/>
                 </Col>
             </Row>

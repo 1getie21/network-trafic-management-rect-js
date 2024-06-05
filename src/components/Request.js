@@ -418,25 +418,25 @@ const Request = () => {
                             <Input.TextArea placeholder="Enter text or upload a file"/>
                         </Form.Item>
 
-                        {/* Option to upload a file */}
                         <Form.Item
-                            label="Upload Description File">
-                            <Input onChange={handleFileChange} type="file"/>
+                            label="Upload Description File"
+                            name="descriptionFile"
+                        >
+                            <input type="file" onChange={handleFileChange} />
                         </Form.Item>
 
-<<<<<<< HEAD
-                        <Form.Item
-                            label="Detail"
-                            name="detail">
-                            <Input.TextArea placeholder="Enter text or upload a file"/>
-                        </Form.Item>
+                        {/*<Form.Item*/}
+                        {/*    label="Detail"*/}
+                        {/*    name="detail">*/}
+                        {/*    <Input.TextArea placeholder="Enter text or upload a file"/>*/}
+                        {/*</Form.Item>*/}
 
-                        {/* Option to upload a file */}
-                        <Form.Item
-                            label="Upload Detail File">
-                            <Input onChange={handleFileChange2} type="file"/>
-                        </Form.Item>
-=======
+                        {/*/!* Option to upload a file *!/*/}
+                        {/*<Form.Item*/}
+                        {/*    label="Upload Detail File">*/}
+                        {/*    <Input onChange={handleFileChange2} type="file"/>*/}
+                        {/*</Form.Item>*/}
+
 
                         <Form.Item label="status" name="status">
                             <Select
@@ -460,7 +460,6 @@ const Request = () => {
                             />
                         </Form.Item>
 
->>>>>>> b0d732c8b0dbb20c7d54afb7b77d732c47149149
                         {/*<Button type="primary" htmlType="submit" form={form}>Submit</Button>*/}
                         <SubmitButton form={trForm}>Submit</SubmitButton>
                     </Form>
