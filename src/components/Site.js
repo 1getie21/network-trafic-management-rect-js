@@ -21,19 +21,36 @@ const Site = () => {
             description: description,
         });
     };
-    const getAllData = () => {
-        axiosInstance.get(API_URL + "/sites")
-            .then(response => {
-                    setData(response?.data?._embedded?.sitesDtoses);
-                    setLoading(false);
-                },
-                error => {
-                    setLoading(false);
-                    openNotificationWithIcon('error', 'Error', error?.message)
-                }
-            );
-    };
+    // const getAllData = () => {
+    //     axiosInstance.get(API_URL + "/sites")
+    //         .then(response => {
+    //                 setData(response?.data?._embedded?.sitesDtoses);
+    //                 setLoading(false);
+    //             },
+    //             error => {
+    //                 setLoading(false);
+    //                 openNotificationWithIcon('error', 'Error', error?.message)
+    //             }
+    //         );
+    // };
 
+    const getAllData = () => {
+        axiosInstance.get(API_URL + "/sites?sort=name,asc")
+            .then(response => {
+                const sortedData = response?.data?._embedded?.sitesDtoses.map(site => ({
+                    ...site,
+                    mainName: site.name.replace(/(IGW|PE)\s+/g, '') // Extract main part of name, ignoring prefixes
+                })).sort((a, b) => a.mainName.localeCompare(b.mainName));
+                console.log("Sorted data:", sortedData);
+                setData(sortedData);
+                setLoading(false);
+            })
+            .catch(error => {
+                setLoading(false);
+                openNotificationWithIcon('error', 'Error', error?.message)
+            });
+    };
+    
     const getDataById = (id) => {
         axiosInstance.get(API_URL + "/sites/" + id)
             .then(response => {

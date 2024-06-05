@@ -1,16 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {
-    Button,
-    Col,
-    Divider,
-    Drawer,
-    Form,
-    Input,
-    notification,
-    Popconfirm,
-    Row,
-    Select,
-    Table
+import {Button, Col,Divider,Drawer,  Form, Input,notification,Popconfirm, Row, Select,Table
+
 } from "antd";
 import axiosInstance from "../auth/authHeader";
 import {CloudDownloadOutlined} from "@ant-design/icons";
@@ -26,14 +16,16 @@ const Request = () => {
     const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [trForm] = Form.useForm();
     const [selectedFile1, setSelectedFile1] = useState(null);
-    const [selectedFile2, setSelectedFile2] = useState(null);
+    //const [selectedFile2, setSelectedFile2] = useState(null);
 
     const handleFileChange = (event) => {
         setSelectedFile1(event.target.files[0]);
     };
-    const handleFileChange2 = (event) => {
-        setSelectedFile2(event.target.files[0]);
-    };
+    // const handleFileChange2 = (event) => {
+    //     setSelectedFile2(event.target.files[0]);
+    // };
+
+
     const SubmitButton = ({form: trafficForm, children}) => {
         const [submittable, setSubmittable] = React.useState(false);
         const values = Form.useWatch([], trafficForm);
@@ -69,8 +61,7 @@ const Request = () => {
                     setDataById(response.data);
                     trForm.setFieldsValue(response.data);
 
-                    setSelectedFile1(null); // Clear selectedFile1
-                    setSelectedFile2(null); // Clear selectedFile2
+
                 },
                 error => {
                     openNotificationWithIcon('error', 'Error', error?.message)
@@ -83,30 +74,11 @@ const Request = () => {
             description: description,
         });
     };
-    const handleRequestError = (error) => {
-        if (error?.response?.data?.apierror?.subErrors?.length > 0) {
-            openNotificationWithIcon(
-                'error',
-                'Error ',
-                error?.response?.data?.apierror?.message +
-                " " + error?.response?.data?.apierror?.subErrors[0]?.field +
-                " " + error?.response?.data?.apierror?.subErrors[0]?.message
-            );
-        } else if (error?.response?.data?.apierror?.status !== undefined) {
-            openNotificationWithIcon(
-                'error',
-                'Error ~' + error?.response?.data?.apierror?.status,
-                error?.response?.data?.apierror?.message
-            );
-        } else {
-            openNotificationWithIcon('error', 'Error', error?.message || 'Unknown Error');
-        }
-    };
     const addNewRecord = (values) => {
         const formData = new FormData();
         formData.append('file', selectedFile1);
-        formData.append('file2', selectedFile2);
-        axiosInstance.post('http://localhost:8080/files', formData, {
+        //formData.append('file2', selectedFile2);
+        axiosInstance.post(API_URL + '/files', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -131,34 +103,26 @@ const Request = () => {
                 }
             })
     };
-    const updateRecordById = (values, id) => {
-        const formData = new FormData();
-        if (selectedFile1) {
-            formData.append('file', selectedFile1);
-        }
-        if (selectedFile2) {
-            formData.append('file2', selectedFile2);
-        }
-        axiosInstance.post('http://localhost:8080/files', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        })
-            .then(() => {
-                axiosInstance.put(API_URL + "/request/" + id, values)
-                    .then(response => {
-                        openNotificationWithIcon('success', 'Success', 'Data Is updated successfully.');
-                        getAllData();
-                        setOpen(false);
-                        setDataById(null);
-                    })
-                    .catch(error => {
-                        handleRequestError(error);
-                    });
-            })
-            .catch(error => {
-                handleRequestError(error);
-            });
+    const updateRecordById = (data, id) => {
+        axiosInstance.put(API_URL + "/request/" + id, data)
+            .then(response => {
+                    openNotificationWithIcon('success', 'Success', 'Data Is updated successfully.')
+                    getAllData();
+                    setOpen(false);
+                    setDataById(null);
+                }
+                , error => {
+                    if (error?.response?.data?.apierror?.subErrors?.length > 0) {
+                        openNotificationWithIcon('error', 'Error '
+                            , error?.response?.data?.apierror?.message
+                            + " " + error?.response?.data?.apierror?.subErrors[0]?.field + " " + error?.response?.data?.apierror?.subErrors[0]?.message)
+                    } else {
+                        openNotificationWithIcon('error',
+                            'Error ~' + error?.response?.data?.apierror?.status
+                            , error?.response?.data?.apierror?.message)
+                    }
+                }
+            );
     };
     const showDrawer = (id) => {
         setDataById(null);
@@ -173,18 +137,14 @@ const Request = () => {
         }
     };
     const onSubmitClick = (values) => {
-        values.detailFile = selectedFile2?.name
+        //values.detailFile = selectedFile2?.name
         values.descriptionFile = selectedFile1?.name
-        // console.log("selectedFile1=", selectedFile1?.name)
-        // console.log("selectedFile2=", selectedFile2?.name)
-        // console.log("values=", values)
         if (addNewMode) {
             addNewRecord(values);
         } else {
             updateRecordById(values, dataById.id);
         }
     };
-
 
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
@@ -269,7 +229,7 @@ const Request = () => {
                             )}
                             {record?.descriptionFile && (
                                 <a target="_blank" href={API_URL + "/files/" + record.descriptionFile}>
-                                    <CloudDownloadOutlined />
+                                    <CloudDownloadOutlined/>
                                 </a>
                             )}
                         </>
@@ -278,25 +238,9 @@ const Request = () => {
             ),
         },
         {
-            title: 'Service Detail',
-            dataIndex: 'detail',
-            key: 'detail',
-            render: (text, record) => (
-                <>
-                    {(record?.detail || record?.detailFile) && (
-                        <>
-                            {record?.detail && (
-                                <p>{record.detail}</p>
-                            )}
-                            {record?.detailFile && (
-                                <a target="_blank" href={API_URL + "/files/" + record.detailFile}>
-                                    <CloudDownloadOutlined />
-                                </a>
-                            )}
-                        </>
-                    )}
-                </>
-            ),
+            title: 'Action Status',
+            dataIndex: 'status',
+            key: 'status',
         },
 
         {
@@ -307,10 +251,10 @@ const Request = () => {
                         <a target="_blank"
                            href={API_URL + "/files/" + record?.descriptionFile}>{record?.descriptionFile}
                         </a> ,
-                    <a target="_blank"
-                       href={API_URL + "/files/" + record?.detailFile}>{record?.detailFile}
-                        </a>
-                        <Divider type="vertical"/>
+                    {/*<a target="_blank"*/}
+                    {/*   href={API_URL + "/files/" + record?.detailFile}>{record?.detailFile}*/}
+                    {/*    </a>*/}
+                    <Divider type="vertical"/>
                     {/* eslint-disable jsx-a11y/anchor-is-valid */}
                     <a onClick={() => showDrawer(record.id)}>Update</a>
                     {/* eslint-enable jsx-a11y/anchor-is-valid */}
@@ -368,22 +312,34 @@ const Request = () => {
                         >
                             <Input/>
                         </Form.Item>
-                        <Form.Item
-                            label="phone"
-                            name="phone"
+                        {/*<Form.Item*/}
+                        {/*    label="phone"*/}
+                        {/*    name="phone"*/}
 
-                            rules={[{required: true, message: 'Please input phone!'},
-                                { pattern: /^[0-9]+?$/, message: 'Please enter a valid phone !' }
+                        {/*    rules={[{required: true, message: 'Please input phone!'},*/}
+                        {/*        {pattern: /^[0-9]+?$/, message: 'Please enter a valid phone !'}*/}
+                        {/*    ]}*/}
+                        {/*>*/}
+                        {/*    <Input addonBefore="+251"/>*/}
+                        {/*</Form.Item>*/}
+                        <Form.Item
+                            label="Phone"
+                            name="phone"
+                            rules={[
+                                { required: true, message: 'Please input phone number!' },
+                                { pattern: /^[0-9]+?$/, message: 'Please enter a valid phone number!' },
+                                { len: 9, message: 'Phone number must be 9 digits!' } // Add this rule for length validation
                             ]}
                         >
-                            <Input addonBefore="+251"/>
+                            <Input addonBefore="+251" />
                         </Form.Item>
+
                         <Form.Item
                             label="email"
                             name="email"
                             rules={[
-                                { required: true, message: 'Please input your email!' },
-                                { type: 'email', message: 'Please enter a valid email address!' },
+                                {required: true, message: 'Please input your email!'},
+                                {type: 'email', message: 'Please enter a valid email address!'},
                             ]}
                         >
                             <Input/>
@@ -423,7 +379,7 @@ const Request = () => {
                         <Form.Item
                             label="categories"
                             name="categories"  // Corrected the name from " categories" to "categories"
-                            rules={[{ required: true, message: 'Please select a category!' }]}  // Add validation rule
+                            rules={[{required: true, message: 'Please select a category!'}]}  // Add validation rule
                         >
                             <Select
                                 showSearch
@@ -465,23 +421,32 @@ const Request = () => {
                             label="Upload Description File"
                             name="descriptionFile"
                         >
-                            <Input onChange={handleFileChange} type="file" value={selectedFile1 ? selectedFile1.name : ''} />
+                            <Input onChange={handleFileChange} type="file"/>
                         </Form.Item>
 
-                        <Form.Item
-                            label="Detail"
-                            name="detail"
-                        >
-                            <Input.TextArea placeholder="Enter text or upload a file"/>
+
+                        <Form.Item label="status" name="status">
+                            <Select
+                                showSearch
+                                placeholder="Select a status"
+                                optionFilterProp="children"
+                                options={[
+                                    {
+                                        value: 'HIGH',
+                                        label: 'HIGH',
+                                    },
+                                    {
+                                        value: 'MEDIUM',
+                                        label: 'MEDIUM',
+                                    },
+                                    {
+                                        value: 'LOW',
+                                        label: 'LOW',
+                                    },
+                                ]}
+                            />
                         </Form.Item>
 
-                        {/* Option to upload a file */}
-                        <Form.Item
-                            label="Upload Detail File"
-                            name="detailFile"
-                        >
-                            <Input onChange={handleFileChange2} type="file" value={selectedFile2 ? selectedFile2.name : ''} />
-                        </Form.Item>
                         {/*<Button type="primary" htmlType="submit" form={form}>Submit</Button>*/}
                         <SubmitButton form={trForm}>Submit</SubmitButton>
                     </Form>

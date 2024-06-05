@@ -348,7 +348,7 @@ const Ftraffics = () => {
                         items={[
                             {
                                 key: '1',
-                                label: 'FIlter By Traffic TIme NAme',
+                                label: 'FIlter By Traffic Time',
                                 children:
                                     <Select
                                         onChange={handleCHange}

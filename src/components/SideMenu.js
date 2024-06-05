@@ -37,16 +37,19 @@ if (listOfRoles) {
             getItem('failed-traffics', 'failed-traffics', <DisconnectOutlined/>),
             getItem('Add site', 'sites', <FileAddOutlined/>),
             getItem('traffic-request', 'request', <FormOutlined/>),
-            getItem('T.Processing checklist', 'CheckList', <CheckSquareOutlined/>),
+            getItem('traffic processing checklist', 'CheckList', <CheckSquareOutlined/>),
             getItem('6Month-SSM-checklist', 'sixmclist', <SecurityScanOutlined/>)
         );
+    }
+    if (listOfRoles.includes('ROLE_MANAGER')) {
+        ListOfItems.push(getItem('traffic-request', 'request', <FormOutlined/>));
     }
 }
 
 // Add remaining menu items
-ListOfItems.push(
-    getItem('traffic-request', 'request', <FormOutlined/>)
-);
+// ListOfItems.push(
+//     getItem('traffic-request', 'request', <FormOutlined/>)
+// );   continue again
 
 // SideMenu component
 function SideMenu() {
@@ -57,7 +60,8 @@ function SideMenu() {
         setCollapsed(!collapsed);
         setWidth(collapsed ? 200 : 56); // Adjust width based on collapse state
     };
-
+//ayeshiw chigrishin  ?algebagnm chigrie    sekahun tastekakyiwalesh bye neber
+    //"npm run build" new madreg yalebsh.  but not  "npm start build". ahuns gebash?ewobey feten blesh astekakyiw 
     const navigate = useNavigate();
 
     return (

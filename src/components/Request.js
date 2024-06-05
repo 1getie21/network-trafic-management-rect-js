@@ -1,16 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {
-    Button,
-    Col,
-    Divider,
-    Drawer,
-    Form,
-    Input,
-    notification,
-    Popconfirm,
-    Row,
-    Select,
-    Table
+import {Button, Col,Divider,Drawer,  Form, Input,notification,Popconfirm, Row, Select,Table
+
 } from "antd";
 import axiosInstance from "../auth/authHeader";
 import {CloudDownloadOutlined} from "@ant-design/icons";
@@ -27,14 +17,14 @@ const Request = () => {
     // const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [trForm] = Form.useForm();
     const [selectedFile1, setSelectedFile1] = useState(null);
-    const [selectedFile2, setSelectedFile2] = useState(null);
+    //const [selectedFile2, setSelectedFile2] = useState(null);
 
     const handleFileChange = (event) => {
         setSelectedFile1(event.target.files[0]);
-    };
-    const handleFileChange2 = (event) => {
-        setSelectedFile2(event.target.files[0]);
-    };
+    }; 
+    // const handleFileChange2 = (event) => {
+    //     setSelectedFile2(event.target.files[0]);
+    // }; 
 
 
     const SubmitButton = ({form: trafficForm, children}) => {
@@ -86,7 +76,7 @@ const Request = () => {
     const addFIle = () => {
         const formData = new FormData();
         formData.append('file', selectedFile1);
-        formData.append('file2', selectedFile2);
+        //formData.append('file2', selectedFile2);
         axiosInstance.post(API_URL + '/files', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -151,7 +141,7 @@ const Request = () => {
         }
     };
     const onSubmitClick = (values) => {
-        values.detailFile = selectedFile2?.name
+        //values.detailFile = selectedFile2?.name
         values.descriptionFile = selectedFile1?.name
         if (addNewMode) {
             addNewRecord(values);
@@ -252,25 +242,9 @@ const Request = () => {
             ),
         },
         {
-            title: 'Service Detail',
-            dataIndex: 'detail',
-            key: 'detail',
-            render: (text, record) => (
-                <>
-                    {(record?.detail || record?.detailFile) && (
-                        <>
-                            {record?.detail && (
-                                <p>{record.detail}</p>
-                            )}
-                            {record?.detailFile && (
-                                <a target="_blank" href={API_URL + "/files/" + record.detailFile}>
-                                    <CloudDownloadOutlined/>
-                                </a>
-                            )}
-                        </>
-                    )}
-                </>
-            ),
+            title: 'Action Status',
+            dataIndex: 'status',
+            key: 'status',
         },
 
         {
@@ -281,10 +255,10 @@ const Request = () => {
                         <a target="_blank"
                            href={API_URL + "/files/" + record?.descriptionFile}>{record?.descriptionFile}
                         </a> ,
-                    <a target="_blank"
-                       href={API_URL + "/files/" + record?.detailFile}>{record?.detailFile}
-                        </a>
-                        <Divider type="vertical"/>
+                    {/*<a target="_blank"*/}
+                    {/*   href={API_URL + "/files/" + record?.detailFile}>{record?.detailFile}*/}
+                    {/*    </a>*/}
+                    <Divider type="vertical"/>
                     {/* eslint-disable jsx-a11y/anchor-is-valid */}
                     <a onClick={() => showDrawer(record.id)}>Update</a>
                     {/* eslint-enable jsx-a11y/anchor-is-valid */}
@@ -342,16 +316,28 @@ const Request = () => {
                         >
                             <Input/>
                         </Form.Item>
-                        <Form.Item
-                            label="phone"
-                            name="phone"
+                        {/*<Form.Item*/}
+                        {/*    label="phone"*/}
+                        {/*    name="phone"*/}
 
-                            rules={[{required: true, message: 'Please input phone!'},
-                                {pattern: /^[0-9]+?$/, message: 'Please enter a valid phone !'}
+                        {/*    rules={[{required: true, message: 'Please input phone!'},*/}
+                        {/*        {pattern: /^[0-9]+?$/, message: 'Please enter a valid phone !'}*/}
+                        {/*    ]}*/}
+                        {/*>*/}
+                        {/*    <Input addonBefore="+251"/>*/}
+                        {/*</Form.Item>*/}
+                        <Form.Item
+                            label="Phone"
+                            name="phone"
+                            rules={[
+                                { required: true, message: 'Please input phone number!' },
+                                { pattern: /^[0-9]+?$/, message: 'Please enter a valid phone number!' },
+                                { len: 9, message: 'Phone number must be 9 digits!' } // Add this rule for length validation
                             ]}
                         >
-                            <Input addonBefore="+251"/>
+                            <Input addonBefore="+251" />
                         </Form.Item>
+
                         <Form.Item
                             label="email"
                             name="email"
@@ -438,6 +424,7 @@ const Request = () => {
                             <Input onChange={handleFileChange} type="file"/>
                         </Form.Item>
 
+<<<<<<< HEAD
                         <Form.Item
                             label="Detail"
                             name="detail">
@@ -449,6 +436,31 @@ const Request = () => {
                             label="Upload Detail File">
                             <Input onChange={handleFileChange2} type="file"/>
                         </Form.Item>
+=======
+
+                        <Form.Item label="status" name="status">
+                            <Select
+                                showSearch
+                                placeholder="Select a status"
+                                optionFilterProp="children"
+                                options={[
+                                    {
+                                        value: 'HIGH',
+                                        label: 'HIGH',
+                                    },
+                                    {
+                                        value: 'MEDIUM',
+                                        label: 'MEDIUM',
+                                    },
+                                    {
+                                        value: 'LOW',
+                                        label: 'LOW',
+                                    },
+                                ]}
+                            />
+                        </Form.Item>
+
+>>>>>>> b0d732c8b0dbb20c7d54afb7b77d732c47149149
                         {/*<Button type="primary" htmlType="submit" form={form}>Submit</Button>*/}
                         <SubmitButton form={trForm}>Submit</SubmitButton>
                     </Form>
