@@ -16,17 +16,20 @@ import {
 } from "antd";
 import axiosInstance from "../auth/authHeader";
 
+import {CloudDownloadOutlined} from "@ant-design/icons";
+
 const {RangePicker} = DatePicker;
 
 const Ftraffics = () => {
     const [data, setData] = useState([]);
+    const [date, setDate] = useState([]);
     const [dataById, setDataById] = useState(null);
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    // const API_URL = "http://localhost:8080";
-    const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+    const API_URL = "http://localhost:8080";
+    // const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [trForm] = Form.useForm();
     const [trSearchForm] = Form.useForm();
 
@@ -178,11 +181,10 @@ const Ftraffics = () => {
                     openNotificationWithIcon('error', 'Error', error?.message);
                 });
     };
-
     const onSearchSubmitClick = (values) => {
         const fromDate = values.from[0].format('YYYY-MM-DD');
         const toDate = values.from[1].format('YYYY-MM-DD');
-
+        setDate('/'+fromDate+'/'+toDate);
         axiosInstance.get(`${API_URL}/f-traffics/${fromDate}/${toDate}`)
             .then(response => {
                 setData(response?.data?._embedded?.fTrafficDtoses);
@@ -318,12 +320,19 @@ const Ftraffics = () => {
                                                         }
                                                     ]}
                                                 >
-                                                    <RangePicker />
+                                                    <RangePicker/>
                                                 </Form.Item>
                                             </Col>
                                             <Col>
                                                 <Form.Item>
                                                     <Button type="primary" htmlType="submit">Submit</Button>
+                                                </Form.Item>
+                                            </Col>
+                                            <Col>
+                                                <Form.Item>
+                                                    <a target="_blank" href={API_URL + "/api/pdf"+date}>
+                                                        <CloudDownloadOutlined/>
+                                                    </a>
                                                 </Form.Item>
                                             </Col>
                                         </Row>

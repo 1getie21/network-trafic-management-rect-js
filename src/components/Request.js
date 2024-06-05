@@ -22,8 +22,9 @@ const Request = () => {
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    // const API_URL = "http://localhost:8080";
-    const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+    const API_URL = "http://localhost:8080";
+
+    // const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [trForm] = Form.useForm();
     const [selectedFile1, setSelectedFile1] = useState(null);
     const [selectedFile2, setSelectedFile2] = useState(null);
@@ -33,9 +34,9 @@ const Request = () => {
     };
     const handleFileChange2 = (event) => {
         setSelectedFile2(event.target.files[0]);
-    }; 
-    
-    
+    };
+
+
     const SubmitButton = ({form: trafficForm, children}) => {
         const [submittable, setSubmittable] = React.useState(false);
         const values = Form.useWatch([], trafficForm);
@@ -70,8 +71,6 @@ const Request = () => {
             .then(response => {
                     setDataById(response.data);
                     trForm.setFieldsValue(response.data);
-
-
                 },
                 error => {
                     openNotificationWithIcon('error', 'Error', error?.message)
@@ -84,7 +83,7 @@ const Request = () => {
             description: description,
         });
     };
-    const addNewRecord = (values) => {
+    const addFIle = () => {
         const formData = new FormData();
         formData.append('file', selectedFile1);
         formData.append('file2', selectedFile2);
@@ -93,6 +92,9 @@ const Request = () => {
                 'Content-Type': 'multipart/form-data',
             },
         });
+    }
+    const addNewRecord = (values) => {
+        addFIle();
         axiosInstance.post(API_URL + "/request", values)
             .then(response => {
                 openNotificationWithIcon('success', 'Success', 'New Recorded Is added successfully.')
@@ -114,6 +116,8 @@ const Request = () => {
             })
     };
     const updateRecordById = (data, id) => {
+
+        addFIle();
         axiosInstance.put(API_URL + "/request/" + id, data)
             .then(response => {
                     openNotificationWithIcon('success', 'Success', 'Data Is updated successfully.')
@@ -325,8 +329,8 @@ const Request = () => {
             >
                 {(addNewMode || dataById) && (
                     <Form
-                        form={trForm} name="validateOnly"
                         layout="vertical"
+                        initialValues={dataById}
                         onFinish={onSubmitClick}
                         onFinishFailed={onFinishFailed}
                     >
@@ -424,32 +428,25 @@ const Request = () => {
                         </Form.Item>
                         <Form.Item
                             label="Description"
-                            name="description"
-
-                        >
+                            name="description">
                             <Input.TextArea placeholder="Enter text or upload a file"/>
                         </Form.Item>
 
                         {/* Option to upload a file */}
                         <Form.Item
-                            label="Upload Description File"
-                            name="descriptionFile"
-                        >
+                            label="Upload Description File">
                             <Input onChange={handleFileChange} type="file"/>
                         </Form.Item>
 
                         <Form.Item
                             label="Detail"
-                            name="detail"
-                        >
+                            name="detail">
                             <Input.TextArea placeholder="Enter text or upload a file"/>
                         </Form.Item>
 
                         {/* Option to upload a file */}
                         <Form.Item
-                            label="Upload Detail File"
-                            name="detailFile"
-                        >
+                            label="Upload Detail File">
                             <Input onChange={handleFileChange2} type="file"/>
                         </Form.Item>
                         {/*<Button type="primary" htmlType="submit" form={form}>Submit</Button>*/}
