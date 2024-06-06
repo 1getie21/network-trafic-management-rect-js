@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Col, Divider, Drawer, Form, Input, notification, Popconfirm, Row, Table} from "antd";
+import {Button,Tooltip, Col, Divider, Drawer, Form, Input, notification, Popconfirm, Row, Table} from "antd";
 import axiosInstance from "../auth/authHeader";
 
 import {CloudDownloadOutlined, EditOutlined, DeleteOutlined} from "@ant-design/icons";
@@ -12,8 +12,8 @@ const Site = () => {
     const [api, contextHolder] = notification.useNotification();
     const cancel = (e) => {};
 
-    // const API_URL = "http://localhost:8080";
-    const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+     const API_URL = "http://localhost:8080";
+    //const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
 
 
     const openNotificationWithIcon = (type, messageTitle, description) => {
@@ -162,24 +162,27 @@ const Site = () => {
             key: 'action',
             render: (text, record) => (
                 <span>
-                    {/* eslint-disable jsx-a11y/anchor-is-valid */} 
-                    <a onClick={() => showDrawer(record.id)}>
-                        <EditOutlined/>
-                    </a>
-                    {/* eslint-enable jsx-a11y/anchor-is-valid */}
-                    <Divider type="vertical"/>
-                     <Popconfirm
-                         title="Delete the task"
-                         description="Are you sure to delete this task?"
-                         onConfirm={() => deleteById(record.id)}
-                         onCancel={cancel}
-                         okText="Yes"
-                         cancelText="No">
-                        <a danger>
-                        <DeleteOutlined/>
-                        </a>
-                      </Popconfirm>
-                </span>
+        <Tooltip title="Update Recored">
+            <a onClick={() => showDrawer(record.id)}>
+                <EditOutlined />
+            </a>
+        </Tooltip>
+        <Divider type="vertical" />
+        <Popconfirm
+            title="Delete the task"
+            description="Are you sure to delete this task?"
+            onConfirm={() => deleteById(record.id)}
+            onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
+        >
+            <Tooltip title="Delete Task">
+                <a danger>
+                    <DeleteOutlined />
+                </a>
+            </Tooltip>
+        </Popconfirm>
+    </span>
             ),
         },
     ];

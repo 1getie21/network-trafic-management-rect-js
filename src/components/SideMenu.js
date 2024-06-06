@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Menu } from "antd";
 import {
     CheckSquareOutlined, DisconnectOutlined, FileAddOutlined, FormOutlined,
-    MenuUnfoldOutlined, SecurityScanOutlined, UserAddOutlined,
+    MenuUnfoldOutlined, SecurityScanOutlined, UserAddOutlined,LineChartOutlined
 } from "@ant-design/icons";
 import AuthService from "../auth/AuthService ";
 
@@ -13,11 +13,7 @@ const listOfRoles = AuthService?.getRoles();
 // Function to create menu item
 function getItem(label, key, icon, children, type) {
     return {
-        key,
-        icon,
-        children,
-        label,
-        type,
+        key, icon, children, label, type,
     };
 }
 
@@ -33,7 +29,7 @@ if (listOfRoles) {
     }
     if (listOfRoles.includes('ROLE_ADMIN') || listOfRoles.includes('ROLE_MEMBER')) {
         ListOfItems.push(
-            getItem('daily-traffic-monitoring', 'f-traffics', <UserAddOutlined/>),
+            getItem('daily-traffic-monitoring', 'f-traffics', <LineChartOutlined />),
             getItem('failed-traffics', 'failed-traffics', <DisconnectOutlined/>),
             getItem('Add site', 'sites', <FileAddOutlined/>),
             getItem('traffic-request', 'request', <FormOutlined/>),

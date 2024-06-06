@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {
     Button,
+    Tooltip,
     Col,
     Divider,
     Drawer,
@@ -274,23 +275,27 @@ const Ftraffics = () => {
             key: 'action',
             render: (text, record) => (
                 <span>
-                    <a onClick={() => showDrawer(record.id)}>
-                        <EditOutlined/>
-                    </a>
-                    <Divider type="vertical"/>
-                    <Popconfirm
-                        title="Delete the task"
-                        description="Are you sure to delete this task?"
-                        onConfirm={() => confirm(record.id)}
-                        onCancel={cancel}
-                        okText="Yes"
-                        cancelText="No"
-                    >
-                        <a danger>
-                        <DeleteOutlined/>
-                        </a>
-                    </Popconfirm>
-                </span>
+        <Tooltip title="Update Record">
+            <a onClick={() => showDrawer(record.id)}>
+                <EditOutlined />
+            </a>
+        </Tooltip>
+        <Divider type="vertical" />
+        <Popconfirm
+            title="Delete the task"
+            description="Are you sure to delete this task?"
+            onConfirm={() => confirm(record.id)}
+            onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
+        >
+            <Tooltip title="Delete Task">
+                <a danger>
+                    <DeleteOutlined />
+                </a>
+            </Tooltip>
+        </Popconfirm>
+    </span>
             ),
         },
     ];
