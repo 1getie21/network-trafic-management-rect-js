@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Button, Card, Form, Input} from 'antd';
+import {Button, Card, Form, Input, Tag} from 'antd';
 import AuthService from "../auth/AuthService ";
 
 
@@ -11,7 +11,7 @@ const Login = () => {
             .then(() => {
                 window.location.reload();
             }, error => {
-                setError(error.response.data.message)
+                setError(error?.response?.data?.apierror?.message)
             });
     };
 
@@ -84,9 +84,7 @@ const Login = () => {
                         />
                     </Form.Item>
                     {errors && (
-                        <div style={{width: 300, alignItems: "center", marginBottom: 15}}>
-                            <label style={{color: 'red'}}>{errors}. Please try again</label>
-                        </div>
+                        <Tag color="red">{errors}. Please try again</Tag>
                     )}
                     <Form.Item wrapperCol={{offset: 16, span: 32}}>
                         <Button
