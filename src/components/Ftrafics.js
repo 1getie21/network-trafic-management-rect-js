@@ -1,10 +1,22 @@
 import React, {useEffect, useState} from 'react';
 import {
-    Button, Col, Divider, Drawer, Form, Input, notification, Popconfirm, Row, Select, Table, DatePicker, Collapse
+    Button,
+    Col,
+    Divider,
+    Drawer,
+    Form,
+    Input,
+    notification,
+    Popconfirm,
+    Row,
+    Select,
+    Table,
+    DatePicker,
+    Collapse
 } from "antd";
 import axiosInstance from "../auth/authHeader";
 
-import {CloudDownloadOutlined} from "@ant-design/icons";
+import {CloudDownloadOutlined, EditOutlined, DeleteOutlined} from "@ant-design/icons";
 
 const {RangePicker} = DatePicker;
 
@@ -16,8 +28,8 @@ const Ftraffics = () => {
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    const API_URL = "http://localhost:8080";
-    // const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+   // const API_URL = "http://localhost:8080";
+     const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [trForm] = Form.useForm();
     const [trSearchForm] = Form.useForm();
 
@@ -172,7 +184,7 @@ const Ftraffics = () => {
     const onSearchSubmitClick = (values) => {
         const fromDate = values.from[0].format('YYYY-MM-DD');
         const toDate = values.from[1].format('YYYY-MM-DD');
-        setDate('/'+fromDate+'/'+toDate);
+        setDate('/' + fromDate + '/' + toDate);
         axiosInstance.get(`${API_URL}/f-traffics/${fromDate}/${toDate}`)
             .then(response => {
                 setData(response?.data?._embedded?.fTrafficDtoses);
@@ -262,7 +274,9 @@ const Ftraffics = () => {
             key: 'action',
             render: (text, record) => (
                 <span>
-                    <a onClick={() => showDrawer(record.id)}>Update</a>
+                    <a onClick={() => showDrawer(record.id)}>
+                        <EditOutlined/>
+                    </a>
                     <Divider type="vertical"/>
                     <Popconfirm
                         title="Delete the task"
@@ -272,7 +286,9 @@ const Ftraffics = () => {
                         okText="Yes"
                         cancelText="No"
                     >
-                        <Button danger>Delete</Button>
+                        <a danger>
+                        <DeleteOutlined/>
+                        </a>
                     </Popconfirm>
                 </span>
             ),
@@ -282,8 +298,8 @@ const Ftraffics = () => {
     return (
         <>
             {contextHolder}
-            <Row gutter={[16, 16]} justify="end" style={{marginBottom: 14}}>
-                <Col span={6}>
+            <Row justify="end" style={{marginBottom: 16}}>
+                <Col span={10}>
                     <Collapse
                         items={[
                             {
@@ -316,35 +332,8 @@ const Ftraffics = () => {
                                                     <Button type="primary" htmlType="submit">Submit</Button>
                                                 </Form.Item>
                                             </Col>
-                                            {/*<Col>*/}
-                                            {/*    <Form.Item>*/}
-                                            {/*        <a target="_blank" href={API_URL + "/api/pdf"+date}>*/}
-                                            {/*            <CloudDownloadOutlined/>*/}
-                                            {/*        </a>*/}
-                                            {/*    </Form.Item>*/}
-                                            {/*</Col>*/}
-                                        </Row>
-                                    </Form>
-                            },
-                        ]}
-                    />
-                </Col>
-                <Col span={6}>
-                    <Collapse
-                        items={[
-                            {
-                                key: '1',
-                                label: 'Download File',
-                                children: (
-                                    <Form
-                                        name="validateOnly"
-                                        layout="horizontal"
-                                        onFinish={onSearchSubmitClick}
-                                        onFinishFailed={onSearchFinishFailed}
-                                    >
-                                        <Row>
                                             <Col>
-                                                <Form.Item name="download-file"> {/* Add a name for the Form.Item */}
+                                                <Form.Item>
                                                     <a target="_blank" href={API_URL + "/api/pdf" + date}>
                                                         <CloudDownloadOutlined/>
                                                     </a>
@@ -352,13 +341,13 @@ const Ftraffics = () => {
                                             </Col>
                                         </Row>
                                     </Form>
-                                )
+                                ,
                             },
                         ]}
                     />
                 </Col>
                 <Col span={1}></Col>
-                <Col span={6}>
+                <Col span={9}>
                     <Collapse
                         items={[
                             {
@@ -387,7 +376,7 @@ const Ftraffics = () => {
                 </Col>
             </Row>
             <Row>
-                <Col span={20}>
+                <Col span={24}>
                     <Table loading={loading} columns={columns} dataSource={data} rowKey="id"/>
                 </Col>
             </Row>

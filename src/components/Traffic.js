@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Col, Divider, Drawer, Form, Input, notification, Popconfirm, Row, Select, Table} from "antd";
 import axiosInstance from "../auth/authHeader";
+import {CloudDownloadOutlined, EditOutlined, DeleteOutlined} from "@ant-design/icons";
+
 
 const Traffics = () => {
     const [data, setData] = useState([]);
@@ -252,7 +254,10 @@ const Traffics = () => {
             render: (text, record) => (
                 <span>
                 {/* eslint-disable jsx-a11y/anchor-is-valid */}
-                    <a onClick={() => showDrawer(record.id)}>Update</a>
+                    <a onClick={() => showDrawer(record.id)}>
+                        
+        <EditOutlined/>
+                    </a>
                     {/* eslint-enable jsx-a11y/anchor-is-valid */}
 
                     <Divider type="vertical"/>
@@ -264,7 +269,9 @@ const Traffics = () => {
                         okText="Yes"
                         cancelText="No"
                     >
-    <Button danger>Delete</Button>
+    <a danger>
+<DeleteOutlined/>
+    </a>
   </Popconfirm>
 
                     {/* eslint-disable jsx-a11y/anchor-is-valid*/}

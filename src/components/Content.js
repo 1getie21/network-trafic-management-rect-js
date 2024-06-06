@@ -18,7 +18,7 @@ function Content() {
         <div
             style={{
                 width: '100%',
-                margin: '10px'
+                marginLeft: '25px'
             }}
         >
             <Routes>

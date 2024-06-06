@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Col,Divider,Drawer,  Form, Input,notification,Popconfirm, Row, Select,Table
-
+import {
+    Button, Col, Divider, Drawer, Form, Input, notification, Popconfirm, Row, Select, Table,Tag
+    ,Tooltip
 } from "antd";
 import axiosInstance from "../auth/authHeader";
-import {CloudDownloadOutlined} from "@ant-design/icons";
+import {CloudDownloadOutlined, EditOutlined,EyeOutlined, DeleteOutlined} from "@ant-design/icons";
 
 const Request = () => {
     const [data, setData] = useState([]);
@@ -12,16 +13,16 @@ const Request = () => {
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    const API_URL = "http://localhost:8080";
+    // const API_URL = "http://localhost:8080";
 
-    // const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+    const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [trForm] = Form.useForm();
     const [selectedFile1, setSelectedFile1] = useState(null);
     //const [selectedFile2, setSelectedFile2] = useState(null);
 
     const handleFileChange = (event) => {
         setSelectedFile1(event.target.files[0]);
-    }; 
+    };
     // const handleFileChange2 = (event) => {
     //     setSelectedFile2(event.target.files[0]);
     // }; 
@@ -128,6 +129,7 @@ const Request = () => {
                 }
             );
     };
+
     const showDrawer = (id) => {
         setDataById(null);
         setOpen(true);
@@ -167,7 +169,16 @@ const Request = () => {
                     openNotificationWithIcon('error', 'Error', error?.message)
                 })
     };
-
+    const confirmAccept = (id) => {
+        axiosInstance.get(API_URL + "/request/accept/" + id)
+            .then(response => {
+                    openNotificationWithIcon('success', 'Success', 'Data Is accepted successfully.')
+                    getAllData();
+                },
+                error => {
+                    openNotificationWithIcon('error', 'Error', error?.message)
+                })
+    };
     const cancel = (e) => {
     };
 
@@ -206,14 +217,14 @@ const Request = () => {
             key: 'organization',
         },
         {
-            title: 'Service Categories',
+            title: 'Categories',
             dataIndex: 'categories',
             key: 'categories',
         },
 
 
         {
-            title: 'Contact-Person',
+            title: 'Contact',
             dataIndex: 'contact',
             key: 'contact',
 
@@ -221,30 +232,43 @@ const Request = () => {
 
 
         {
-            title: 'Service Description',
+            title: 'Description',
             dataIndex: 'description',
-            key: 'description',
-            render: (text, record) => (
-                <>
-                    {(record?.description || record?.descriptionFile) && (
-                        <>
-                            {record?.description && (
-                                <p>{record.description}</p>
-                            )}
-                            {record?.descriptionFile && (
-                                <a target="_blank" href={API_URL + "/files/" + record.descriptionFile}>
-                                    <CloudDownloadOutlined/>
-                                </a>
-                            )}
-                        </>
-                    )}
-                </>
-            ),
+            key: 'description'
         },
         {
-            title: 'Action Status',
+            title: 'Priority',
+            dataIndex: 'priority',
+            key: 'priority',
+            render: (text, record) => (
+                <>
+                    {record?.priority === 'HIGH' && (
+                        <Tag color="red">{record?.priority}</Tag>
+                    )}
+                    {record?.priority === 'MEDIUM' && (
+                        <Tag color="blue">{record?.priority}</Tag>
+                    )}
+                    {record?.priority === 'LOW' && (
+                        <Tag color="green">{record?.priority}</Tag>
+                    )}
+                </>
+
+            )
+        },
+        {
+            title: 'Status',
             dataIndex: 'status',
             key: 'status',
+            render: (text, record) => (
+                <>
+                    {record?.status === 'Pending' && (
+                        <Tag color="blue">{record?.status}</Tag>
+                    )}
+                    {record?.status === 'Accepted' && (
+                        <Tag color="green">{record?.status}</Tag>
+                    )}
+                </>
+            )
         },
 
         {
@@ -252,29 +276,57 @@ const Request = () => {
             key: 'action',
             render: (text, record) => (
                 <span>
-                        <a target="_blank"
-                           href={API_URL + "/files/" + record?.descriptionFile}>{record?.descriptionFile}
-                        </a> ,
-                    {/*<a target="_blank"*/}
-                    {/*   href={API_URL + "/files/" + record?.detailFile}>{record?.detailFile}*/}
-                    {/*    </a>*/}
+                    {(record?.description || record?.descriptionFile) && (
+                        <>
+                            {record?.descriptionFile && (
+                                <Tooltip title="download file">
+                                    <a target="_blank" href={API_URL + "/files/" + record.descriptionFile}>
+                                        <CloudDownloadOutlined/>
+                                    </a>
+                                </Tooltip>
+
+                            )}
+                        </>
+                    )}
                     <Divider type="vertical"/>
                     {/* eslint-disable jsx-a11y/anchor-is-valid */}
-                    <a onClick={() => showDrawer(record.id)}>Update</a>
+                    {(record?.status === 'Pending') && (
+                        <Popconfirm
+                            title="Accept the request"
+                            description="Are you sure to accept this request?"
+                            onConfirm={() => confirmAccept(record.id)}
+                            onCancel={cancel}
+                            okText="Yes"
+                            cancelText="No"
+                        >
+                            <Tooltip title="accept">
+                                <EyeOutlined />
+                            </Tooltip>
+                        </Popconfirm>
+                    )}
+                    <Divider type="vertical"/>
+
+                     <a onClick={() => showDrawer(record.id)}>
+                          <Tooltip title="update record">
+                                <EditOutlined />
+                            </Tooltip>
+                    </a>
                     {/* eslint-enable jsx-a11y/anchor-is-valid */}
 
                     <Divider type="vertical"/>
 
                     {/* eslint-disable jsx-a11y/anchor-is-valid */}
                     <Popconfirm
-                        title="Delete the task"
-                        description="Are you sure to delete this task?"
+                        title="Delete the request"
+                        description="Are you sure to delete this request?"
                         onConfirm={() => confirm(record.id)}
                         onCancel={cancel}
                         okText="Yes"
                         cancelText="No"
                     >
-                        <Button danger>Delete</Button>
+                          <Tooltip title="delete record">
+                                <DeleteOutlined />
+                            </Tooltip>
                         </Popconfirm>
                     {/*<a onClick={() => deleteById(record.id)}>Delete</a>*/}
                     {/* eslint-enable jsx-a11y/anchor-is-valid */}
@@ -330,12 +382,12 @@ const Request = () => {
                             label="Phone"
                             name="phone"
                             rules={[
-                                { required: true, message: 'Please input phone number!' },
-                                { pattern: /^[0-9]+?$/, message: 'Please enter a valid phone number!' },
-                                { len: 9, message: 'Phone number must be 9 digits!' } // Add this rule for length validation
+                                {required: true, message: 'Please input phone number!'},
+                                {pattern: /^[0-9]+?$/, message: 'Please enter a valid phone number!'},
+                                {len: 9, message: 'Phone number must be 9 digits!'} // Add this rule for length validation
                             ]}
                         >
-                            <Input addonBefore="+251" />
+                            <Input addonBefore="+251"/>
                         </Form.Item>
 
                         <Form.Item
@@ -418,30 +470,16 @@ const Request = () => {
                             <Input.TextArea placeholder="Enter text or upload a file"/>
                         </Form.Item>
 
+                        {/* Option to upload a file */}
                         <Form.Item
-                            label="Upload Description File"
-                            name="descriptionFile"
-                        >
-                            <input type="file" onChange={handleFileChange} />
+                            label="Upload Description File">
+                            <Input onChange={handleFileChange} type="file"/>
                         </Form.Item>
 
-                        {/*<Form.Item*/}
-                        {/*    label="Detail"*/}
-                        {/*    name="detail">*/}
-                        {/*    <Input.TextArea placeholder="Enter text or upload a file"/>*/}
-                        {/*</Form.Item>*/}
-
-                        {/*/!* Option to upload a file *!/*/}
-                        {/*<Form.Item*/}
-                        {/*    label="Upload Detail File">*/}
-                        {/*    <Input onChange={handleFileChange2} type="file"/>*/}
-                        {/*</Form.Item>*/}
-
-
-                        <Form.Item label="status" name="status">
+                        <Form.Item label="priority" name="priority">
                             <Select
                                 showSearch
-                                placeholder="Select a status"
+                                placeholder="Select a priority"
                                 optionFilterProp="children"
                                 options={[
                                     {
@@ -459,7 +497,6 @@ const Request = () => {
                                 ]}
                             />
                         </Form.Item>
-
                         {/*<Button type="primary" htmlType="submit" form={form}>Submit</Button>*/}
                         <SubmitButton form={trForm}>Submit</SubmitButton>
                     </Form>
