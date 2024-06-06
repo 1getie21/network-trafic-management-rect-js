@@ -256,7 +256,7 @@ const Traffics = () => {
                 {/* eslint-disable jsx-a11y/anchor-is-valid */}
                     <a onClick={() => showDrawer(record.id)}>
                         
-        <EditOutlined/>
+        <EditOutlined style={{ fontSize: '20px'}}/>
                     </a>
                     {/* eslint-enable jsx-a11y/anchor-is-valid */}
 
@@ -270,7 +270,7 @@ const Traffics = () => {
                         cancelText="No"
                     >
     <a danger>
-<DeleteOutlined/>
+<DeleteOutlined style={{ fontSize: '20px', color:"red" }}/>
     </a>
   </Popconfirm>
 

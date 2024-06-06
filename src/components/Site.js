@@ -164,7 +164,7 @@ const Site = () => {
                 <span>
                     {/* eslint-disable jsx-a11y/anchor-is-valid */} 
                     <a onClick={() => showDrawer(record.id)}>
-                        <EditOutlined/>
+                        <EditOutlined style={{ fontSize: '20px'}}/>
                     </a>
                     {/* eslint-enable jsx-a11y/anchor-is-valid */}
                     <Divider type="vertical"/>
@@ -176,7 +176,7 @@ const Site = () => {
                          okText="Yes"
                          cancelText="No">
                         <a danger>
-                        <DeleteOutlined/>
+                        style={{ fontSize: '20px', color:"red" }}
                         </a>
                       </Popconfirm>
                 </span>

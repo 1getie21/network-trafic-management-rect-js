@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Menu } from "antd";
+import { Menu, Button } from "antd";
 import {
     CheckSquareOutlined, DisconnectOutlined, FileAddOutlined, FormOutlined,
-    MenuUnfoldOutlined, SecurityScanOutlined, UserAddOutlined,
+    MenuUnfoldOutlined, MenuFoldOutlined, SecurityScanOutlined, UserAddOutlined,
 } from "@ant-design/icons";
 import AuthService from "../auth/AuthService ";
 
@@ -22,59 +22,57 @@ function getItem(label, key, icon, children, type) {
 }
 
 // Initialize list of menu items
-const ListOfItems = [
-    getItem('Collapse', 'Collapse', <MenuUnfoldOutlined/>)
-];
+const ListOfItems = [];
 
-// Add menu items based on user roles
 if (listOfRoles) {
     if (listOfRoles.includes('ROLE_ADMIN')) {
-        ListOfItems.push(getItem('Users', 'Users', <UserAddOutlined/>));
+        ListOfItems.push(getItem('Users', 'Users', <UserAddOutlined />));
     }
     if (listOfRoles.includes('ROLE_ADMIN') || listOfRoles.includes('ROLE_MEMBER')) {
         ListOfItems.push(
-            getItem('daily-traffic-monitoring', 'f-traffics', <UserAddOutlined/>),
-            getItem('failed-traffics', 'failed-traffics', <DisconnectOutlined/>),
-            getItem('Add site', 'sites', <FileAddOutlined/>),
-            getItem('traffic-request', 'request', <FormOutlined/>),
-            getItem('traffic processing checklist', 'CheckList', <CheckSquareOutlined/>),
-            getItem('6Month-SSM-checklist', 'sixmclist', <SecurityScanOutlined/>)
+            getItem('Daily Traffic Monitoring', 'f-traffics', <UserAddOutlined />),
+            getItem('Failed Traffics', 'failed-traffics', <DisconnectOutlined />),
+            getItem('Sites', 'sites', <FileAddOutlined />),
+            getItem('Traffic Request', 'request', <FormOutlined />),
+            getItem('Traffic Processing Checklist', 'CheckList', <CheckSquareOutlined />),
+            getItem('6Month SSM Checklist', 'sixmclist', <SecurityScanOutlined />)
         );
     }
     if (listOfRoles.includes('ROLE_MANAGER')) {
-        ListOfItems.push(getItem('traffic-request', 'request', <FormOutlined/>));
+        ListOfItems.push(getItem('Traffic Request', 'request', <FormOutlined />));
     }
 }
-
-// Add remaining menu items
-// ListOfItems.push(
-//     getItem('traffic-request', 'request', <FormOutlined/>)
-// );   continue again
 
 // SideMenu component
 function SideMenu() {
     const [collapsed, setCollapsed] = useState(false);
-    const [width, setWidth] = useState(200); // Initialize width with 200
-
     const toggleCollapsed = () => {
         setCollapsed(!collapsed);
-        setWidth(collapsed ? 200 : 56); // Adjust width based on collapse state
     };
-//ayeshiw chigrishin  ?algebagnm chigrie    sekahun tastekakyiwalesh bye neber
-    //"npm run build" new madreg yalebsh.  but not  "npm start build". ahuns gebash?ewobey feten blesh astekakyiw 
     const navigate = useNavigate();
 
     return (
-        <div
-            style={{
-                width: width,
-                display: "flex",
-                flexDirection: "column",
-            }}
-        >
+        <div style={{
+            flexDirection: "column",
+            boxShadow: "0 5px 8px rgba(0, 0, 0, 0.1)",
+            padding: "0 10px",
+            marginLeft: -10,
+            display: "flex",
+            height: "100vh",
+            fontFamily: 'Roboto, sans-serif', // Apply Roboto font to the component
+            // overflowY: 'auto', // Make the menu scrollable
+        }}>
+            <Button
+                type="primary"
+                onClick={toggleCollapsed}
+                style={{
+                    borderRadius: 0
+                }}>
+                {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            </Button>
             <Menu
-                style={{height: '100%'}}
-                onClick={({key}) => {
+                style={{ height: '100%' }}
+                onClick={({ key }) => {
                     if (key === "Collapse") {
                         toggleCollapsed(key);
                     } else {

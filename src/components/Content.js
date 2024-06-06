@@ -18,7 +18,10 @@ function Content() {
         <div
             style={{
                 width: '100%',
-                margin: '10px'
+                marginTop: '10px',
+                marginLeft: '10px',
+                marginRight: '2px',
+                backgroundColor: "rgba(255,255,255,0.62)",
             }}
         >
             <Routes>
