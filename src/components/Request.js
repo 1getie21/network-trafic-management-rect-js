@@ -15,7 +15,7 @@ const Request = () => {
     const [api, contextHolder] = notification.useNotification();
     const API_URL = "http://localhost:8080";
 
-    //const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+    // const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [trForm] = Form.useForm();
     const [selectedFile1, setSelectedFile1] = useState(null);
     //const [selectedFile2, setSelectedFile2] = useState(null);
@@ -184,15 +184,15 @@ const Request = () => {
 
     const columns = [
         {
-            title: 'Id',
+            title: '#',
             dataIndex: 'id',
             key: 'id',
             render: (text, record, index) => index + 1,
         },
         {
             title: 'FName',
-            dataIndex: 'fname',
-            key: 'fname',
+            dataIndex: 'createdBy',
+            key: 'createdBy',
         },
         {
             title: 'Phone',
@@ -242,13 +242,13 @@ const Request = () => {
             key: 'priority',
             render: (text, record) => (
                 <>
-                    {record?.priority === 'HIGH' && (
+                    {record?.priority == 'HIGH' && (
                         <Tag color="red">{record?.priority}</Tag>
                     )}
-                    {record?.priority === 'MEDIUM' && (
+                    {record?.priority == 'MEDIUM' && (
                         <Tag color="blue">{record?.priority}</Tag>
                     )}
-                    {record?.priority === 'LOW' && (
+                    {record?.priority == 'LOW' && (
                         <Tag color="green">{record?.priority}</Tag>
                     )}
                 </>
@@ -261,10 +261,10 @@ const Request = () => {
             key: 'status',
             render: (text, record) => (
                 <>
-                    {record?.status === 'Pending' && (
+                    {record?.status == 'Pending' && (
                         <Tag color="blue">{record?.status}</Tag>
                     )}
-                    {record?.status === 'Accepted' && (
+                    {record?.status == 'Accepted' && (
                         <Tag color="green">{record?.status}</Tag>
                     )}
                 </>
@@ -281,7 +281,7 @@ const Request = () => {
                             {record?.descriptionFile && (
                                 <Tooltip title="download file">
                                     <a target="_blank" href={API_URL + "/files/" + record.descriptionFile}>
-                                        <CloudDownloadOutlined/>
+                                        <CloudDownloadOutlined style={{ fontSize: '20px'}}/>
                                     </a>
                                 </Tooltip>
 
@@ -289,26 +289,10 @@ const Request = () => {
                         </>
                     )}
                     <Divider type="vertical"/>
-                    {/* eslint-disable jsx-a11y/anchor-is-valid */}
-                    {(record?.status === 'Pending') && (
-                        <Popconfirm
-                            title="Accept the request"
-                            description="Are you sure to accept this request?"
-                            onConfirm={() => confirmAccept(record.id)}
-                            onCancel={cancel}
-                            okText="Yes"
-                            cancelText="No"
-                        >
-                            <Tooltip title="accept">
-                                <EyeOutlined />
-                            </Tooltip>
-                        </Popconfirm>
-                    )}
-                    <Divider type="vertical"/>
 
                      <a onClick={() => showDrawer(record.id)}>
                           <Tooltip title="update record">
-                                <EditOutlined />
+                              <EditOutlined style={{ fontSize: '20px'}}/>
                             </Tooltip>
                     </a>
                     {/* eslint-enable jsx-a11y/anchor-is-valid */}
@@ -325,11 +309,27 @@ const Request = () => {
                         cancelText="No"
                     >
                           <Tooltip title="delete record">
-                                <DeleteOutlined />
+                                <DeleteOutlined style={{ fontSize: '20px', color:"red" }}/>
                             </Tooltip>
                         </Popconfirm>
                     {/*<a onClick={() => deleteById(record.id)}>Delete</a>*/}
                     {/* eslint-enable jsx-a11y/anchor-is-valid */}
+                    <Divider type="vertical"/>
+                    {/* eslint-disable jsx-a11y/anchor-is-valid */}
+                    {(record?.status == 'Pending') && (
+                        <Popconfirm
+                            title="Accept the request"
+                            description="Are you sure to accept this request?"
+                            onConfirm={() => confirmAccept(record.id)}
+                            onCancel={cancel}
+                            okText="Yes"
+                            cancelText="No"
+                        >
+                            <Tooltip title="accept">
+                                <EyeOutlined style={{ fontSize: '20px'}}/>
+                            </Tooltip>
+                        </Popconfirm>
+                    )}
                         </span>
             ),
         },
@@ -337,7 +337,7 @@ const Request = () => {
     return (
         <>
             {contextHolder}
-            <Row justify="end" style={{marginBottom: 16}}>
+            <Row  justify="end">
                 <Col>
                     <Button onClick={() => showDrawer(undefined)}>Add New Recored</Button>
                 </Col>
@@ -361,13 +361,13 @@ const Request = () => {
                         onFinishFailed={onFinishFailed}
                     >
 
-                        <Form.Item
-                            label="fname"
-                            name="fname"
-                            rules={[{required: true, message: 'Please input fname!'}]}
-                        >
-                            <Input/>
-                        </Form.Item>
+                        {/*<Form.Item*/}
+                        {/*    label="fname"*/}
+                        {/*    name="fname"*/}
+                        {/*    rules={[{required: true, message: 'Please input fname!'}]}*/}
+                        {/*>*/}
+                        {/*    <Input/>*/}
+                        {/*</Form.Item>*/}
                         {/*<Form.Item*/}
                         {/*    label="phone"*/}
                         {/*    name="phone"*/}

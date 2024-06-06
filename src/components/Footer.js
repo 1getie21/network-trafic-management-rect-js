@@ -2,24 +2,30 @@ import React from "react";
 
 function Footer() {
     return (
-            <span style={{
+        <div
+            style={{
                 textAlign: "center",
                 color: "white",
-                backgroundColor: "black",
-                alignItems: "center",
+                backgroundColor: "rgba(8, 5, 46, 0.98)",
                 fontWeight: "bold",
-                justifyContent: "center"
-            }}>
-                <br/>
-            <div>
-                system teamop
-            </div>
-                <br/>
-            <div>
-                All rights are reserved
-            </div>
-                <br/>
-            </span>
+                padding: "20px",
+            }}
+        >
+            <div>system teamop</div>
+            <div>All rights are reserved</div>
+            <style>{`
+        @media (max-width: 768px) {
+          div {
+            font-size: 14px;
+          }
+        }
+        @media (max-width: 576px) {
+          div {
+            font-size: 12px;
+          }
+        }
+      `}</style>
+        </div>
     );
 }
 

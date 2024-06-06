@@ -11,11 +11,13 @@ import Login from "./components/Login";
 const App = () => {
     let isLoggedIn = AuthService.getCurrentUser();
     return (
-        <div style={{display: "flex", flexDirection: "column", flex: 1, height: '100vh'}}>
+        <div style={{display: "flex", marginTop: 60, flexDirection: "column", height: '100vh'}}>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap"/>
+
             {isLoggedIn ? (
                 <>
                     <Header/>
-                    <div style={{display: "flex", flexDirection: "row", flex: 1}}>
+                    <div style={{display: "flex", flexDirection: "row"}}>
                         <SideMenu/>
                         <Content/>
                     </div>

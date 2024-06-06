@@ -177,7 +177,7 @@ const CheckList = () => {
 
     const columns = [
         {
-            title: 'Id',
+            title: '#',
             dataIndex: 'id',
             key: 'id',
             render: (text, record, index) => index + 1,
@@ -233,7 +233,7 @@ const CheckList = () => {
                 <span>
                 {/* eslint-disable jsx-a11y/anchor-is-valid */}
                     <a onClick={() => showDrawer(record.id)}>
-                        <EditOutlined/>
+                        <EditOutlined style={{ fontSize: '20px'}}/>
                     </a>
                     {/* eslint-enable jsx-a11y/anchor-is-valid */}
 
@@ -249,7 +249,7 @@ const CheckList = () => {
                         cancelText="No"
                     >
     <a danger> 
-<DeleteOutlined/>
+<DeleteOutlined style={{ fontSize: '20px', color:"red" }}/>
     </a>
   </Popconfirm>
                     {/*<a onClick={() => deleteById(record.id)}>Delete</a>*/}

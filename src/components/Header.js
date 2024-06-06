@@ -90,17 +90,26 @@ const Header = () => {
 
     return (
         <div style={{
+            position: "fixed", // Make the header fixed
+            top: 0, // Position it at the top of the viewport
+            width: "100%", // Occupy full width
+            zIndex: 1000, // Set a high z-index to ensure it's on top of other elements
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.5)",
+            padding: "0 20px",
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
+            backgroundColor: "rgb(255,255,255)", // Semi-transparent white background
             height: 60,
-            backgroundColor: "blue"
+            // backgroundImage: "url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSx6yBZlLnqn-b9ZCU-bug-r6Ytcmdv1_dDPw&s')", // Replace 'path_to_your_image.jpg' with the actual path to your image
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
         }}>
-            <div></div>
+            <div style={{fontWeight: "bold", fontSize: 20}}>Traffic Management System</div>
             <Dropdown overlay={menu} trigger={['click']}>
-                <Button type="text" style={{ color: 'white', fontWeight: "bold", fontSize: 20 }}>
-                    <UserOutlined /> {isLoggedIn ? `${isLoggedIn.firstName} ${isLoggedIn.lastName}` : 'Guest'}
-                    <CaretDownOutlined />
+                <Button type="text" style={{color: 'black', fontWeight: "bold", fontSize: 20}}>
+                    <UserOutlined/> {isLoggedIn ? `${isLoggedIn.firstName} ${isLoggedIn.lastName}` : 'Guest'}
+                    <CaretDownOutlined/>
                 </Button>
             </Dropdown>
             {password()}
