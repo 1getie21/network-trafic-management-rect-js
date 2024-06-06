@@ -28,8 +28,8 @@ const Ftraffics = () => {
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    const API_URL = "http://localhost:8080";
-    // const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+    // const API_URL = "http://localhost:8080";
+    const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [trForm] = Form.useForm();
     const [trSearchForm] = Form.useForm();
 
@@ -220,7 +220,7 @@ const Ftraffics = () => {
 
     const columns = [
         {
-            title: '#',
+            title: 'Id',
             dataIndex: 'id',
             key: 'id',
             render: (text, record, index) => index + 1,
@@ -275,7 +275,7 @@ const Ftraffics = () => {
             render: (text, record) => (
                 <span>
                     <a onClick={() => showDrawer(record.id)}>
-                        <EditOutlined style={{ fontSize: '20px'}}/>
+                        <EditOutlined/>
                     </a>
                     <Divider type="vertical"/>
                     <Popconfirm
@@ -285,8 +285,10 @@ const Ftraffics = () => {
                         onCancel={cancel}
                         okText="Yes"
                         cancelText="No"
-                    > 
-                        <DeleteOutlined style={{ fontSize: '20px', color:"red" }}/> 
+                    >
+                        <a danger>
+                        <DeleteOutlined/>
+                        </a>
                     </Popconfirm>
                 </span>
             ),
@@ -311,7 +313,7 @@ const Ftraffics = () => {
                                         onFinishFailed={onSearchFinishFailed}
                                     >
                                         <Row>
-                                            <Col  span={8}>
+                                            <Col>
                                                 <Form.Item
                                                     name="from"
                                                     rules={[
@@ -325,16 +327,15 @@ const Ftraffics = () => {
                                                     <RangePicker/>
                                                 </Form.Item>
                                             </Col>
-                                            <Col span={1}></Col>
-                                            <Col span={7}>
+                                            <Col>
                                                 <Form.Item>
                                                     <Button type="primary" htmlType="submit">Submit</Button>
                                                 </Form.Item>
                                             </Col>
-                                            <Col span={8}>
+                                            <Col>
                                                 <Form.Item>
                                                     <a target="_blank" href={API_URL + "/api/pdf" + date}>
-                                                        <CloudDownloadOutlined style={{ fontSize: '30px' }} />
+                                                        <CloudDownloadOutlined/>
                                                     </a>
                                                 </Form.Item>
                                             </Col>
@@ -345,19 +346,30 @@ const Ftraffics = () => {
                         ]}
                     />
                 </Col>
-                <Col span={6}></Col>
-                <Col span={4}>
-                    <Select
-                        onChange={handleCHange}
-                        showSearch
-                        placeholder="Select a time traffic"
-                        optionFilterProp="children"
-                        options={[
-                            {value: '8 O\'clock', label: '8 O\'clock'},
-                            {value: '14 O\'clock', label: '14 O\'clock'},
-                            {value: '18 O\'clock', label: '18 O\'clock'},
+                <Col span={1}></Col>
+                <Col span={9}>
+                    <Collapse
+                        items={[
+                            {
+                                key: '1',
+                                label: 'FIlter By Traffic Time',
+                                children:
+                                    <Select
+                                        onChange={handleCHange}
+                                        showSearch
+                                        placeholder="Select a time traffic"
+                                        optionFilterProp="children"
+                                        options={[
+                                            {value: '8 O\'clock', label: '8 O\'clock'},
+                                            {value: '14 O\'clock', label: '14 O\'clock'},
+                                            {value: '18 O\'clock', label: '18 O\'clock'},
+                                        ]}
+                                    />
+                                ,
+                            },
                         ]}
                     />
+
                 </Col>
                 <Col span={4}>
                     <Button onClick={() => showDrawer(undefined)}>Add New Traffic</Button>

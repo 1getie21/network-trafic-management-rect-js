@@ -10,8 +10,8 @@ const Login = () => {
         AuthService.login(values)
             .then(() => {
                 window.location.reload();
-            }, error => {
-                setError(error?.response?.data?.apierror?.message)
+            }, error => { 
+                setError(error?.message+' '+error?.response?.data?.apierror?.message)
             });
     };
 
