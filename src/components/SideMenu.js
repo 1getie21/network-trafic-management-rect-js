@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Menu, Button } from "antd";
+import {Tooltip, Menu, Button } from "antd";
 import {
-    CheckSquareOutlined, DisconnectOutlined, FileAddOutlined, FormOutlined,
+    LineChartOutlined, CheckSquareOutlined, DisconnectOutlined, FileAddOutlined, FormOutlined,
     MenuUnfoldOutlined, MenuFoldOutlined, SecurityScanOutlined, UserAddOutlined,
 } from "@ant-design/icons";
 import AuthService from "../auth/AuthService ";
@@ -30,7 +30,7 @@ if (listOfRoles) {
     }
     if (listOfRoles.includes('ROLE_ADMIN') || listOfRoles.includes('ROLE_MEMBER')) {
         ListOfItems.push(
-            getItem('Daily Traffic Monitoring', 'f-traffics', <UserAddOutlined />),
+            getItem('Daily Traffic Monitoring', 'f-traffics', <LineChartOutlined/>),
             getItem('Failed Traffics', 'failed-traffics', <DisconnectOutlined />),
             getItem('Sites', 'sites', <FileAddOutlined />),
             getItem('Traffic Request', 'request', <FormOutlined />),
@@ -62,6 +62,7 @@ function SideMenu() {
             fontFamily: 'Roboto, sans-serif', // Apply Roboto font to the component
             // overflowY: 'auto', // Make the menu scrollable
         }}>
+            <Tooltip title="collapsed">
             <Button
                 type="primary"
                 onClick={toggleCollapsed}
@@ -70,6 +71,7 @@ function SideMenu() {
                 }}>
                 {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             </Button>
+            </Tooltip>
             <Menu
                 style={{ height: '100%' }}
                 onClick={({ key }) => {

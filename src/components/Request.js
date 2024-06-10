@@ -13,9 +13,9 @@ const Request = () => {
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    const API_URL = "http://localhost:8080";
+const API_URL = "http://localhost:8080";
 
-    // const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+//const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [trForm] = Form.useForm();
     const [selectedFile1, setSelectedFile1] = useState(null);
     //const [selectedFile2, setSelectedFile2] = useState(null);
@@ -190,7 +190,7 @@ const Request = () => {
             render: (text, record, index) => index + 1,
         },
         {
-            title: 'FName',
+            title: 'Name',
             dataIndex: 'createdBy',
             key: 'createdBy',
         },
@@ -281,18 +281,36 @@ const Request = () => {
                             {record?.descriptionFile && (
                                 <Tooltip title="download file">
                                     <a target="_blank" href={API_URL + "/files/" + record.descriptionFile}>
-                                        <CloudDownloadOutlined style={{ fontSize: '20px'}}/>
+                                        <CloudDownloadOutlined style={{ fontSize: '17px'}}/>
                                     </a>
                                 </Tooltip>
 
                             )}
                         </>
                     )}
+
+                    <Divider type="vertical"/>
+                    {/* eslint-disable jsx-a11y/anchor-is-valid */}
+                    {(record?.status == 'Pending') && (
+                        <Popconfirm
+                            title="Accept the request"
+                            description="Are you sure to accept this request?"
+                            onConfirm={() => confirmAccept(record.id)}
+                            onCancel={cancel}
+                            okText="Yes"
+                            cancelText="No"
+                        >
+                            <Tooltip title="accept">
+                                <EyeOutlined style={{ fontSize: '18px'}}/>
+                            </Tooltip>
+                        </Popconfirm>
+                    )}
+
                     <Divider type="vertical"/>
 
                      <a onClick={() => showDrawer(record.id)}>
                           <Tooltip title="update record">
-                              <EditOutlined style={{ fontSize: '20px'}}/>
+                              <EditOutlined style={{ fontSize: '16px'}}/>
                             </Tooltip>
                     </a>
                     {/* eslint-enable jsx-a11y/anchor-is-valid */}
@@ -309,27 +327,28 @@ const Request = () => {
                         cancelText="No"
                     >
                           <Tooltip title="delete record">
-                                <DeleteOutlined style={{ fontSize: '20px', color:"red" }}/>
+                                <DeleteOutlined style={{ fontSize: '17px', color:"red" }}/>
                             </Tooltip>
                         </Popconfirm>
                     {/*<a onClick={() => deleteById(record.id)}>Delete</a>*/}
                     {/* eslint-enable jsx-a11y/anchor-is-valid */}
-                    <Divider type="vertical"/>
-                    {/* eslint-disable jsx-a11y/anchor-is-valid */}
-                    {(record?.status == 'Pending') && (
-                        <Popconfirm
-                            title="Accept the request"
-                            description="Are you sure to accept this request?"
-                            onConfirm={() => confirmAccept(record.id)}
-                            onCancel={cancel}
-                            okText="Yes"
-                            cancelText="No"
-                        >
-                            <Tooltip title="accept">
-                                <EyeOutlined style={{ fontSize: '20px'}}/>
-                            </Tooltip>
-                        </Popconfirm>
-                    )}
+
+                    {/*<Divider type="vertical"/>*/}
+                    {/*/!* eslint-disable jsx-a11y/anchor-is-valid *!/*/}
+                    {/*{(record?.status == 'Pending') && (*/}
+                    {/*    <Popconfirm*/}
+                    {/*        title="Accept the request"*/}
+                    {/*        description="Are you sure to accept this request?"*/}
+                    {/*        onConfirm={() => confirmAccept(record.id)}*/}
+                    {/*        onCancel={cancel}*/}
+                    {/*        okText="Yes"*/}
+                    {/*        cancelText="No"*/}
+                    {/*    >*/}
+                    {/*        <Tooltip title="accept">*/}
+                    {/*            <EyeOutlined style={{ fontSize: '18px'}}/>*/}
+                    {/*        </Tooltip>*/}
+                    {/*    </Popconfirm>*/}
+                    {/*)}*/}
                         </span>
             ),
         },

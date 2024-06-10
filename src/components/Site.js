@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Col, Divider, Drawer, Form, Input, notification, Popconfirm, Row, Table} from "antd";
+import {Button, Tooltip, Col, Divider, Drawer, Form, Input, notification, Popconfirm, Row, Table} from "antd";
 import axiosInstance from "../auth/authHeader";
 
 import {CloudDownloadOutlined, EditOutlined, DeleteOutlined} from "@ant-design/icons";
@@ -165,9 +165,11 @@ const Site = () => {
             render: (text, record) => (
                 <span>
                     {/* eslint-disable jsx-a11y/anchor-is-valid */}
+                    <Tooltip title="Update Rcored">
                     <a onClick={() => showDrawer(record.id)}>
-                        <EditOutlined style={{fontSize: '20px'}}/>
+                        <EditOutlined style={{fontSize: '16px'}}/>
                     </a>
+                    </Tooltip>
                     {/* eslint-enable jsx-a11y/anchor-is-valid */}
                     <Divider type="vertical"/>
                      <Popconfirm
@@ -176,8 +178,12 @@ const Site = () => {
                          onConfirm={() => deleteById(record.id)}
                          onCancel={cancel}
                          okText="Yes"
-                         cancelText="No"> 
-                            <DeleteOutlined style={{fontSize: '20px', color: "red"}}/>
+                         cancelText="No">
+                                 <Tooltip title="Delete Task">
+                                     <a danger>
+                            <DeleteOutlined style={{fontSize: '16px', color: "red"}}/>
+                                         </a>
+                                          </Tooltip>
                       </Popconfirm>
                 </span>
             ),

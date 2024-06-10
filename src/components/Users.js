@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Col, Divider, Drawer, Form, Input, notification, Popconfirm, Row, Select, Table} from "antd";
+import {Button,Tooltip, Col, Divider, Drawer, Form, Input, notification, Popconfirm, Row, Select, Table} from "antd";
 import axiosInstance from "../auth/authHeader";
 
 import {CloudDownloadOutlined, EditOutlined, DeleteOutlined} from "@ant-design/icons";
@@ -59,6 +59,8 @@ const Users = () => {
                     openNotificationWithIcon('error', 'Error', error?.message)
                 });
     };
+
+
     const getDataById = (id) => {
         axiosInstance.get(API_URL + "/users/" + id)
             .then(response => {
@@ -208,9 +210,11 @@ const Users = () => {
             render: (text, record) => (
                 <span>
                 {/* eslint-disable jsx-a11y/anchor-is-valid */}
+                    <Tooltip title="Update Record">
                     <a onClick={() => showUserDrawer(record.id)}>
-                        <EditOutlined style={{ fontSize: '20px'}}/>
+                        <EditOutlined style={{ fontSize: '16px'}}/>
                     </a>
+                      </Tooltip>
                     {/* eslint-enable jsx-a11y/anchor-is-valid */}
 
                     <Divider type="vertical"/>
@@ -222,9 +226,11 @@ const Users = () => {
                                okText="Yes"
                                cancelText="No"
                            >
+                               <Tooltip title="Delete Task">
                     <a danger>
-                         <DeleteOutlined style={{ fontSize: '20px', color:"red" }}/>
+                         <DeleteOutlined style={{ fontSize: '16px', color:"red" }}/>
                     </a>
+                               </Tooltip>
                 </Popconfirm>
 
                     {/* eslint-disable jsx-a11y/anchor-is-valid */}

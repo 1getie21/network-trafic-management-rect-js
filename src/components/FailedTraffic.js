@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
-    Button,
+    Button,Tooltip,
     Col,
     DatePicker,
     Divider,
@@ -24,8 +24,8 @@ const FailedTraffics = () => {
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    // const API_URL = "http://localhost:8080";
-    const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+ const API_URL = "http://localhost:8080";
+  //const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [trForm] = Form.useForm();
 
     const [sites, setSites] = useState([]);
@@ -303,9 +303,12 @@ const FailedTraffics = () => {
             key: 'action',
             render: (text, record) => (
                 <span>
-                   <a onClick={() => showDrawer(record.id)}> 
-                    <EditOutlined style={{ fontSize: '20px'}}/>
+                    <Tooltip title="Update Rcored">
+                    <a onClick={() => showDrawer(record.id)}>
+                    <EditOutlined style={{ fontSize: '16px'}}/>
                    </a>
+                        </Tooltip>
+
                    <Divider type="vertical"/>
                    <Popconfirm
                        title="Delete the task"
@@ -315,9 +318,11 @@ const FailedTraffics = () => {
                        okText="Yes"
                        cancelText="No"
                    >
+                       <Tooltip title="Delete Task">
                        <a danger>
-                        <DeleteOutlined style={{ fontSize: '20px', color:"red" }}/>
+                        <DeleteOutlined style={{ fontSize: '16px', color:"red" }}/>
                        </a>
+                       </Tooltip>
                    </Popconfirm>
                </span>
             ),

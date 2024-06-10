@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
-    Button,
+    Button,Tooltip,
     Col,
     Divider,
     Drawer,
@@ -28,8 +28,8 @@ const Ftraffics = () => {
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    // const API_URL = "http://localhost:8080";
-    const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+ const API_URL = "http://localhost:8080";
+  // const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [trForm] = Form.useForm();
     const [trSearchForm] = Form.useForm();
 
@@ -220,7 +220,7 @@ const Ftraffics = () => {
 
     const columns = [
         {
-            title: 'Id',
+            title: '#',
             dataIndex: 'id',
             key: 'id',
             render: (text, record, index) => index + 1,
@@ -274,22 +274,24 @@ const Ftraffics = () => {
             key: 'action',
             render: (text, record) => (
                 <span>
-                    <a onClick={() => showDrawer(record.id)}>
-                        <EditOutlined/>
-                    </a>
-                    <Divider type="vertical"/>
-                    <Popconfirm
-                        title="Delete the task"
-                        description="Are you sure to delete this task?"
-                        onConfirm={() => confirm(record.id)}
-                        onCancel={cancel}
-                        okText="Yes"
-                        cancelText="No"
-                    >
-                        <a danger>
-                        <DeleteOutlined/>
+                    <Tooltip title="Update Recored">
+                        <a onClick={() => showDrawer(record.id)}>
+                            <EditOutlined style={{ fontSize: '16px' }}/>
                         </a>
-                    </Popconfirm>
+                    </Tooltip>
+                    <Divider type="vertical"/>
+                    <Tooltip title="Delete Task">
+                        <Popconfirm
+                            title="Delete the task"
+                            description="Are you sure to delete this task?"
+                            onConfirm={() => confirm(record.id)}
+                            onCancel={cancel}
+                            okText="Yes"
+                            cancelText="No"
+                        >
+                            <DeleteOutlined style={{ fontSize: '16px', color:"red" }}/>
+                        </Popconfirm>
+                    </Tooltip>
                 </span>
             ),
         },
@@ -298,8 +300,8 @@ const Ftraffics = () => {
     return (
         <>
             {contextHolder}
-            <Row justify="end" style={{marginBottom: 16}}>
-                <Col span={10}>
+            <Row justify="end" style={{marginBottom: 22}}>
+                <Col span={12}>
                     <Collapse
                         items={[
                             {
@@ -313,7 +315,7 @@ const Ftraffics = () => {
                                         onFinishFailed={onSearchFinishFailed}
                                     >
                                         <Row>
-                                            <Col>
+                                            <Col  span={10}>
                                                 <Form.Item
                                                     name="from"
                                                     rules={[
@@ -327,18 +329,19 @@ const Ftraffics = () => {
                                                     <RangePicker/>
                                                 </Form.Item>
                                             </Col>
-                                            <Col>
+                                            <Col span={1}></Col>
+                                            <Col span={7}>
                                                 <Form.Item>
                                                     <Button type="primary" htmlType="submit">Submit</Button>
                                                 </Form.Item>
                                             </Col>
-                                            <Col>
-                                                <Form.Item>
-                                                    <a target="_blank" href={API_URL + "/api/pdf" + date}>
-                                                        <CloudDownloadOutlined/>
-                                                    </a>
-                                                </Form.Item>
-                                            </Col>
+                                            {/*<Col span={8}>*/}
+                                            {/*    <Form.Item>*/}
+                                            {/*        <a target="_blank" href={API_URL + "/api/pdf" + date}>*/}
+                                            {/*            <CloudDownloadOutlined style={{ fontSize: '30px' }} />*/}
+                                            {/*        </a>*/}
+                                            {/*    </Form.Item>*/}
+                                            {/*</Col>*/}
                                         </Row>
                                     </Form>
                                 ,
@@ -346,30 +349,33 @@ const Ftraffics = () => {
                         ]}
                     />
                 </Col>
-                <Col span={1}></Col>
-                <Col span={9}>
-                    <Collapse
-                        items={[
-                            {
-                                key: '1',
-                                label: 'FIlter By Traffic Time',
-                                children:
-                                    <Select
-                                        onChange={handleCHange}
-                                        showSearch
-                                        placeholder="Select a time traffic"
-                                        optionFilterProp="children"
-                                        options={[
-                                            {value: '8 O\'clock', label: '8 O\'clock'},
-                                            {value: '14 O\'clock', label: '14 O\'clock'},
-                                            {value: '18 O\'clock', label: '18 O\'clock'},
-                                        ]}
-                                    />
-                                ,
-                            },
+                <Row>
+                    <Col span={12}>
+                        <Form.Item
+                            name="download file">
+                            <Tooltip title="Download File">
+                                <a target="_blank" href={API_URL + "/api/pdf" + date}>
+                                    <CloudDownloadOutlined style={{ fontSize: '30px' }} />
+                                </a>
+                            </Tooltip>
+                        </Form.Item>
+                    </Col>
+                </Row>
+
+
+                <Col span={6}></Col>
+                <Col span={4}>
+                    <Select
+                        onChange={handleCHange}
+                        showSearch
+                        placeholder="Select a time traffic"
+                        optionFilterProp="children"
+                        options={[
+                            {value: '8 O\'clock', label: '8 O\'clock'},
+                            {value: '14 O\'clock', label: '14 O\'clock'},
+                            {value: '18 O\'clock', label: '18 O\'clock'},
                         ]}
                     />
-
                 </Col>
                 <Col span={4}>
                     <Button onClick={() => showDrawer(undefined)}>Add New Traffic</Button>

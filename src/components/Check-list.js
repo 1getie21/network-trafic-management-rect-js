@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { InputNumber } from 'antd';
-import { Button, Col, Divider, Drawer, Form, Input, notification, Popconfirm, Row, Select, Table } from "antd";
+import { Button, Tooltip, Col, Divider, Drawer, Form, Input, notification, Popconfirm, Row, Select, Table } from "antd";
 import axiosInstance from "../auth/authHeader";
 import {CloudDownloadOutlined, EditOutlined, DeleteOutlined} from "@ant-design/icons";
  
@@ -232,9 +232,11 @@ const CheckList = () => {
             render: (text, record) => (
                 <span>
                 {/* eslint-disable jsx-a11y/anchor-is-valid */}
+                    <Tooltip title="Update Recored">
                     <a onClick={() => showDrawer(record.id)}>
-                        <EditOutlined style={{ fontSize: '20px'}}/>
+                        <EditOutlined style={{ fontSize: '16px'}}/>
                     </a>
+                        </Tooltip>
                     {/* eslint-enable jsx-a11y/anchor-is-valid */}
 
                     <Divider type="vertical"/>
@@ -248,16 +250,18 @@ const CheckList = () => {
                         okText="Yes"
                         cancelText="No"
                     >
-    <a danger> 
-<DeleteOutlined style={{ fontSize: '20px', color:"red" }}/>
-    </a>
-  </Popconfirm>
-                    {/*<a onClick={() => deleteById(record.id)}>Delete</a>*/}
-                    {/* eslint-enable jsx-a11y/anchor-is-valid */}
-                </span>
-            ),
-        },
-    ];
+                        <Tooltip title="Delete Task">
+                <a danger>
+            <DeleteOutlined style={{ fontSize: '16px', color:"red" }}/>
+                </a>
+                      </Tooltip>
+              </Popconfirm>
+                                {/*<a onClick={() => deleteById(record.id)}>Delete</a>*/}
+                                {/* eslint-enable jsx-a11y/anchor-is-valid */}
+                            </span>
+                        ),
+                    },
+                ];
     return (
         <>
             {contextHolder}
