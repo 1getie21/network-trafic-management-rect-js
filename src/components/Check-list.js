@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { InputNumber } from 'antd';
-import { Button, Tooltip, Col, Divider, Drawer, Form, Input, notification, Popconfirm, Row, Select, Table } from "antd";
+import { Button,
+    Tooltip, DatePicker, RangePicker as AntRangePicker,
+    Collapse, Col,
+    Divider, Drawer,
+    Form, Input, notification,
+    Popconfirm, Row,
+    Select, Table } from "antd";
 import axiosInstance from "../auth/authHeader";
 import {CloudDownloadOutlined, EditOutlined, DeleteOutlined} from "@ant-design/icons";
- 
+const {RangePicker} = DatePicker;
 
 const CheckList = () => {
     const [data, setData] = useState([]);
@@ -12,9 +18,11 @@ const CheckList = () => {
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    // const API_URL = "http://localhost:8080";
-    const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+    const API_URL = "http://localhost:8080";
+    //const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [trForm] = Form.useForm();
+    const [date, setDate] = useState('');
+
 
     const SubmitButton = ({ form: trafficForm, children }) => {
         const [submittable, setSubmittable] = React.useState(false);
@@ -130,6 +138,25 @@ const CheckList = () => {
                 error => {
                     openNotificationWithIcon('error', 'Error', error?.message)
                 });
+    };
+
+    const onSearchSubmitClick = (values) => {
+        const fromDate = values.from[0].format('YYYY-MM-DD');
+        const toDate = values.from[1].format('YYYY-MM-DD');
+        setDate('/' + fromDate + '/' + toDate);
+        axiosInstance.get(`${API_URL}/f-traffics/${fromDate}/${toDate}`)
+            .then(response => {
+                setData(response?.data?._embedded?.fTrafficDtoses);
+                setLoading(false);
+            })
+            .catch(error => {
+                setLoading(false);
+                openNotificationWithIcon('error', 'Error', error?.message);
+            });
+    };
+
+    const onSearchFinishFailed = (errorInfo) => {
+        console.log('Failed:', errorInfo);
     };
 
     const onSubmitClick = (values) => {
@@ -265,7 +292,65 @@ const CheckList = () => {
     return (
         <>
             {contextHolder}
-            <Row justify="end" style={{marginBottom: 16}}>
+            <Row justify="space-between" style={{ marginBottom: '8px' }}>
+                <Col span={13}>
+                    <Collapse
+                        items={[
+                            {
+                                key: '1',
+                                label: 'Filter By Date Range',
+                                children: (
+                                    <Form
+                                        name="validateOnly"
+                                        layout="horizontal"
+                                        onFinish={onSearchSubmitClick}
+                                        onFinishFailed={onSearchFinishFailed}
+                                    >
+                                        <Row justify="start"> {/* Align items to the start */}
+                                            <Col span={12}>
+                                                <Form.Item
+                                                    name="from"
+                                                    rules={[
+                                                        {
+                                                            type: 'array',
+                                                            required: true,
+                                                            message: 'Please select the date range!'
+                                                        }
+                                                    ]}
+                                                >
+                                                    <RangePicker />
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={1}></Col>
+                                            <Col span={6}>
+                                                <Form.Item>
+                                                    <Button type="primary" htmlType="submit">Submit</Button>
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    </Form>
+
+
+                                ),
+                            },
+                        ]}
+                    />
+                </Col>
+
+                <Row>
+                    <Col span={8} style={{ textAlign: 'center' }}> {/* Center aligns content */}
+                        <Form.Item name="download file">
+                            <Tooltip title="Download File">
+                                <a target="_blank" href={API_URL + "/api/pdf" + date}>
+                                    <CloudDownloadOutlined style={{ fontSize: '30px' }} />
+                                </a>
+                            </Tooltip>
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}></Col> {/* This empty column ensures space between the Download File button and the right edge of the row */}
+                </Row>
+
+
                 <Col>
                     <Button onClick={() => showDrawer(undefined)}>Add New Record</Button>
                 </Col>
@@ -366,3 +451,4 @@ const CheckList = () => {
 };
 
 export default CheckList;
+

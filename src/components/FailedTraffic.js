@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-    Button,Tooltip,
+    Button, Tooltip,
     Col,
-    DatePicker,
+    DatePicker, Collapse, RangePicker as AntRangePicker,
     Divider,
     Drawer,
     Form,
@@ -15,8 +15,9 @@ import {
 } from "antd";
 import axiosInstance from "../auth/authHeader";
 import dayjs from "dayjs";
-import {CloudDownloadOutlined, EditOutlined, DeleteOutlined} from "@ant-design/icons";
+import { CloudDownloadOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
+const {RangePicker} = DatePicker;
 const FailedTraffics = () => {
     const [data, setData] = useState([]);
     const [dataById, setDataById] = useState(null);
@@ -24,8 +25,8 @@ const FailedTraffics = () => {
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
- const API_URL = "http://localhost:8080";
-  //const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+   // const API_URL = "http://localhost:8080";
+    const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [trForm] = Form.useForm();
 
     const [sites, setSites] = useState([]);
@@ -50,6 +51,9 @@ const FailedTraffics = () => {
             </Button>
         );
     };
+
+    // Define setDate if necessary
+    const [date, setDate] = useState("");
 
     const getAllData = () => {
         axiosInstance.get(API_URL + "/failed-traffics")
@@ -171,6 +175,25 @@ const FailedTraffics = () => {
                 });
             }
         }
+    };
+
+    const onSearchSubmitClick = (values) => {
+        const fromDate = values.from[0].format('YYYY-MM-DD');
+        const toDate = values.from[1].format('YYYY-MM-DD');
+        setDate('/' + fromDate + '/' + toDate);
+        axiosInstance.get(`${API_URL}/f-traffics/${fromDate}/${toDate}`)
+            .then(response => {
+                setData(response?.data?._embedded?.fTrafficDtoses);
+                setLoading(false);
+            })
+            .catch(error => {
+                setLoading(false);
+                openNotificationWithIcon('error', 'Error', error?.message);
+            });
+    };
+
+    const onSearchFinishFailed = (errorInfo) => {
+        console.log('Failed:', errorInfo);
     };
 
     const onSubmitClick = (values) => {
@@ -332,7 +355,76 @@ const FailedTraffics = () => {
     return (
         <>
             {contextHolder}
-            <Row justify="end" style={{marginBottom: 16}}>
+
+            <Row justify="space-between" style={{ marginBottom: '4px' }}>
+                <Col span={10}>
+                    <Collapse
+                        items={[
+                            {
+                                key: '1',
+                                label: 'Filter By Date Range',
+                                children: (
+                                    <Form
+                                        name="validateOnly"
+                                        layout="horizontal"
+                                        onFinish={onSearchSubmitClick}
+                                        onFinishFailed={onSearchFinishFailed}
+                                    >
+                                        <Row justify="start"> {/* Align items to the start */}
+                                            <Col span={12}>
+                                                <Form.Item
+                                                    name="from"
+                                                    rules={[
+                                                        {
+                                                            type: 'array',
+                                                            required: true,
+                                                            message: 'Please select the date range!'
+                                                        }
+                                                    ]}
+                                                >
+                                                    <RangePicker />
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={1}></Col>
+                                            <Col span={6}>
+                                                <Form.Item>
+                                                    <Button type="primary" htmlType="submit">Submit</Button>
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    </Form>
+                                ),
+                            },
+                        ]}
+                    />
+                </Col>
+                <Col span={4} style={{ textAlign: 'center' }}> {/* Center aligns content */}
+                    <Form.Item name="download file">
+                        <Tooltip title="Download File">
+                            <a target="_blank" href={API_URL + "/api/pdf" + date}>
+                                <CloudDownloadOutlined style={{ fontSize: '30px' }} />
+                            </a>
+                        </Tooltip>
+                    </Form.Item>
+                </Col>
+                <Col span={8}></Col> {/* This empty column ensures space between the Download File button and the right edge of the row */}
+            </Row>
+
+
+
+        {/*<Row>*/}
+        {/*        <Col>*/}
+        {/*            <Button onClick={() => showDrawer(undefined)}>Add New Traffic</Button>*/}
+        {/*        </Col>*/}
+        {/*    </Row>*/}
+
+        {/*    <Row>*/}
+        {/*        <Col span={24}>*/}
+        {/*            <Table loading={loading} columns={columns} dataSource={data} rowKey="id"/>*/}
+        {/*        </Col>*/}
+        {/*    </Row>*/}
+
+            <Row justify="end" style={{ marginBottom: '22px' }}>
                 <Col>
                     <Button onClick={() => showDrawer(undefined)}>Add New Traffic</Button>
                 </Col>

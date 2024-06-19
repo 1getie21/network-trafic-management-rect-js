@@ -23,15 +23,17 @@ const {RangePicker} = DatePicker;
 const Ftraffics = () => {
     const [data, setData] = useState([]);
     const [date, setDate] = useState([]);
+    const [timeTraficName, setTimeTraficName] = useState([]);
     const [dataById, setDataById] = useState(null);
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
- const API_URL = "http://localhost:8080";
-  // const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+    const API_URL = "http://localhost:8080";
+    // const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [trForm] = Form.useForm();
     const [trSearchForm] = Form.useForm();
+    const [selectedTrafficTime, setSelectedTrafficTime] = useState(null);
 
     const SubmitButton = ({form: trafficForm, children}) => {
         const [submittable, setSubmittable] = useState(false);
@@ -63,6 +65,7 @@ const Ftraffics = () => {
             </Button>
         );
     };
+
     const getAllData = () => {
         axiosInstance.get(API_URL + "/f-traffics")
             .then(response => {
@@ -158,6 +161,7 @@ const Ftraffics = () => {
     };
 
     const handleCHange = (value) => {
+        setTimeTraficName("/"+value)
         axiosInstance.get(API_URL + "/f-traffics/tr/" + value)
             .then(response => {
                     setData(response?.data?._embedded?.fTrafficDtoses);
@@ -198,6 +202,14 @@ const Ftraffics = () => {
 
     const onSearchFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
+    };
+
+    const handleDownload = () => {
+        if (selectedTrafficTime) {
+            window.open(`${API_URL}/api/pdf/${selectedTrafficTime}`, '_blank');
+        } else {
+            openNotificationWithIcon(',,');
+        }
     };
 
     const onSubmitClick = (values) => {
@@ -300,7 +312,7 @@ const Ftraffics = () => {
     return (
         <>
             {contextHolder}
-            <Row justify="end" style={{marginBottom: 22}}>
+            <Row justify="end" style={{marginBottom: 18}}>
                 <Col span={12}>
                     <Collapse
                         items={[
@@ -314,7 +326,7 @@ const Ftraffics = () => {
                                         onFinish={onSearchSubmitClick}
                                         onFinishFailed={onSearchFinishFailed}
                                     >
-                                        <Row>
+                                        <Row justify="start"> {/* Align items to the start */}
                                             <Col  span={10}>
                                                 <Form.Item
                                                     name="from"
@@ -349,8 +361,9 @@ const Ftraffics = () => {
                         ]}
                     />
                 </Col>
+
                 <Row>
-                    <Col span={12}>
+                    <Col span={16}>
                         <Form.Item
                             name="download file">
                             <Tooltip title="Download File">
@@ -362,8 +375,8 @@ const Ftraffics = () => {
                     </Col>
                 </Row>
 
-
                 <Col span={6}></Col>
+
                 <Col span={4}>
                     <Select
                         onChange={handleCHange}
@@ -376,6 +389,9 @@ const Ftraffics = () => {
                             {value: '18 O\'clock', label: '18 O\'clock'},
                         ]}
                     />
+                    <a target="_blank" href={API_URL + "/api/pdf" + timeTraficName}>
+                        <CloudDownloadOutlined style={{ fontSize: '30px' }} />
+                    </a>
                 </Col>
                 <Col span={4}>
                     <Button onClick={() => showDrawer(undefined)}>Add New Traffic</Button>

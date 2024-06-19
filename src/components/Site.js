@@ -40,12 +40,22 @@ const Site = () => {
     const getAllData = () => {
         axiosInstance.get(API_URL + "/sites?sort=name,asc")
             .then(response => {
-                const sortedData = response?.data?._embedded?.sitesDtoses.map(site => ({
-                    ...site,
-                    mainName: site.name.replace(/(IGW|PE)\s+/g, '') // Extract main part of name, ignoring prefixes
-                })).sort((a, b) => a.mainName.localeCompare(b.mainName));
-                console.log("Sorted data:", sortedData);
-                setData(sortedData);
+                const sortedData = response?.data?._embedded?.sitesDtoses; // Assuming direct access to sites data
+
+                // Optional: Log sorted data for debugging
+                console.log("Sorted data from API:", sortedData);
+
+                // If API doesn't return pre-sorted data, sort locally
+                if (!sortedData?.length || !sortedData[0]?.hasOwnProperty('name')) {
+                    console.warn("API data might not be sorted. Sorting locally.");
+                    setData(sortedData.map(site => ({
+                        ...site,
+                        mainName: site.name.replace(/(IGW|PE)\s+/g, '') // Extract main part of name, ignoring prefixes
+                    })).sort((a, b) => a.mainName.localeCompare(b.mainName)));
+                } else {
+                    // Use data as-is if already sorted by name
+                    setData(sortedData);
+                }
                 setLoading(false);
             })
             .catch(error => {
@@ -53,7 +63,7 @@ const Site = () => {
                 openNotificationWithIcon('error', 'Error', error?.message)
             });
     };
-
+    
     const getDataById = (id) => {
         axiosInstance.get(API_URL + "/sites/" + id)
             .then(response => {

@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {
-    Button, Col, Divider, Drawer, Form, Input, notification, Popconfirm, Row, Select, Table,Tag
+    Button, Col, DatePicker, Collapse,RangePicker as AntRangePicker, Divider, Drawer, Form, Input, notification, Popconfirm, Row, Select, Table,Tag
     ,Tooltip
 } from "antd";
 import axiosInstance from "../auth/authHeader";
 import {CloudDownloadOutlined, EditOutlined,EyeOutlined, DeleteOutlined} from "@ant-design/icons";
+
+const {RangePicker} = DatePicker;
 
 const Request = () => {
     const [data, setData] = useState([]);
@@ -17,6 +19,7 @@ const API_URL = "http://localhost:8080";
 
 //const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [trForm] = Form.useForm();
+    const [date, setDate] = useState('');
     const [selectedFile1, setSelectedFile1] = useState(null);
     //const [selectedFile2, setSelectedFile2] = useState(null);
 
@@ -142,6 +145,26 @@ const API_URL = "http://localhost:8080";
             setAddNewMode(false);
         }
     };
+
+    const onSearchSubmitClick = (values) => {
+        const fromDate = values.from[0].format('YYYY-MM-DD');
+        const toDate = values.from[1].format('YYYY-MM-DD');
+        setDate('/' + fromDate + '/' + toDate);
+        axiosInstance.get(`${API_URL}/f-traffics/${fromDate}/${toDate}`)
+            .then(response => {
+                setData(response?.data?._embedded?.fTrafficDtoses);
+                setLoading(false);
+            })
+            .catch(error => {
+                setLoading(false);
+                openNotificationWithIcon('error', 'Error', error?.message);
+            });
+    };
+
+    const onSearchFinishFailed = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+    };
+
     const onSubmitClick = (values) => {
         //values.detailFile = selectedFile2?.name
         values.descriptionFile = selectedFile1?.name
@@ -356,11 +379,65 @@ const API_URL = "http://localhost:8080";
     return (
         <>
             {contextHolder}
-            <Row  justify="end">
+
+            <Row justify="space-between" style={{ marginBottom: 18 }}>
+                <Col span={12}>
+                    <Collapse
+                        items={[
+                            {
+                                key: '1',
+                                label: 'Filter By Date Range',
+                                children: (
+                                    <Form
+                                        name="validateOnly"
+                                        layout="horizontal"
+                                        onFinish={onSearchSubmitClick}
+                                        onFinishFailed={onSearchFinishFailed}
+                                    >
+                                        <Row justify="start"> {/* Align items to the start */}
+                                            <Col span={10}>
+                                                <Form.Item
+                                                    name="from"
+                                                    rules={[
+                                                        {
+                                                            type: 'array',
+                                                            required: true,
+                                                            message: 'Please select the date range!'
+                                                        }
+                                                    ]}
+                                                >
+                                                    <RangePicker/>
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={1}></Col>
+                                            <Col span={7}>
+                                                <Form.Item>
+                                                    <Button type="primary" htmlType="submit">Submit</Button>
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    </Form>
+                                ),
+                            },
+                        ]}
+                    />
+                </Col>
+
+                <Col span={4}>
+                    <Form.Item name="download file">
+                        <Tooltip title="Download File">
+                            <a target="_blank" href={API_URL + "/api/pdf" + date}>
+                                <CloudDownloadOutlined style={{ fontSize: '30px' }} />
+                            </a>
+                        </Tooltip>
+                    </Form.Item>
+                </Col>
+
                 <Col>
-                    <Button onClick={() => showDrawer(undefined)}>Add New Recored</Button>
+                    <Button onClick={() => showDrawer(undefined)}>Add New Record</Button>
                 </Col>
             </Row>
+
             <Row>
                 <Col span={24}>
                     <Table loading={loading} columns={columns} dataSource={data} rowKey="id"/>

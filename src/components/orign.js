@@ -1,242 +1,247 @@
-// import React, {useEffect, useState} from 'react';
-// import {Button, Tooltip, Col, Divider, Drawer, Form, Input, notification, Popconfirm, Row, Table} from "antd";
-// import axiosInstance from "../auth/authHeader";
+// package com.insa.TeamOpsSystem.report;
 //
-// import {CloudDownloadOutlined, EditOutlined, DeleteOutlined} from "@ant-design/icons";
+// import com.insa.TeamOpsSystem.FTraffic.FTrafficRepository;
+// import com.insa.TeamOpsSystem.FTraffic.Ftraffics;
+// import com.insa.TeamOpsSystem.exceptions.AlreadyExistException;
+// import com.insa.TeamOpsSystem.failedTraffics.FailedTrafficRepository;
+// import com.insa.TeamOpsSystem.failedTraffics.FailedTraffics;
+// import com.itextpdf.kernel.pdf.PdfWriter;
+// import com.itextpdf.layout.Document;
+// import com.itextpdf.layout.element.Paragraph;
+// import com.itextpdf.layout.element.Table;
+// import com.itextpdf.kernel.pdf.PdfDocument;
+// import com.itextpdf.io.image.ImageDataFactory;
+// import com.itextpdf.layout.element.Image;
+// import com.itextpdf.layout.element.Div;
+// import com.itextpdf.layout.properties.HorizontalAlignment;
+// import com.itextpdf.layout.properties.TextAlignment;
+// import com.itextpdf.layout.properties.UnitValue;
+// import lombok.RequiredArgsConstructor;
+// import org.springframework.stereotype.Service;
 //
-// const Site = () => {
-//     const [data, setData] = useState([]);
-//     const [dataById, setDataById] = useState(null);
-//     const [open, setOpen] = useState(false);
-//     const [loading, setLoading] = useState(true);
-//     const [addNewMode, setAddNewMode] = useState(false);
-//     const [api, contextHolder] = notification.useNotification();
-//     const cancel = (e) => {
-//     };
+// import java.io.ByteArrayInputStream;
+// import java.io.ByteArrayOutputStream;
+// import java.time.LocalDate;
+// import java.util.List;
 //
-//     // const API_URL = "http://localhost:8080";
-//     const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+// @Service
+// @RequiredArgsConstructor
+// public class PdfService {
+//     private final FTrafficRepository trafficRepository;
+//     private final FailedTrafficRepository failedTrafficRepository;
+//
+//     public ByteArrayInputStream generatePdf() {
+//
+//         try {
+//             ByteArrayOutputStream out = new ByteArrayOutputStream();
+//             // Initialize PDF writer
+//             PdfWriter writer = new PdfWriter(out);
+//
+//             // Initialize PDF document
+//             PdfDocument pdf = new PdfDocument(writer);
+//
+//             // Initialize document
+//             Document document = new Document(pdf);
+//
+//             // Add image    please not to remove this one
+//             String imagePath = "\\\\10.10.10.112\\home\\img.png";
+//             Image img = new Image(ImageDataFactory.create(imagePath));
+//             img.setHorizontalAlignment(HorizontalAlignment.CENTER);
+//             document.add(img);
+//
+//             // Add title
+//             Paragraph title1 = new Paragraph("INFORMATION NETWORK SECURITY ADMINISTRATION")
+//                 .setBold().setFontSize(18).setTextAlignment(TextAlignment.CENTER);
+//             document.add(title1);
+//
+//             Paragraph title2 = new Paragraph("DAILY TOTAL TRAFFIC MONITORING CHECKLIST")
+//                 .setBold().setFontSize(16).setTextAlignment(TextAlignment.CENTER);
+//             document.add(title2);
+//
+//             // Add title2
+//             Paragraph title = new Paragraph("INFORMATION NETWORK SECURITY ADMINISTRATION")
+//                 .setBold().setFontSize(18).setTextAlignment(TextAlignment.CENTER);
+//             document.add(title);
+//
+//             Paragraph title3 = new Paragraph("FAILED TRAFFIC  CHECKLIST")
+//                 .setBold().setFontSize(16).setTextAlignment(TextAlignment.CENTER);
+//             document.add(title3);
 //
 //
-//     const openNotificationWithIcon = (type, messageTitle, description) => {
-//         api[type]({
-//             message: messageTitle,
-//             description: description,
-//         });
-//     };
-//     // const getAllData = () => {
-//     //     axiosInstance.get(API_URL + "/sites")
-//     //         .then(response => {
-//     //                 setData(response?.data?._embedded?.sitesDtoses);
-//     //                 setLoading(false);
-//     //             },
-//     //             error => {
-//     //                 setLoading(false);
-//     //                 openNotificationWithIcon('error', 'Error', error?.message)
-//     //             }
-//     //         );
-//     // };
+//             // Add date
+//             Paragraph date = new Paragraph("Date: all ")
+//                 .setTextAlignment(TextAlignment.CENTER)
+//                 .setUnderline(1.5f, -1);
+//             document.add(date);
 //
-//     const getAllData = () => {
-//         axiosInstance.get(API_URL + "/sites?sort=name,asc")
-//             .then(response => {
-//                 const sortedData = response?.data?._embedded?.sitesDtoses.map(site => ({
-//                     ...site,
-//                     mainName: site.name.replace(/(IGW|PE)\s+/g, '') // Extract main part of name, ignoring prefixes
-//                 })).sort((a, b) => a.mainName.localeCompare(b.mainName));
-//                 console.log("Sorted data:", sortedData);
-//                 setData(sortedData);
-//                 setLoading(false);
-//             })
-//             .catch(error => {
-//                 setLoading(false);
-//                 openNotificationWithIcon('error', 'Error', error?.message)
-//             });
-//     };
 //
-//     const getDataById = (id) => {
-//         axiosInstance.get(API_URL + "/sites/" + id)
-//             .then(response => {
-//                     setDataById(response?.data);
-//                 },
-//                 error => {
-//                     openNotificationWithIcon('error', 'Error', error?.message)
-//                 }
-//             );
-//     };
+//             // Add table for traffic data
+//             Table trafficTable = new Table(new float[]{1, 3, 3, 3, 3});
+//             trafficTable.setWidth(UnitValue.createPercentValue(100));
+//             trafficTable.setHorizontalAlignment(HorizontalAlignment.CENTER);
 //
-//     const deleteById = (id) => {
-//         axiosInstance.delete(API_URL + "/sites/" + id)
-//             .then(response => {
-//                     api.open({
-//                         message: 'Success',
-//                         description: 'Data Is deleted successfully.'
-//                     });
-//                     getAllData();
-//                 },
-//                 error => {
-//                     openNotificationWithIcon('error', 'Error', error?.message)
-//                 }
-//             );
-//     };
+//             trafficTable.addCell("No");
+//             trafficTable.addCell("Site");
+//             trafficTable.addCell("Time");
+//             trafficTable.addCell("Total Traffic");
+//             trafficTable.addCell("Remark");
+//             List<Ftraffics> ftraffics = trafficRepository.findAll();
+//             // Add rows (example data)
+//             for (Ftraffics traffics : ftraffics) {
+//                 trafficTable.addCell(traffics.getId() != null ? traffics.getId().toString() : "");
+//                 trafficTable.addCell(traffics.getSites() != null ? traffics.getSites().getName() : "");
+//                 trafficTable.addCell(traffics.getTrafficTimeName() != null ? traffics.getTrafficTimeName() : "");
+//                 trafficTable.addCell(traffics.getTimeValues() != null ? traffics.getTimeValues() : "");
+//                 trafficTable.addCell(traffics.getRemark() != null ? traffics.getRemark() : "");
 //
-//     const addNewRecord = (values) => {
-//         axiosInstance.post(API_URL + "/sites", values)
-//             .then(response => {
-//                     api.open({
-//                         message: 'Success',
-//                         description: 'New Site Is added successfully.'
-//                     });
-//                     getAllData();
-//                     setOpen(false);
-//                     setDataById(null);
-//                 },
-//                 error => {
-//                     console.log("Error=", error)
-//                     openNotificationWithIcon('error', 'Error', error?.message)
-//                 }
-//             );
-//     };
-//     const updateRecordById = (data, id) => {
-//         axiosInstance.put(API_URL + "/sites/" + id, data)
-//             .then(response => {
-//                     api.open({
-//                         message: 'Success',
-//                         description: 'Data Is updated successfully.'
-//                     });
-//                     getAllData();
-//                     setOpen(false);
-//                     setDataById(null);
-//                 },
-//                 error => {
-//                     openNotificationWithIcon('error', 'Error', error?.message)
-//                 });
-//     };
-//     const showDrawer = (id) => {
-//         setOpen(true);
-//         if (id === undefined) {
-//             setAddNewMode(true);
-//         } else {
-//             setDataById(null);
-//             getDataById(id);
-//             setAddNewMode(false);
+//             }
+//
+// //            // Add table to document
+// //            Div tableDiv = new Div();
+// //            tableDiv.setHorizontalAlignment(HorizontalAlignment.CENTER);
+// //            tableDiv.add(trafficTable);
+// //            document.add(tableDiv);
+// //
+// //            // Close document
+// //            document.close();
+//
+//
+//
+//             // Add table for failedtraffic data
+//             Table failedTable = new Table(new float[]{1, 3, 3, 3, 3});
+//             failedTable.setWidth(UnitValue.createPercentValue(100));
+//             failedTable.setHorizontalAlignment(HorizontalAlignment.CENTER);
+//
+//             failedTable.addCell("No");
+//             failedTable.addCell("Disconected Site");
+//             failedTable.addCell("Reported to");
+//             failedTable.addCell("FailedReason");
+//             // failedTable.addCell("Remark");
+//             List<FailedTraffics> failedTraffics = (List<FailedTraffics>) failedTrafficRepository.findAll();
+//             // Add rows (example data)
+//             for (FailedTraffics fftraffics : failedTraffics) {
+//                 failedTable.addCell(fftraffics.getId() != null ? fftraffics.getId().toString() : "");
+//                 failedTable.addCell(fftraffics.getSites() != null ? fftraffics.getSites().getName() : "");
+//                 failedTable.addCell(fftraffics.getFailedLinkType() != null ? fftraffics.getFailedLinkType() : "");
+//                 failedTable.addCell(fftraffics.getReportedTo() != null ? fftraffics.getReportedTo() : "");
+// //                failedTable.addCell(fftraffics.getFixedAt() != null ? fftraffics.getFixedAt() : "");
+// //                failedTable.addCell(fftraffics.getDisConnectedAt() != null ? fftraffics.getDisConnectedAt() : "");
+//                 failedTable.addCell(fftraffics.getFailedReason() != null ? fftraffics.getFailedReason() : "");
+//
+//             }
+//
+//             // Add table to document
+//             Div tableDiv = new Div();
+//             tableDiv.setHorizontalAlignment(HorizontalAlignment.CENTER);
+//             tableDiv.add(trafficTable);
+//             document.add(tableDiv);
+//
+//             // Close document
+//             document.close();
+//
+//             return new ByteArrayInputStream(out.toByteArray());
+//         } catch (Exception e) {
+//             throw new AlreadyExistException(e.getMessage());
 //         }
-//     };
 //
-//     const onSubmitClick = (values) => {
-//         if (addNewMode) {
-//             addNewRecord(values);
-//         } else {
-//             updateRecordById(values, dataById.id);
-//         }
-//     };
+//     }
 //
-//     const onFinishFailed = (errorInfo) => {
-//         console.log('Failed:', errorInfo);
-//     };
 //
-//     useEffect(() => {
-//         getAllData();
-//     }, []);
-//     const columns = [
-//         {
-//             title: '#',
-//             key: 'index',
-//             render: (text, record, index) => index + 1,
-//         },
-//         // {
-//         //     title: 'Id',
-//         //     dataIndex: 'id',
-//         //     key: 'id',
-//         // },
-//         {
-//             title: 'Site Name',
-//             dataIndex: 'name',
-//             key: 'name',
-//         },
-//         {
-//             title: 'URL',
-//             dataIndex: 'url',
-//             key: 'url',
-//         },
-//         {
-//             title: 'Action',
-//             key: 'action',
-//             render: (text, record) => (
-//                 <span>
-//                     {/* eslint-disable jsx-a11y/anchor-is-valid */}
-//                     <Tooltip title="Update Rcored">
-//                     <a onClick={() => showDrawer(record.id)}>
-//                         <EditOutlined style={{fontSize: '16px'}}/>
-//                     </a>
-//                     </Tooltip>
-//                     {/* eslint-enable jsx-a11y/anchor-is-valid */}
-//                     <Divider type="vertical"/>
-//                      <Popconfirm
-//                          title="Delete the task"
-//                          description="Are you sure to delete this task?"
-//                          onConfirm={() => deleteById(record.id)}
-//                          onCancel={cancel}
-//                          okText="Yes"
-//                          cancelText="No">
-//                                  <Tooltip title="Delete Task">
-//                                      <a danger>
-//                             <DeleteOutlined style={{fontSize: '16px', color: "red"}}/>
-//                                          </a>
-//                                           </Tooltip>
-//                       </Popconfirm>
-//                 </span>
-//             ),
-//         },
-//     ];
 //
-//     return (
-//         <>
-//             {contextHolder}
-//             <Row justify="end" style={{marginBottom: 16}}>
-//                 <Col>
-//                     <Button onClick={() => showDrawer(undefined)}>Add New Record</Button>
-//                 </Col>
-//             </Row>
-//             <Row>
-//                 <Col span={24}>
-//                     <Table loading={loading} columns={columns} dataSource={data} rowKey="id"/>
-//                 </Col>
-//             </Row>
-//             <Drawer
-//                 title="New site"
-//                 placement="right"
-//                 onClose={() => setOpen(false)}
-//                 visible={open}
-//             >
-//                 {(addNewMode || dataById) && (
-//                     <Form
-//                         layout="vertical"
-//                         initialValues={dataById}
-//                         onFinish={onSubmitClick}
-//                         onFinishFailed={onFinishFailed}
-//                     >
-//                         <Form.Item
-//                             label="Name"
-//                             name="name"
-//                             rules={[{required: true, message: 'Please input sites name!'}]}
-//                         >
-//                             <Input/>
-//                         </Form.Item>
-//                         <Form.Item
-//                             label="Url"
-//                             name="url"
-//                         >
-//                             <Input/>
-//                         </Form.Item>
-//                         <Form.Item>
-//                             <Button type="primary" htmlType="submit">Submit</Button>
-//                         </Form.Item>
-//                     </Form>
-//                 )}
-//             </Drawer>
-//         </>
-//     );
-// };
 //
-// export default Site;
+//
+//     public ByteArrayInputStream generatePdfByDateRAnge(LocalDate from, LocalDate to) {
+//     try {
+//     ByteArrayOutputStream out = new ByteArrayOutputStream();
+//     // Initialize PDF writer
+//     PdfWriter writer = new PdfWriter(out);
+//
+//     // Initialize PDF document
+//     PdfDocument pdf = new PdfDocument(writer);
+//
+//     // Initialize document
+//     Document document = new Document(pdf);
+//
+//     // Add image
+//     String imagePath = "path/img.png";
+//     Image img = new Image(ImageDataFactory.create(imagePath));
+//     img.setHorizontalAlignment(HorizontalAlignment.CENTER);
+//     document.add(img);
+//
+//     // Add title
+//     Paragraph title1 = new Paragraph("INFORMATION NETWORK SECURITY ADMINISTRATION")
+//         .setBold().setFontSize(18).setTextAlignment(TextAlignment.CENTER);
+//     document.add(title1);
+//
+//     Paragraph title2 = new Paragraph("DAILY TOTAL TRAFFIC MONITORING CHECKLIST")
+//         .setBold().setFontSize(16).setTextAlignment(TextAlignment.CENTER);
+//     document.add(title2);
+//
+//
+//     // Add title2
+//     Paragraph title = new Paragraph("INFORMATION NETWORK SECURITY ADMINISTRATION")
+//         .setBold().setFontSize(18).setTextAlignment(TextAlignment.CENTER);
+//     document.add(title);
+//
+//     Paragraph title3 = new Paragraph("FAILED TRAFFIC  CHECKLIST")
+//         .setBold().setFontSize(16).setTextAlignment(TextAlignment.CENTER);
+//     document.add(title3);
+//     // Add date
+//     Paragraph date = new Paragraph("Date: " + from.toString() + " - " + to.toString())
+//         .setTextAlignment(TextAlignment.CENTER)
+//         .setUnderline(1.5f, -1);
+//     document.add(date);
+//
+//
+//     // Add table for traffic data
+//     Table trafficTable = new Table(new float[]{1, 3, 3, 3, 3});
+// trafficTable.setWidth(UnitValue.createPercentValue(100));
+// trafficTable.setHorizontalAlignment(HorizontalAlignment.CENTER);
+//
+// trafficTable.addCell("No");
+// trafficTable.addCell("Site");
+// trafficTable.addCell("Time");
+// trafficTable.addCell("Total Traffic");
+// trafficTable.addCell("Remark");
+// List<Ftraffics> ftraffics = trafficRepository.findAllByCreatedAtBetweenAndSitesDeletedIsFalse(from.atStartOfDay(), to.plusDays(1).atStartOfDay());
+// int index = 1;  // Index counter
+//
+// // Add rows (example data)
+// for (Ftraffics traffics : ftraffics) {
+//     trafficTable.addCell(String.valueOf(index++));
+//     trafficTable.addCell(traffics.getSites() != null ? traffics.getSites().getName() : "");
+//     trafficTable.addCell(traffics.getTrafficTimeName() != null ? traffics.getTrafficTimeName() : "");
+//     trafficTable.addCell(traffics.getTimeValues() != null ? traffics.getTimeValues() : "");
+//     trafficTable.addCell(traffics.getRemark() != null ? traffics.getRemark() : "");
+//
+// }
+//
+// // Add table for failedtraffic data
+// Table failedTable = new Table(new float[]{1, 3, 3, 3, 3});
+// failedTable.setWidth(UnitValue.createPercentValue(100));
+// failedTable.setHorizontalAlignment(HorizontalAlignment.CENTER);
+//
+// failedTable.addCell("No");
+// failedTable.addCell("Disconected Site");
+// failedTable.addCell("Reported to");
+// failedTable.addCell("FailedReason");
+// List<FailedTraffics> failedTraffics = failedTrafficRepository.findAllByCreatedAtBetweenAndSitesDeletedIsFalse(from.atStartOfDay(), to.plusDays(1).atStartOfDay());
+// index = 1;
+//
+// // Add table to document
+// Div tableDiv = new Div();
+// tableDiv.setHorizontalAlignment(HorizontalAlignment.CENTER);
+// tableDiv.add(trafficTable);
+// document.add(tableDiv);
+//
+//
+//
+// // Close document
+// document.close();
+// return new ByteArrayInputStream(out.toByteArray());
+// } catch (Exception e) {
+//     throw new AlreadyExistException(e.getMessage());
+// }
+//
+// }
+// }
