@@ -375,9 +375,9 @@ const Ftraffics = () => {
                     </Col>
                 </Row>
 
-                <Col span={6}></Col>
+                <Col span={5}></Col>
 
-                <Col span={4}>
+                <Col span={5}>
                     <Select
                         onChange={handleCHange}
                         showSearch
@@ -389,10 +389,15 @@ const Ftraffics = () => {
                             {value: '18 O\'clock', label: '18 O\'clock'},
                         ]}
                     />
-                    <a target="_blank" href={API_URL + "/api/pdf" + timeTraficName}>
-                        <CloudDownloadOutlined style={{ fontSize: '30px' }} />
-                    </a>
-                </Col>
+                    <Form.Item
+                        name="download file">
+                        <Tooltip title="Download File">
+                            <a target="_blank" href={API_URL + "/api/pdf" + timeTraficName}>
+                                <CloudDownloadOutlined style={{ fontSize: '30px' }} />
+                            </a>
+                        </Tooltip>
+                    </Form.Item>
+                </Col> 
                 <Col span={4}>
                     <Button onClick={() => showDrawer(undefined)}>Add New Traffic</Button>
                 </Col>
