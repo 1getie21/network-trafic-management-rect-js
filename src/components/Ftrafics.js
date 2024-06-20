@@ -29,8 +29,8 @@ const Ftraffics = () => {
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    const API_URL = "http://localhost:8080";
-    // const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+   const API_URL = "http://localhost:8080";
+  // const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [trForm] = Form.useForm();
     const [trSearchForm] = Form.useForm();
     const [selectedTrafficTime, setSelectedTrafficTime] = useState(null);
@@ -377,7 +377,30 @@ const Ftraffics = () => {
 
                 <Col span={5}></Col>
 
-                <Col span={5}>
+                {/*<Col span={5}>*/}
+                {/*    <Select*/}
+                {/*        onChange={handleCHange}*/}
+                {/*        showSearch*/}
+                {/*        placeholder="Select a time traffic"*/}
+                {/*        optionFilterProp="children"*/}
+                {/*        options={[*/}
+                {/*            {value: '8 O\'clock', label: '8 O\'clock'},*/}
+                {/*            {value: '14 O\'clock', label: '14 O\'clock'},*/}
+                {/*            {value: '18 O\'clock', label: '18 O\'clock'},*/}
+                {/*        ]}*/}
+                {/*    />*/}
+                {/*    <Form.Item*/}
+                {/*        name="download file">*/}
+                {/*        <Tooltip title="Download File">*/}
+                {/*            <a target="_blank" href={API_URL + "/api/pdf" + timeTraficName}>*/}
+                {/*                <CloudDownloadOutlined style={{ fontSize: '28px' }} />*/}
+                {/*            </a>*/}
+                {/*        </Tooltip>*/}
+                {/*    </Form.Item>*/}
+                {/*</Col>*/}
+                
+
+                <Col span={6}>
                     <Select
                         onChange={handleCHange}
                         showSearch
@@ -388,16 +411,15 @@ const Ftraffics = () => {
                             {value: '14 O\'clock', label: '14 O\'clock'},
                             {value: '18 O\'clock', label: '18 O\'clock'},
                         ]}
+                        dropdownAlign={{ offset: [0, 4] }} // Optional: Adjust dropdown position if needed
                     />
-                    <Form.Item
-                        name="download file">
-                        <Tooltip title="Download File">
-                            <a target="_blank" href={API_URL + "/api/pdf" + timeTraficName}>
-                                <CloudDownloadOutlined style={{ fontSize: '30px' }} />
-                            </a>
-                        </Tooltip>
-                    </Form.Item>
-                </Col> 
+                    <Tooltip title="Download Each Time Report">
+                        <a target="_blank" href={API_URL + "/api/pdf" + timeTraficName} style={{ marginLeft: '6px' }}>
+                            <CloudDownloadOutlined style={{ fontSize: '28px' }} />
+                        </a>
+                    </Tooltip>
+                </Col>
+
                 <Col span={4}>
                     <Button onClick={() => showDrawer(undefined)}>Add New Traffic</Button>
                 </Col>

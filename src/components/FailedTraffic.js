@@ -25,8 +25,8 @@ const FailedTraffics = () => {
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-   // const API_URL = "http://localhost:8080";
-    const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+   const API_URL = "http://localhost:8080";
+   //const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [trForm] = Form.useForm();
 
     const [sites, setSites] = useState([]);
@@ -181,9 +181,9 @@ const FailedTraffics = () => {
         const fromDate = values.from[0].format('YYYY-MM-DD');
         const toDate = values.from[1].format('YYYY-MM-DD');
         setDate('/' + fromDate + '/' + toDate);
-        axiosInstance.get(`${API_URL}/f-traffics/${fromDate}/${toDate}`)
+        axiosInstance.get(`${API_URL}/failed-traffics/${fromDate}/${toDate}`)
             .then(response => {
-                setData(response?.data?._embedded?.fTrafficDtoses);
+                setData(response?.data?._embedded?.failedTrafficDtoses);
                 setLoading(false);
             })
             .catch(error => {
@@ -357,7 +357,7 @@ const FailedTraffics = () => {
             {contextHolder}
 
             <Row justify="space-between" style={{ marginBottom: '4px' }}>
-                <Col span={10}>
+                <Col span={14}>
                     <Collapse
                         items={[
                             {
@@ -371,7 +371,7 @@ const FailedTraffics = () => {
                                         onFinishFailed={onSearchFinishFailed}
                                     >
                                         <Row justify="start"> {/* Align items to the start */}
-                                            <Col span={12}>
+                                            <Col span={10}>
                                                 <Form.Item
                                                     name="from"
                                                     rules={[
@@ -398,37 +398,24 @@ const FailedTraffics = () => {
                         ]}
                     />
                 </Col>
-                <Col span={4} style={{ textAlign: 'center' }}> {/* Center aligns content */}
+                <Col span={10} > {/* Center aligns content */}
                     <Form.Item name="download file">
                         <Tooltip title="Download File">
-                            <a target="_blank" href={API_URL + "/api/pdf" + date}>
+                            <a target="_blank" href={API_URL + "/api/pdf/failed-traffics" + date}>
                                 <CloudDownloadOutlined style={{ fontSize: '30px' }} />
                             </a>
                         </Tooltip>
                     </Form.Item>
                 </Col>
-                <Col span={8}></Col> {/* This empty column ensures space between the Download File button and the right edge of the row */}
+                <Col span={10}></Col> {/* This empty column ensures space between the Download File button and the right edge of the row */}
             </Row>
 
-
-
-        {/*<Row>*/}
-        {/*        <Col>*/}
-        {/*            <Button onClick={() => showDrawer(undefined)}>Add New Traffic</Button>*/}
-        {/*        </Col>*/}
-        {/*    </Row>*/}
-
-        {/*    <Row>*/}
-        {/*        <Col span={24}>*/}
-        {/*            <Table loading={loading} columns={columns} dataSource={data} rowKey="id"/>*/}
-        {/*        </Col>*/}
-        {/*    </Row>*/}
-
-            <Row justify="end" style={{ marginBottom: '22px' }}>
+            <Row justify="end" style={{marginBottom: 16}}>
                 <Col>
-                    <Button onClick={() => showDrawer(undefined)}>Add New Traffic</Button>
+                    <Button onClick={() => showDrawer(undefined)}>Add New Record</Button>
                 </Col>
             </Row>
+
             <Row>
                 <Col span={24}>
                     <Table loading={loading} columns={columns} dataSource={data} rowKey="id"/>

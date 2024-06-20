@@ -15,9 +15,9 @@ const Request = () => {
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-const API_URL = "http://localhost:8080";
+    const API_URL = "http://localhost:8080";
 
-//const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+  //const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [trForm] = Form.useForm();
     const [date, setDate] = useState('');
     const [selectedFile1, setSelectedFile1] = useState(null);
@@ -75,7 +75,8 @@ const API_URL = "http://localhost:8080";
         api[type]({
             message: messageTitle,
             description: description,
-        });
+
+         });
     };
     const addFIle = () => {
         const formData = new FormData();
@@ -150,15 +151,16 @@ const API_URL = "http://localhost:8080";
         const fromDate = values.from[0].format('YYYY-MM-DD');
         const toDate = values.from[1].format('YYYY-MM-DD');
         setDate('/' + fromDate + '/' + toDate);
-        axiosInstance.get(`${API_URL}/f-traffics/${fromDate}/${toDate}`)
-            .then(response => {
-                setData(response?.data?._embedded?.fTrafficDtoses);
-                setLoading(false);
-            })
-            .catch(error => {
-                setLoading(false);
-                openNotificationWithIcon('error', 'Error', error?.message);
-            });
+        axiosInstance.get(`${API_URL}/request/${fromDate}/${toDate}`)
+            .then(
+                response => {
+                    setData(response?.data?._embedded?.requestDtoses);
+                    setLoading(false);
+                },
+                error => {
+                    setLoading(false);
+                    openNotificationWithIcon('error', 'Error', error?.message)
+                } );
     };
 
     const onSearchFinishFailed = (errorInfo) => {
@@ -353,25 +355,7 @@ const API_URL = "http://localhost:8080";
                                 <DeleteOutlined style={{ fontSize: '17px', color:"red" }}/>
                             </Tooltip>
                         </Popconfirm>
-                    {/*<a onClick={() => deleteById(record.id)}>Delete</a>*/}
-                    {/* eslint-enable jsx-a11y/anchor-is-valid */}
 
-                    {/*<Divider type="vertical"/>*/}
-                    {/*/!* eslint-disable jsx-a11y/anchor-is-valid *!/*/}
-                    {/*{(record?.status == 'Pending') && (*/}
-                    {/*    <Popconfirm*/}
-                    {/*        title="Accept the request"*/}
-                    {/*        description="Are you sure to accept this request?"*/}
-                    {/*        onConfirm={() => confirmAccept(record.id)}*/}
-                    {/*        onCancel={cancel}*/}
-                    {/*        okText="Yes"*/}
-                    {/*        cancelText="No"*/}
-                    {/*    >*/}
-                    {/*        <Tooltip title="accept">*/}
-                    {/*            <EyeOutlined style={{ fontSize: '18px'}}/>*/}
-                    {/*        </Tooltip>*/}
-                    {/*    </Popconfirm>*/}
-                    {/*)}*/}
                         </span>
             ),
         },
@@ -380,8 +364,8 @@ const API_URL = "http://localhost:8080";
         <>
             {contextHolder}
 
-            <Row justify="space-between" style={{ marginBottom: 18 }}>
-                <Col span={12}>
+            <Row justify="space-between" style={{ marginBottom: '4px' }}>
+                <Col span={14}>
                     <Collapse
                         items={[
                             {
@@ -406,11 +390,11 @@ const API_URL = "http://localhost:8080";
                                                         }
                                                     ]}
                                                 >
-                                                    <RangePicker/>
+                                                    <RangePicker />
                                                 </Form.Item>
                                             </Col>
                                             <Col span={1}></Col>
-                                            <Col span={7}>
+                                            <Col span={6}>
                                                 <Form.Item>
                                                     <Button type="primary" htmlType="submit">Submit</Button>
                                                 </Form.Item>
@@ -422,17 +406,20 @@ const API_URL = "http://localhost:8080";
                         ]}
                     />
                 </Col>
-
-                <Col span={4}>
+                <Col span={10} > {/* Center aligns content */}
                     <Form.Item name="download file">
                         <Tooltip title="Download File">
-                            <a target="_blank" href={API_URL + "/api/pdf" + date}>
+                            <a target="_blank" href={API_URL + "/api/pdf/request" + date}>
                                 <CloudDownloadOutlined style={{ fontSize: '30px' }} />
                             </a>
                         </Tooltip>
                     </Form.Item>
                 </Col>
+                <Col span={10}></Col> {/* This empty column ensures space between the Download File button and the right edge of the row */}
+            </Row>
 
+
+            <Row justify="end" style={{marginBottom: 16}}>
                 <Col>
                     <Button onClick={() => showDrawer(undefined)}>Add New Record</Button>
                 </Col>

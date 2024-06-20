@@ -28,8 +28,9 @@ const SixMCList = () => {
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-     const API_URL = "http://localhost:8080";
-    //const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+    
+    const API_URL = "http://localhost:8080";
+   // const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [trForm] = Form.useForm();
     const [date, setDate] = useState('');
 
@@ -157,9 +158,9 @@ const SixMCList = () => {
     const onSearchSubmitClick = (values) => {
         const fromDate = values.from[0].format('YYYY-MM-DD');
         const toDate = values.from[1].format('YYYY-MM-DD');
-        axiosInstance.get(`${API_URL}/f-traffics/${fromDate}/${toDate}`)
+        axiosInstance.get(`${API_URL}/sixmclist/${fromDate}/${toDate}`)
             .then(response => {
-                setData(response?.data?._embedded?.fTrafficDtoses);
+                setData(response?.data?._embedded?.sixmclistDtos);
                 setLoading(false);
             })
             .catch(error => {
@@ -327,7 +328,7 @@ const SixMCList = () => {
             {contextHolder}
 
             <Row justify="space-between" style={{ marginBottom: '4px' }}>
-                <Col span={10}>
+                <Col span={14}>
                     <Collapse
                         items={[
                             {
@@ -368,16 +369,16 @@ const SixMCList = () => {
                         ]}
                     />
                 </Col>
-                <Col span={4} style={{ textAlign: 'center' }}> {/* Center aligns content */}
+                <Col span={10} > {/* Center aligns content */}
                     <Form.Item name="download file">
                         <Tooltip title="Download File">
-                            <a target="_blank" href={API_URL + "/api/pdf" + date}>
+                            <a target="_blank" href={API_URL + "/api/pdf/sixmclist" + date}>
                                 <CloudDownloadOutlined style={{ fontSize: '30px' }} />
                             </a>
                         </Tooltip>
                     </Form.Item>
                 </Col>
-                <Col span={8}></Col> {/* This empty column ensures space between the Download File button and the right edge of the row */}
+                <Col span={10}></Col> {/* This empty column ensures space between the Download File button and the right edge of the row */}
             </Row>
 
             <Row justify="end" style={{marginBottom: 16}}>

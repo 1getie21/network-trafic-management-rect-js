@@ -19,7 +19,7 @@ const CheckList = () => {
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
     const API_URL = "http://localhost:8080";
-    //const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+  // const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [trForm] = Form.useForm();
     const [date, setDate] = useState('');
 
@@ -144,9 +144,9 @@ const CheckList = () => {
         const fromDate = values.from[0].format('YYYY-MM-DD');
         const toDate = values.from[1].format('YYYY-MM-DD');
         setDate('/' + fromDate + '/' + toDate);
-        axiosInstance.get(`${API_URL}/f-traffics/${fromDate}/${toDate}`)
+        axiosInstance.get(`${API_URL}/check_list/${fromDate}/${toDate}`)
             .then(response => {
-                setData(response?.data?._embedded?.fTrafficDtoses);
+                setData(response?.data?._embedded?.checkListDtoses);
                 setLoading(false);
             })
             .catch(error => {
@@ -292,8 +292,9 @@ const CheckList = () => {
     return (
         <>
             {contextHolder}
-            <Row justify="space-between" style={{ marginBottom: '8px' }}>
-                <Col span={13}>
+
+            <Row style={{ marginBottom: '4px' }}>
+                <Col span={14}>
                     <Collapse
                         items={[
                             {
@@ -307,7 +308,7 @@ const CheckList = () => {
                                         onFinishFailed={onSearchFinishFailed}
                                     >
                                         <Row justify="start"> {/* Align items to the start */}
-                                            <Col span={12}>
+                                            <Col span={10}>
                                                 <Form.Item
                                                     name="from"
                                                     rules={[
@@ -329,32 +330,29 @@ const CheckList = () => {
                                             </Col>
                                         </Row>
                                     </Form>
-
-
                                 ),
                             },
                         ]}
                     />
                 </Col>
-
-                <Row>
-                    <Col span={8} style={{ textAlign: 'center' }}> {/* Center aligns content */}
-                        <Form.Item name="download file">
-                            <Tooltip title="Download File">
-                                <a target="_blank" href={API_URL + "/api/pdf" + date}>
-                                    <CloudDownloadOutlined style={{ fontSize: '30px' }} />
-                                </a>
-                            </Tooltip>
-                        </Form.Item>
-                    </Col>
-                    <Col span={8}></Col> {/* This empty column ensures space between the Download File button and the right edge of the row */}
-                </Row>
-
-
-                <Col>
-                    <Button onClick={() => showDrawer(undefined)}>Add New Record</Button>
+                <Col span={10} > {/* Center aligns content */}
+                    <Form.Item name="download file">
+                        <Tooltip title="Download File">
+                            <a target="_blank" href={API_URL + "/api/pdf/check_list" + date}>
+                                <CloudDownloadOutlined style={{ fontSize: '30px' }} />
+                            </a>
+                        </Tooltip>
+                    </Form.Item>
                 </Col>
+                <Col span={10}></Col> {/* This empty column ensures space between the Download File button and the right edge of the row */}
             </Row>
+
+             <Row justify="end" style={{marginBottom: 16}}>
+            <Col>
+                <Button onClick={() => showDrawer(undefined)}>Add New Record</Button>
+            </Col>
+        </Row>
+
             <Row>
                 <Col span={24}>
                     <Table loading={loading} columns={columns} dataSource={data} rowKey="id"/>

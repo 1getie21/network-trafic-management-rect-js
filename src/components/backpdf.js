@@ -22,6 +22,8 @@
 // import java.time.LocalDate;
 // import java.util.List;
 //
+// import static org.springframework.data.jpa.domain.AbstractAuditable_.createdBy;
+//
 // @Service
 // @RequiredArgsConstructor
 //
@@ -146,7 +148,9 @@
 // trafficTable.addCell("Remark");
 //
 // // Fetch traffic data within specified date range
-// List<Ftraffics> ftraffics = trafficRepository.findAllByCreatedAtBetweenAndSitesDeletedIsFalse(from.atStartOfDay(), to.plusDays(1).atStartOfDay());
+// List<Ftraffics> ftraffics = trafficRepository.findAllByCreatedAtBetweenAndCreatedBy(from.atStartOfDay(), to.plusDays(1).atStartOfDay(), createdBy);
+// //  trafficTable = createTrafficTable(ftraffics);
+// // List<Ftraffics> ftraffics = trafficRepository.findAllByCreatedAtBetweenAndSitesDeletedIsFalse(from.atStartOfDay(), to.plusDays(1).atStartOfDay());
 // int index = 1;  // Index counter
 //
 // // Add rows
@@ -205,9 +209,12 @@
 //         trafficTable.addCell("Total Time Traffic");
 //         trafficTable.addCell("Remark");
 //
-//         List<Ftraffics> ftraffics = trafficRepository.findAllByTrafficTimeName( trafficTimeName);
-//         int index = 1;  // Index counter
+// //             List<Ftraffics> ftraffics = trafficRepository.findAllByTrafficTimeName( trafficTimeName);
+// //            int index = 1;  // Index counter
 //
+//         List<Ftraffics> ftraffics = trafficRepository.findAllByTrafficTimeNameAndCreatedBy(trafficTimeName, createdBy);
+//         // trafficTable = createTrafficTable(ftraffics);
+//         int index = 1;  // Index counter
 //         // Add rows
 //         for (Ftraffics traffics : ftraffics) {
 //             trafficTable.addCell(String.valueOf(index++));
@@ -232,5 +239,4 @@
 //     }
 // }
 //
-// } orignanal pdf service
-
+// }
