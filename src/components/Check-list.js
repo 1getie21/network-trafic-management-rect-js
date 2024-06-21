@@ -9,8 +9,10 @@ import { Button,
     Select, Table } from "antd";
 import axiosInstance from "../auth/authHeader";
 import {CloudDownloadOutlined, EditOutlined, DeleteOutlined} from "@ant-design/icons";
+import AuthService from "../auth/AuthService ";
 const {RangePicker} = DatePicker;
 
+const logedInUser = AuthService.getCurrentUser();
 const CheckList = () => {
     const [data, setData] = useState([]);
     const [dataById, setDataById] = useState(null);
@@ -197,11 +199,7 @@ const CheckList = () => {
 
     const cancel = (e) => {
     };
-
-
-
-
-
+    
     const columns = [
         {
             title: '#',
@@ -338,7 +336,7 @@ const CheckList = () => {
                 <Col span={10} > {/* Center aligns content */}
                     <Form.Item name="download file">
                         <Tooltip title="Download File">
-                            <a target="_blank" href={API_URL + "/api/pdf/check_list" + date}>
+                            <a target="_blank" href={API_URL + "/api/pdf/check_list" + date+'?userName='+logedInUser?.username}>
                                 <CloudDownloadOutlined style={{ fontSize: '30px' }} />
                             </a>
                         </Tooltip>

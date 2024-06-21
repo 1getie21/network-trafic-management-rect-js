@@ -1,23 +1,26 @@
 import React, {useEffect, useState} from 'react';
+import AuthService from "../auth/AuthService ";
 import {
     Button, Col, DatePicker, Collapse,RangePicker as AntRangePicker, Divider, Drawer, Form, Input, notification, Popconfirm, Row, Select, Table,Tag
     ,Tooltip
 } from "antd";
 import axiosInstance from "../auth/authHeader";
 import {CloudDownloadOutlined, EditOutlined,EyeOutlined, DeleteOutlined} from "@ant-design/icons";
-
 const {RangePicker} = DatePicker;
 
+
 const Request = () => {
+    const logedInUser = AuthService.getCurrentUser();
     const [data, setData] = useState([]);
     const [dataById, setDataById] = useState(null);
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    const API_URL = "http://localhost:8080";
 
+    const API_URL = "http://localhost:8080";
   //const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+
     const [trForm] = Form.useForm();
     const [date, setDate] = useState('');
     const [selectedFile1, setSelectedFile1] = useState(null);
@@ -409,7 +412,7 @@ const Request = () => {
                 <Col span={10} > {/* Center aligns content */}
                     <Form.Item name="download file">
                         <Tooltip title="Download File">
-                            <a target="_blank" href={API_URL + "/api/pdf/request" + date}>
+                            <a target="_blank" href={API_URL + "/api/pdf/request" + date+'?userName='+logedInUser?.username}>
                                 <CloudDownloadOutlined style={{ fontSize: '30px' }} />
                             </a>
                         </Tooltip>

@@ -17,10 +17,12 @@ import {
 import axiosInstance from "../auth/authHeader";
 
 import {CloudDownloadOutlined, EditOutlined, DeleteOutlined} from "@ant-design/icons";
+import AuthService from "../auth/AuthService ";
 
 const {RangePicker} = DatePicker;
 
 const Ftraffics = () => {
+    const logedInUser = AuthService.getCurrentUser();
     const [data, setData] = useState([]);
     const [date, setDate] = useState([]);
     const [timeTraficName, setTimeTraficName] = useState([]);
@@ -367,7 +369,7 @@ const Ftraffics = () => {
                         <Form.Item
                             name="download file">
                             <Tooltip title="Download File">
-                                <a target="_blank" href={API_URL + "/api/pdf" + date}>
+                                <a target="_blank" href={API_URL + "/api/pdf" + date+'?userName='+logedInUser?.username}>
                                     <CloudDownloadOutlined style={{ fontSize: '30px' }} />
                                 </a>
                             </Tooltip>
@@ -376,30 +378,7 @@ const Ftraffics = () => {
                 </Row>
 
                 <Col span={5}></Col>
-
-                {/*<Col span={5}>*/}
-                {/*    <Select*/}
-                {/*        onChange={handleCHange}*/}
-                {/*        showSearch*/}
-                {/*        placeholder="Select a time traffic"*/}
-                {/*        optionFilterProp="children"*/}
-                {/*        options={[*/}
-                {/*            {value: '8 O\'clock', label: '8 O\'clock'},*/}
-                {/*            {value: '14 O\'clock', label: '14 O\'clock'},*/}
-                {/*            {value: '18 O\'clock', label: '18 O\'clock'},*/}
-                {/*        ]}*/}
-                {/*    />*/}
-                {/*    <Form.Item*/}
-                {/*        name="download file">*/}
-                {/*        <Tooltip title="Download File">*/}
-                {/*            <a target="_blank" href={API_URL + "/api/pdf" + timeTraficName}>*/}
-                {/*                <CloudDownloadOutlined style={{ fontSize: '28px' }} />*/}
-                {/*            </a>*/}
-                {/*        </Tooltip>*/}
-                {/*    </Form.Item>*/}
-                {/*</Col>*/}
                 
-
                 <Col span={6}>
                     <Select
                         onChange={handleCHange}
@@ -414,7 +393,7 @@ const Ftraffics = () => {
                         dropdownAlign={{ offset: [0, 4] }} // Optional: Adjust dropdown position if needed
                     />
                     <Tooltip title="Download Each Time Report">
-                        <a target="_blank" href={API_URL + "/api/pdf" + timeTraficName} style={{ marginLeft: '6px' }}>
+                        <a target="_blank" href={API_URL + "/api/pdf" + timeTraficName+'?userName='+logedInUser?.username} style={{ marginLeft: '6px' }}>
                             <CloudDownloadOutlined style={{ fontSize: '28px' }} />
                         </a>
                     </Tooltip>
