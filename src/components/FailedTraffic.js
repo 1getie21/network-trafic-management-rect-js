@@ -16,9 +16,11 @@ import {
 import axiosInstance from "../auth/authHeader";
 import dayjs from "dayjs";
 import { CloudDownloadOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import AuthService from "../auth/AuthService ";
 
 const {RangePicker} = DatePicker;
 const FailedTraffics = () => {
+    const logedInUser = AuthService.getCurrentUser();
     const [data, setData] = useState([]);
     const [dataById, setDataById] = useState(null);
     const [open, setOpen] = useState(false);
@@ -26,8 +28,8 @@ const FailedTraffics = () => {
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
     
-   //const API_URL = "http://localhost:8080";
-   const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+   const API_URL = "http://localhost:8080";
+   //const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     
     const [trForm] = Form.useForm();
 
@@ -254,7 +256,7 @@ const FailedTraffics = () => {
             dataIndex: 'createdAt',
             key: 'createdAt',
             render: (text) => {
-                const date = new Date(text);
+                const date = new Date(text); 
                 const options = {
                     year: 'numeric',
                     month: 'short',
@@ -403,7 +405,7 @@ const FailedTraffics = () => {
                 <Col span={10} > {/* Center aligns content */}
                     <Form.Item name="download file">
                         <Tooltip title="Download File">
-                            <a target="_blank" href={API_URL + "/api/pdf/failed-traffics" + date}>
+                            <a target="_blank" href={API_URL + "/api/pdf/failed-traffics" + date+'?userName='+logedInUser?.username}>
                                 <CloudDownloadOutlined style={{ fontSize: '30px' }} />
                             </a>
                         </Tooltip>

@@ -214,24 +214,9 @@ const SixMCList = () => {
             render: (text, record, index) => index + 1,
         },
         {
-            title: 'Created At',
-            dataIndex: 'createdAt',
-            key: 'createdAt',
-            render: (text) => {
-                const date = new Date(text);
-                const options = {
-                    year: 'numeric',
-                    month: 'short',
-                    day: '2-digit',
-                    hour: '2-digit',
-
-                    minute: '2-digit',
-                    second: '2-digit'
-                };
-                const formattedDate = date.toLocaleDateString('en-US', options);
-                return <span>{formattedDate}</span>;
-            },
-
+            title: 'Created By',
+            dataIndex: 'createdBy',
+            key: 'createdBy',
         },
         {
             title: 'Sites',
