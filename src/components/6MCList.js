@@ -163,7 +163,7 @@ const SixMCList = () => {
         setDate('/' + fromDate + '/' + toDate);
         axiosInstance.get(`${API_URL}/sixmclist/${fromDate}/${toDate}`)
             .then(response => {
-                setData(response?.data?._embedded?.sixmclistDtos);
+                 setData(response?.data?.content);
                 setLoading(false);
             })
             .catch(error => {
