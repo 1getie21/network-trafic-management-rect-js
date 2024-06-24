@@ -17,19 +17,20 @@ import {
 import axiosInstance from "../auth/authHeader";
 import dayjs from "dayjs";
 
+import AuthService from "../auth/AuthService ";
 import { CloudDownloadOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 const { RangePicker } = DatePicker;
 //const { Panel } = Collapse;
 
 const SixMCList = () => {
+    const logedInUser = AuthService.getCurrentUser();
     const [data, setData] = useState([]);
     const [dataById, setDataById] = useState(null);
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    
-    const API_URL = "http://localhost:8080";
+    const API_URL = process.env.REACT_APP_API_URL;
    // const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     
     const [trForm] = Form.useForm();
@@ -159,6 +160,7 @@ const SixMCList = () => {
     const onSearchSubmitClick = (values) => {
         const fromDate = values.from[0].format('YYYY-MM-DD');
         const toDate = values.from[1].format('YYYY-MM-DD');
+        setDate('/' + fromDate + '/' + toDate);
         axiosInstance.get(`${API_URL}/sixmclist/${fromDate}/${toDate}`)
             .then(response => {
                 setData(response?.data?._embedded?.sixmclistDtos);
@@ -168,6 +170,7 @@ const SixMCList = () => {
                 setLoading(false);
                 openNotificationWithIcon('error', 'Error', error?.message);
             });
+
     };
 
     const onSearchFinishFailed = (errorInfo) => {
@@ -358,7 +361,7 @@ const SixMCList = () => {
                 <Col span={10} > {/* Center aligns content */}
                     <Form.Item name="download file">
                         <Tooltip title="Download File">
-                            <a target="_blank" href={API_URL + "/api/pdf/sixmclist" + date}>
+                            <a target="_blank" href={API_URL + "/api/pdf/sixmclist" + date+'?userName='+logedInUser?.username}>
                                 <CloudDownloadOutlined style={{ fontSize: '30px' }} />
                             </a>
                         </Tooltip>
