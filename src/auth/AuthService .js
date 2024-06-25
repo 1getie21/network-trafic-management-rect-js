@@ -1,14 +1,13 @@
 // AuthService.js
 import axios from 'axios';
 
-
-const API_URL = process.env.REACT_APP_API_URL;
+// const API_URL = process.env.REACT_APP_API_URL;
 
 // this is requested from deployed  backend
 // if u want to test it locally comment 10.10........ but uncomment localhost:8080....
 //   look me
 // const API_URL = "http://localhost:8080";
-// //const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
 // on all other files
 //
 // if u want to build and then deploye, comment localhost and uncomment 10.10.10......
