@@ -14,8 +14,8 @@ const Site = () => {
     const cancel = (e) => {
     };
 
-    //const API_URL = process.env.REACT_APP_API_URL;
-    const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+    const API_URL = process.env.REACT_APP_API_URL;
+    //const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
 
 
     const openNotificationWithIcon = (type, messageTitle, description) => {
@@ -40,27 +40,37 @@ const Site = () => {
     const getAllData = () => {
         axiosInstance.get(API_URL + "/sites?sort=name,asc")
             .then(response => {
-                const sortedData = response?.data?._embedded?.sitesDtoses; // Assuming direct access to sites data
+                const sortedData = response?.data?._embedded?.sitesDtoses;
 
-                // Optional: Log sorted data for debugging
-                console.log("Sorted data from API:", sortedData);
+                if (!sortedData || !Array.isArray(sortedData)) {
+                    console.warn("API data is empty.");
+                    setLoading(false); // Ensure loading state is updated
+                    setData([]); // Initialize data as empty array or handle as per your logic
+                    return; // Exit function early
+                }
 
-                // If API doesn't return pre-sorted data, sort locally
-                if (!sortedData?.length || !sortedData[0]?.hasOwnProperty('name')) {
+                // Check if data is sorted by 'name' in ascending order
+                const isSorted = sortedData.every((item, index) => {
+                    if (index === 0) return true; // First item is always sorted
+                    return item.name >= sortedData[index - 1].name; // Check if current item is >= previous item
+                });
+
+                if (!isSorted) {
                     console.warn("API data might not be sorted. Sorting locally.");
-                    setData(sortedData.map(site => ({
-                        ...site,
-                        mainName: site.name.replace(/(IGW|PE)\s+/g, '') // Extract main part of name, ignoring prefixes
-                    })).sort((a, b) => a.mainName.localeCompare(b.mainName)));
+
+                    // Sort data locally by 'name'
+                    const sortedLocally = sortedData.slice().sort((a, b) => a.name.localeCompare(b.name));
+                    setData(sortedLocally);
                 } else {
-                    // Use data as-is if already sorted by name
+                    // Use sortedData as-is if already sorted by 'name'
                     setData(sortedData);
                 }
-                setLoading(false);
+
+                setLoading(false); // Update loading state after data manipulation
             })
             .catch(error => {
-                setLoading(false);
-                openNotificationWithIcon('error', 'Error', error?.message)
+                setLoading(false); // Ensure loading state is updated in case of error
+                openNotificationWithIcon('error', 'Error', error?.message); // Display error notification
             });
     };
     

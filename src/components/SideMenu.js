@@ -26,13 +26,16 @@ const ListOfItems = [];
 
 if (listOfRoles) {
     if (listOfRoles.includes('ROLE_ADMIN')) {
-        ListOfItems.push(getItem('Users', 'Users', <UserAddOutlined />));
+        ListOfItems.push(
+             getItem('Users', 'Users', <UserAddOutlined />),
+             getItem('Sites', 'sites', <FileAddOutlined />));
+
     }
     if (listOfRoles.includes('ROLE_ADMIN') || listOfRoles.includes('ROLE_MEMBER')) {
         ListOfItems.push(
             getItem('Daily Traffic Monitoring', 'f-traffics', <LineChartOutlined/>),
             getItem('Failed Traffics', 'failed-traffics', <DisconnectOutlined />),
-            getItem('Sites', 'sites', <FileAddOutlined />),
+           // getItem('Sites', 'sites', <FileAddOutlined />),
             getItem('Traffic Request', 'request', <FormOutlined />),
             getItem('Traffic Processing Checklist', 'CheckList', <CheckSquareOutlined />),
             getItem('6Month SSM Checklist', 'sixmclist', <SecurityScanOutlined />)

@@ -23,6 +23,8 @@ const {RangePicker} = DatePicker;
 
 const Ftraffics = () => {
     const logedInUser = AuthService.getCurrentUser();
+    const listOfRoles = AuthService?.getRoles();
+
     const [data, setData] = useState([]);
     const [date, setDate] = useState([]);
     const [timeTraficName, setTimeTraficName] = useState([]);
@@ -31,8 +33,8 @@ const Ftraffics = () => {
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    // const API_URL = process.env.REACT_APP_API_URL;
-    const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+     const API_URL = process.env.REACT_APP_API_URL;
+    //const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [trForm] = Form.useForm();
     const [trSearchForm] = Form.useForm();
     const [selectedTrafficTime, setSelectedTrafficTime] = useState(null);
@@ -364,21 +366,26 @@ const Ftraffics = () => {
                     />
                 </Col>
 
-                <Row>
-                    <Col span={16}>
-                        <Form.Item
-                            name="download file">
-                            <Tooltip title="Download File">
-                                <a target="_blank" href={API_URL + "/api/pdf" + date+'?userName='+logedInUser?.username}>
-                                    <CloudDownloadOutlined style={{ fontSize: '30px' }} />
-                                </a>
-                            </Tooltip>
-                        </Form.Item>
-                    </Col>
+                    <Row>
+                        <Col span={5} style={{ textAlign: 'center' }}>
+                            <Form.Item>
+                                <Tooltip title="Download File">
+                                    {listOfRoles && listOfRoles.includes('ROLE_ADMIN') ? (
+                                        <a target="_blank" href={`${API_URL}/api/pdf${date}?userName=ROLE_ADMIN`}>
+                                            <CloudDownloadOutlined style={{ fontSize: '30px' }} />
+                                        </a>
+                                    ) : (
+                                        <a target="_blank" href={`${API_URL}/api/pdf${date}?userName=${logedInUser?.username}`}>
+                                            <CloudDownloadOutlined style={{ fontSize: '30px' }} />
+                                        </a>
+                                    )}
+                                </Tooltip>
+                            </Form.Item>
+                        </Col>
                 </Row>
 
                 <Col span={5}></Col>
-                
+
                 <Col span={6}>
                     <Select
                         onChange={handleCHange}
@@ -393,11 +400,24 @@ const Ftraffics = () => {
                         dropdownAlign={{ offset: [0, 4] }} // Optional: Adjust dropdown position if needed
                     />
                     <Tooltip title="Download Each Time Report">
-                        <a target="_blank" href={API_URL + "/api/pdf" + timeTraficName+'?userName='+logedInUser?.username} style={{ marginLeft: '6px' }}>
-                            <CloudDownloadOutlined style={{ fontSize: '28px' }} />
-                        </a>
+                        {listOfRoles && listOfRoles.includes('ROLE_ADMIN') ? (
+                            <a target="_blank" href={`${API_URL}/api/pdf${timeTraficName}?userName=ROLE_ADMIN`}>
+                                <CloudDownloadOutlined style={{ fontSize: '30px' }} />
+                            </a>
+                        ) : (
+                            <a target="_blank" href={`${API_URL}/api/pdf${timeTraficName}?userName=${logedInUser?.username}`} style={{ marginLeft: '6px' }}>
+                                <CloudDownloadOutlined style={{ fontSize: '28px' }} />
+                            </a>
+                        )}
                     </Tooltip>
                 </Col>
+
+                    {/*<Tooltip title="Download Each Time Report">*/}
+                    {/*    <a target="_blank" href={API_URL + "/api/pdf" + timeTraficName+'?userName='+logedInUser?.username} style={{ marginLeft: '6px' }}>*/}
+                    {/*        <CloudDownloadOutlined style={{ fontSize: '28px' }} />*/}
+                    {/*    </a>*/}
+                    {/*</Tooltip>*/}
+
 
                 <Col span={4}>
                     <Button onClick={() => showDrawer(undefined)}>Add New Traffic</Button>

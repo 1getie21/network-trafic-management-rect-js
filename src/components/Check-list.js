@@ -12,16 +12,18 @@ import {CloudDownloadOutlined, EditOutlined, DeleteOutlined} from "@ant-design/i
 import AuthService from "../auth/AuthService ";
 const {RangePicker} = DatePicker;
 
-const logedInUser = AuthService.getCurrentUser();
 const CheckList = () => {
+    const logedInUser = AuthService.getCurrentUser();
+    const listOfRoles = AuthService?.getRoles();
+
     const [data, setData] = useState([]);
     const [dataById, setDataById] = useState(null);
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-  // const API_URL = process.env.REACT_APP_API_URL;
-    const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+   const API_URL = process.env.REACT_APP_API_URL;
+    //const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [trForm] = Form.useForm();
     const [date, setDate] = useState('');
 
@@ -352,15 +354,32 @@ const CheckList = () => {
                         ]}
                     />
                 </Col>
-                <Col span={10} > {/* Center aligns content */}
-                    <Form.Item name="download file">
-                        <Tooltip title="Download File">
-                            <a target="_blank" href={API_URL + "/api/pdf/check_list" + date+'?userName='+logedInUser?.username}>
-                                <CloudDownloadOutlined style={{ fontSize: '30px' }} />
-                            </a>
+                {/*<Col span={10} > /!* Center aligns content *!/*/}
+                {/*    <Form.Item name="download file">*/}
+                {/*        <Tooltip title="Download File">*/}
+                {/*            <a target="_blank" href={API_URL + "/api/pdf/check_list" + date+'?userName='+logedInUser?.username}>*/}
+                {/*                <CloudDownloadOutlined style={{ fontSize: '30px' }} />*/}
+                {/*            </a>*/}
+                {/*        </Tooltip>*/}
+                {/*    </Form.Item>*/}
+                {/*</Col>*/}
+
+                <Col span={5} style={{ textAlign: 'center' }}>
+                    <Form.Item>
+                        <Tooltip title="Download Checklist File">
+                            {listOfRoles && listOfRoles.includes('ROLE_ADMIN') ? (
+                                <a target="_blank" href={`${API_URL}/api/pdf/check_list${date}?userName=ROLE_ADMIN`}>
+                                    <CloudDownloadOutlined style={{ fontSize: '30px' }} />
+                                </a>
+                            ) : (
+                                <a target="_blank" href={`${API_URL}/api/pdf/check_list${date}?userName=${logedInUser?.username}`}>
+                                    <CloudDownloadOutlined style={{ fontSize: '30px' }} />
+                                </a>
+                            )}
                         </Tooltip>
                     </Form.Item>
                 </Col>
+
                 <Col span={10}></Col> {/* This empty column ensures space between the Download File button and the right edge of the row */}
             </Row>
 

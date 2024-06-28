@@ -31,11 +31,14 @@ function Content() {
                         <Route path="/failed-traffics" element={<FailedTraffic/>}></Route>
                         <Route path="/CheckList" element={<CheckList/>}></Route>
                         <Route path="/sixmclist" element={<SixMCList/>}></Route>
-                        <Route path="/sites" element={<Site/>}></Route>
+                        //<Route path="/sites" element={<Site/>}></Route>
                     </>
                 )}
                 {listOfRoles && listOfRoles.includes("ROLE_ADMIN") && (
-                    <Route path="/users" element={<Users/>}/>
+                    <>
+                        <Route path="/users" element={<Users />} />
+                        <Route path="/sites" element={<Site />} />
+                    </>
                 )}
                 <Route path="/request" element={<Request/>}></Route>
             </Routes>

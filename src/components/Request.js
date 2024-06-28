@@ -1,16 +1,34 @@
 import React, {useEffect, useState} from 'react';
 import AuthService from "../auth/AuthService ";
 import {
-    Button, Col, DatePicker, Collapse,RangePicker as AntRangePicker, Divider, Drawer, Form, Input, notification, Popconfirm, Row, Select, Table,Tag
-    ,Tooltip
+    Button,
+    Col,
+    DatePicker,
+    Collapse,
+    RangePicker as AntRangePicker,
+    Divider,
+    Drawer,
+    Form,
+    Input,
+    notification,
+    Popconfirm,
+    Row,
+    Select,
+    Table,
+    Tag
+    ,
+    Tooltip
 } from "antd";
 import axiosInstance from "../auth/authHeader";
-import {CloudDownloadOutlined, EditOutlined,EyeOutlined, DeleteOutlined} from "@ant-design/icons";
+import {CloudDownloadOutlined, EditOutlined, EyeOutlined, DeleteOutlined} from "@ant-design/icons";
+
 const {RangePicker} = DatePicker;
 
 
 const Request = () => {
     const logedInUser = AuthService.getCurrentUser();
+    const listOfRoles = AuthService?.getRoles();
+
     const [data, setData] = useState([]);
     const [dataById, setDataById] = useState(null);
     const [open, setOpen] = useState(false);
@@ -18,8 +36,8 @@ const Request = () => {
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
 
- //const API_URL = process.env.REACT_APP_API_URL;
-    const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+    const API_URL = process.env.REACT_APP_API_URL;
+    //const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
 
     const [trForm] = Form.useForm();
     const [date, setDate] = useState('');
@@ -31,7 +49,7 @@ const Request = () => {
     };
     // const handleFileChange2 = (event) => {
     //     setSelectedFile2(event.target.files[0]);
-    // }; 
+    // };
 
 
     const SubmitButton = ({form: trafficForm, children}) => {
@@ -79,7 +97,7 @@ const Request = () => {
             message: messageTitle,
             description: description,
 
-         });
+        });
     };
     const addFIle = () => {
         const formData = new FormData();
@@ -163,7 +181,7 @@ const Request = () => {
                 error => {
                     setLoading(false);
                     openNotificationWithIcon('error', 'Error', error?.message)
-                } );
+                });
     };
 
     const onSearchFinishFailed = (errorInfo) => {
@@ -330,7 +348,7 @@ const Request = () => {
                             {record?.descriptionFile && (
                                 <Tooltip title="download file">
                                     <a target="_blank" href={API_URL + "/files/" + record.descriptionFile}>
-                                        <CloudDownloadOutlined style={{ fontSize: '17px'}}/>
+                                        <CloudDownloadOutlined style={{fontSize: '17px'}}/>
                                     </a>
                                 </Tooltip>
 
@@ -350,7 +368,7 @@ const Request = () => {
                             cancelText="No"
                         >
                             <Tooltip title="accept">
-                                <EyeOutlined style={{ fontSize: '18px'}}/>
+                                <EyeOutlined style={{fontSize: '18px'}}/>
                             </Tooltip>
                         </Popconfirm>
                     )}
@@ -359,7 +377,7 @@ const Request = () => {
 
                      <a onClick={() => showDrawer(record.id)}>
                           <Tooltip title="update record">
-                              <EditOutlined style={{ fontSize: '16px'}}/>
+                              <EditOutlined style={{fontSize: '16px'}}/>
                             </Tooltip>
                     </a>
                     {/* eslint-enable jsx-a11y/anchor-is-valid */}
@@ -376,7 +394,7 @@ const Request = () => {
                         cancelText="No"
                     >
                           <Tooltip title="delete record">
-                                <DeleteOutlined style={{ fontSize: '17px', color:"red" }}/>
+                                <DeleteOutlined style={{fontSize: '17px', color: "red"}}/>
                             </Tooltip>
                         </Popconfirm>
 
@@ -387,8 +405,7 @@ const Request = () => {
     return (
         <>
             {contextHolder}
-
-            <Row justify="space-between" style={{ marginBottom: '4px' }}>
+            <Row gutter={16}>
                 <Col span={14}>
                     <Collapse
                         items={[
@@ -402,7 +419,7 @@ const Request = () => {
                                         onFinish={onSearchSubmitClick}
                                         onFinishFailed={onSearchFinishFailed}
                                     >
-                                        <Row justify="start"> {/* Align items to the start */}
+                                        <Row justify="start">
                                             <Col span={10}>
                                                 <Form.Item
                                                     name="from"
@@ -414,7 +431,7 @@ const Request = () => {
                                                         }
                                                     ]}
                                                 >
-                                                    <RangePicker />
+                                                    <RangePicker/>
                                                 </Form.Item>
                                             </Col>
                                             <Col span={1}></Col>
@@ -430,17 +447,62 @@ const Request = () => {
                         ]}
                     />
                 </Col>
-                <Col span={10} > {/* Center aligns content */}
-                    <Form.Item name="download file">
+                <Col span={5} style={{ textAlign: 'center' }}>
+                    <Form.Item>
                         <Tooltip title="Download File">
-                            <a target="_blank" href={API_URL + "/api/pdf/request" + date+'?userName='+logedInUser?.username}>
-                                <CloudDownloadOutlined style={{ fontSize: '30px' }} />
-                            </a>
+                            {listOfRoles && listOfRoles.includes('ROLE_ADMIN') ? (
+                                <a target="_blank" href={`${API_URL}/api/pdf/request${date}?userName=ROLE_ADMIN`}>
+                                    <CloudDownloadOutlined style={{ fontSize: '30px' }} />
+                                </a>
+                            ) : (
+                                <a target="_blank" href={`${API_URL}/api/pdf/request${date}?userName=${logedInUser?.username}`}>
+                                    <CloudDownloadOutlined style={{ fontSize: '30px' }} />
+                                </a>
+                            )}
                         </Tooltip>
                     </Form.Item>
                 </Col>
-                <Col span={10}></Col> {/* This empty column ensures space between the Download File button and the right edge of the row */}
             </Row>
+
+
+                {/*<Col span={10} style={{ textAlign: 'center' }}>*/}
+                {/*    <Form.Item>*/}
+                {/*        <Tooltip title="Download File">*/}
+                {/*            <a target="_blank" href={API_URL + "/api/pdf/request" + date + '?userName=' + logedInUser?.username}>*/}
+                {/*                <CloudDownloadOutlined style={{ fontSize: '30px' }} />*/}
+                {/*            </a>*/}
+                {/*        </Tooltip>*/}
+                {/*        &nbsp;&nbsp;&nbsp; /!* Optional spacing between icons *!/*/}
+                {/*        <Tooltip title="Download All Files">*/}
+                {/*            <a target="_blank" href={API_URL + "/api/pdf/request" + date + '?userName=ROLE_ADMIN'}>*/}
+                {/*                <CloudDownloadOutlined style={{ fontSize: '30px' }} />*/}
+                {/*            </a>*/}
+                {/*        </Tooltip>*/}
+                {/*    </Form.Item>*/}
+                {/*</Col>*/}
+                {/*<Col span={8}> /!* Center aligns content *!/*/}
+                {/*    <Form.Item name="download file">*/}
+                {/*        <Tooltip title="Download File">*/}
+                {/*            <a target="_blank"*/}
+                {/*               href={API_URL + "/api/pdf/request" + date + '?userName=' + logedInUser?.username}>*/}
+                {/*                <CloudDownloadOutlined style={{fontSize: '30px'}}/>*/}
+                {/*            </a>*/}
+                {/*        </Tooltip>*/}
+                {/*    </Form.Item>*/}
+                {/*</Col>*/}
+
+                {/*<Col span={5}> /!* Center aligns content *!/ */}
+                {/*        <Form.Item name="download file">*/}
+                {/*        <Tooltip title="Download All File">*/}
+                {/*        <a target="_blank" href={API_URL + "/api/pdf/request" + date + '?userName=ROLE_ADMIN'}>*/}
+                {/*        <CloudDownloadOutlined style={{fontSize: '30px'}} />*/}
+                {/*        </a>*/}
+                {/*        </Tooltip>*/}
+                {/*        </Form.Item> */}
+                {/*</Col>*/}
+                {/*<Col*/}
+                {/*    span={10}></Col> /!* This empty column ensures space between the Download File button and the right edge of the row *!/*/}
+
 
 
             <Row justify="end" style={{marginBottom: 16}}>
@@ -468,30 +530,14 @@ const Request = () => {
                         onFinishFailed={onFinishFailed}
                     >
 
-                        {/*<Form.Item*/}
-                        {/*    label="fname"*/}
-                        {/*    name="fname"*/}
-                        {/*    rules={[{required: true, message: 'Please input fname!'}]}*/}
-                        {/*>*/}
-                        {/*    <Input/>*/}
-                        {/*</Form.Item>*/}
-                        {/*<Form.Item*/}
-                        {/*    label="phone"*/}
-                        {/*    name="phone"*/}
 
-                        {/*    rules={[{required: true, message: 'Please input phone!'},*/}
-                        {/*        {pattern: /^[0-9]+?$/, message: 'Please enter a valid phone !'}*/}
-                        {/*    ]}*/}
-                        {/*>*/}
-                        {/*    <Input addonBefore="+251"/>*/}
-                        {/*</Form.Item>*/}
                         <Form.Item
                             label="Phone"
                             name="phone"
                             rules={[
                                 {required: true, message: 'Please input phone number!'},
                                 {pattern: /^[0-9]+?$/, message: 'Please enter a valid phone number!'},
-                                {len: 9, message: 'Phone number must be 9 digits!'} // Add this rule for length validation
+                                {len: 9, message: ''} // Add this rule for length validation
                             ]}
                         >
                             <Input addonBefore="+251"/>
