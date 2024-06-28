@@ -447,7 +447,7 @@ const Request = () => {
                         ]}
                     />
                 </Col>
-                <Col span={5} style={{ textAlign: 'center' }}>
+                <Col style={{ textAlign: 'center' }}>
                     <Form.Item>
                         <Tooltip title="Download File">
                             {listOfRoles && listOfRoles.includes('ROLE_ADMIN') ? (
@@ -462,6 +462,8 @@ const Request = () => {
                         </Tooltip>
                     </Form.Item>
                 </Col>
+                <Col
+                    span={5}></Col> {/* This empty column ensures space between the Download File button and the right edge of the row */}
             </Row>
 
 
@@ -500,9 +502,6 @@ const Request = () => {
                 {/*        </Tooltip>*/}
                 {/*        </Form.Item> */}
                 {/*</Col>*/}
-                {/*<Col*/}
-                {/*    span={10}></Col> /!* This empty column ensures space between the Download File button and the right edge of the row *!/*/}
-
 
 
             <Row justify="end" style={{marginBottom: 16}}>

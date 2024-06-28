@@ -24,6 +24,8 @@ const { RangePicker } = DatePicker;
 
 const SixMCList = () => {
     const logedInUser = AuthService.getCurrentUser();
+    const listOfRoles = AuthService?.getRoles();
+
     const [data, setData] = useState([]);
     const [dataById, setDataById] = useState(null);
     const [open, setOpen] = useState(false);
@@ -380,16 +382,22 @@ const SixMCList = () => {
                         ]}
                     />
                 </Col>
-                <Col span={10} > {/* Center aligns content */}
+                <Col span={5} > {/* Center aligns content */}
                     <Form.Item name="download file">
                         <Tooltip title="Download File">
+                            {listOfRoles && listOfRoles.includes('ROLE_ADMIN') ? (
+                                <a target="_blank" href={`${API_URL}/api/pdf/sixmclist${date}?userName=ROLE_ADMIN`}>
+                                    <CloudDownloadOutlined style={{ fontSize: '30px' }} />
+                                </a>
+                            ) : (
                             <a target="_blank" href={API_URL + "/api/pdf/sixmclist" + date+'?userName='+logedInUser?.username}>
                                 <CloudDownloadOutlined style={{ fontSize: '30px' }} />
                             </a>
+                                )}
                         </Tooltip>
                     </Form.Item>
                 </Col>
-                <Col span={10}></Col> {/* This empty column ensures space between the Download File button and the right edge of the row */}
+                <Col span={5}></Col> {/* This empty column ensures space between the Download File button and the right edge of the row */}
             </Row>
 
             <Row justify="end" style={{marginBottom: 16}}>

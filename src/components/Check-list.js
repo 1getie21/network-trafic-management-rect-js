@@ -327,7 +327,7 @@ const CheckList = () => {
                                         onFinishFailed={onSearchFinishFailed}
                                     >
                                         <Row justify="start"> {/* Align items to the start */}
-                                            <Col span={10}>
+                                            <Col span={5}>
                                                 <Form.Item
                                                     name="from"
                                                     rules={[
@@ -364,7 +364,7 @@ const CheckList = () => {
                 {/*    </Form.Item>*/}
                 {/*</Col>*/}
 
-                <Col span={5} style={{ textAlign: 'center' }}>
+                <Col  style={{ textAlign: 'center' }}>
                     <Form.Item>
                         <Tooltip title="Download Checklist File">
                             {listOfRoles && listOfRoles.includes('ROLE_ADMIN') ? (
@@ -380,7 +380,7 @@ const CheckList = () => {
                     </Form.Item>
                 </Col>
 
-                <Col span={10}></Col> {/* This empty column ensures space between the Download File button and the right edge of the row */}
+                <Col span={5}></Col> {/* This empty column ensures space between the Download File button and the right edge of the row */}
             </Row>
 
              <Row justify="end" style={{marginBottom: 16}}>
