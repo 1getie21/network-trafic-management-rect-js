@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Button,Tooltip, Col, Divider, Drawer, Form, Input, notification, Popconfirm, Row, Select, Table} from "antd";
 import axiosInstance from "../auth/authHeader";
 
-import {CloudDownloadOutlined, EditOutlined, DeleteOutlined} from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined} from "@ant-design/icons";
 
 
 const Users = () => {
@@ -13,7 +13,7 @@ const Users = () => {
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    const API_URL = process.env.REACT_APP_API_URL;
+    const API_URL = "http://localhost:8080";
     //const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [form] = Form.useForm();
 

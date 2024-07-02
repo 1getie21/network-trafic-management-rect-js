@@ -25,7 +25,7 @@ const API_URL = process.env.REACT_APP_API_URL;
     };
 
     const updateRecordById = async (data, id) => {
-        const response = await axiosInstance.put(`${API_URL}/users/${id}`, data);
+        const response = await axiosInstance.put(`${API_URL}/users/update-password/${id}`, data);
         return response.data;
     };
 

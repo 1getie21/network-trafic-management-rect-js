@@ -36,7 +36,7 @@ const Request = () => {
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
 
-    const API_URL = process.env.REACT_APP_API_URL;
+    const API_URL = "http://localhost:8080";
     //const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
 
     const [trForm] = Form.useForm();
@@ -311,13 +311,13 @@ const Request = () => {
 
             render: (text, record) => (
                 <>
-                    {record?.priority == 'HIGH' && (
+                    {record?.priority === 'HIGH' && (
                         <Tag color="red">{record?.priority}</Tag>
                     )}
-                    {record?.priority == 'MEDIUM' && (
+                    {record?.priority === 'MEDIUM' && (
                         <Tag color="blue">{record?.priority}</Tag>
                     )}
-                    {record?.priority == 'LOW' && (
+                    {record?.priority === 'LOW' && (
                         <Tag color="green">{record?.priority}</Tag>
                     )}
                 </>
@@ -331,10 +331,10 @@ const Request = () => {
             key: 'status',
             render: (text, record) => (
                 <>
-                    {record?.status == 'Pending' && (
+                    {record?.status === 'Pending' && (
                         <Tag color="blue">{record?.status}</Tag>
                     )}
-                    {record?.status == 'Accepted' && (
+                    {record?.status === 'Accepted' && (
                         <Tag color="green">{record?.status}</Tag>
                     )}
                 </>
@@ -450,16 +450,17 @@ const Request = () => {
                         ]}
                     />
                 </Col>
-                <Col style={{ textAlign: 'center' }}>
+                <Col style={{textAlign: 'center'}}>
                     <Form.Item>
                         <Tooltip title="Download File">
                             {listOfRoles && listOfRoles.includes('ROLE_ADMIN') ? (
                                 <a target="_blank" href={`${API_URL}/api/pdf/request${date}?userName=ROLE_ADMIN`}>
-                                    <CloudDownloadOutlined style={{ fontSize: '30px' }} />
+                                    <CloudDownloadOutlined style={{fontSize: '30px'}}/>
                                 </a>
                             ) : (
-                                <a target="_blank" href={`${API_URL}/api/pdf/request${date}?userName=${logedInUser?.username}`}>
-                                    <CloudDownloadOutlined style={{ fontSize: '30px' }} />
+                                <a target="_blank"
+                                   href={`${API_URL}/api/pdf/request${date}?userName=${logedInUser?.username}`}>
+                                    <CloudDownloadOutlined style={{fontSize: '30px'}}/>
                                 </a>
                             )}
                         </Tooltip>
@@ -470,47 +471,53 @@ const Request = () => {
             </Row>
 
 
-                {/*<Col span={10} style={{ textAlign: 'center' }}>*/}
-                {/*    <Form.Item>*/}
-                {/*        <Tooltip title="Download File">*/}
-                {/*            <a target="_blank" href={API_URL + "/api/pdf/request" + date + '?userName=' + logedInUser?.username}>*/}
-                {/*                <CloudDownloadOutlined style={{ fontSize: '30px' }} />*/}
-                {/*            </a>*/}
-                {/*        </Tooltip>*/}
-                {/*        &nbsp;&nbsp;&nbsp; /!* Optional spacing between icons *!/*/}
-                {/*        <Tooltip title="Download All Files">*/}
-                {/*            <a target="_blank" href={API_URL + "/api/pdf/request" + date + '?userName=ROLE_ADMIN'}>*/}
-                {/*                <CloudDownloadOutlined style={{ fontSize: '30px' }} />*/}
-                {/*            </a>*/}
-                {/*        </Tooltip>*/}
-                {/*    </Form.Item>*/}
-                {/*</Col>*/}
-                {/*<Col span={8}> /!* Center aligns content *!/*/}
-                {/*    <Form.Item name="download file">*/}
-                {/*        <Tooltip title="Download File">*/}
-                {/*            <a target="_blank"*/}
-                {/*               href={API_URL + "/api/pdf/request" + date + '?userName=' + logedInUser?.username}>*/}
-                {/*                <CloudDownloadOutlined style={{fontSize: '30px'}}/>*/}
-                {/*            </a>*/}
-                {/*        </Tooltip>*/}
-                {/*    </Form.Item>*/}
-                {/*</Col>*/}
+            {/*<Col span={10} style={{ textAlign: 'center' }}>*/}
+            {/*    <Form.Item>*/}
+            {/*        <Tooltip title="Download File">*/}
+            {/*            <a target="_blank" href={API_URL + "/api/pdf/request" + date + '?userName=' + logedInUser?.username}>*/}
+            {/*                <CloudDownloadOutlined style={{ fontSize: '30px' }} />*/}
+            {/*            </a>*/}
+            {/*        </Tooltip>*/}
+            {/*        &nbsp;&nbsp;&nbsp; /!* Optional spacing between icons *!/*/}
+            {/*        <Tooltip title="Download All Files">*/}
+            {/*            <a target="_blank" href={API_URL + "/api/pdf/request" + date + '?userName=ROLE_ADMIN'}>*/}
+            {/*                <CloudDownloadOutlined style={{ fontSize: '30px' }} />*/}
+            {/*            </a>*/}
+            {/*        </Tooltip>*/}
+            {/*    </Form.Item>*/}
+            {/*</Col>*/}
+            {/*<Col span={8}> /!* Center aligns content *!/*/}
+            {/*    <Form.Item name="download file">*/}
+            {/*        <Tooltip title="Download File">*/}
+            {/*            <a target="_blank"*/}
+            {/*               href={API_URL + "/api/pdf/request" + date + '?userName=' + logedInUser?.username}>*/}
+            {/*                <CloudDownloadOutlined style={{fontSize: '30px'}}/>*/}
+            {/*            </a>*/}
+            {/*        </Tooltip>*/}
+            {/*    </Form.Item>*/}
+            {/*</Col>*/}
 
-                {/*<Col span={5}> /!* Center aligns content *!/ */}
-                {/*        <Form.Item name="download file">*/}
-                {/*        <Tooltip title="Download All File">*/}
-                {/*        <a target="_blank" href={API_URL + "/api/pdf/request" + date + '?userName=ROLE_ADMIN'}>*/}
-                {/*        <CloudDownloadOutlined style={{fontSize: '30px'}} />*/}
-                {/*        </a>*/}
-                {/*        </Tooltip>*/}
-                {/*        </Form.Item> */}
-                {/*</Col>*/}
+            {/*<Col span={5}> /!* Center aligns content *!/ */}
+            {/*        <Form.Item name="download file">*/}
+            {/*        <Tooltip title="Download All File">*/}
+            {/*        <a target="_blank" href={API_URL + "/api/pdf/request" + date + '?userName=ROLE_ADMIN'}>*/}
+            {/*        <CloudDownloadOutlined style={{fontSize: '30px'}} />*/}
+            {/*        </a>*/}
+            {/*        </Tooltip>*/}
+            {/*        </Form.Item> */}
+            {/*</Col>*/}
 
 
             <Row justify="end" style={{marginBottom: 16}}>
-                <Col>
-                    <Button onClick={() => showDrawer(undefined)}>Add New Record</Button>
-                </Col>
+                {listOfRoles && listOfRoles.includes('ROLE_MANAGER') ? (
+                    <Col>
+                        <Button onClick={() => showDrawer(undefined)}>Add New Record</Button>
+                    </Col>
+                ) : (
+                    <Col>
+                    </Col>
+                )}
+
             </Row>
 
             <Row>
