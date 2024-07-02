@@ -350,14 +350,7 @@ const Ftraffics = () => {
                                                 <Form.Item>
                                                     <Button type="primary" htmlType="submit">Submit</Button>
                                                 </Form.Item>
-                                            </Col>
-                                            {/*<Col span={8}>*/}
-                                            {/*    <Form.Item>*/}
-                                            {/*        <a target="_blank" href={API_URL + "/api/pdf" + date}>*/}
-                                            {/*            <CloudDownloadOutlined style={{ fontSize: '30px' }} />*/}
-                                            {/*        </a>*/}
-                                            {/*    </Form.Item>*/}
-                                            {/*</Col>*/}
+                                            </Col> 
                                         </Row>
                                     </Form>
                                 ,

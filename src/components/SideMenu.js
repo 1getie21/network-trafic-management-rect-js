@@ -41,7 +41,7 @@ if (listOfRoles) {
             getItem('6Month SSM Checklist', 'sixmclist', <SecurityScanOutlined />)
         );
     }
-    if (listOfRoles.includes('ROLE_MANAGER')) {
+    if (listOfRoles.includes('ROLE_USER')) {
         ListOfItems.push(getItem('Traffic Request', 'request', <FormOutlined />));
     }
 }

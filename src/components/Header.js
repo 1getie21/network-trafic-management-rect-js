@@ -62,13 +62,23 @@ const API_URL = process.env.REACT_APP_API_URL;
                 onFinishFailed={(errorInfo) => console.log('Failed:', errorInfo)}
             >
                 <Form.Item
+                    label="Enter old password"
+                    name="oldPassword"
+                    placeholder="Enter old password ***"
+                    rules={[{ required: true, message: 'Please input your old password!' }]}
+                >
+                    <Input type="password" />
+                </Form.Item>
+
+                <Form.Item
                     label="New Password"
                     name="password"
                     placeholder="Enter new password ***"
-                    rules={[{ required: true, message: 'Please input password!' }]}
+                    rules={[{ required: true, message: 'Please input your new password!' }]}
                 >
-                    <Input />
+                    <Input type="password" />
                 </Form.Item>
+
                 <Form.Item>
                     <Button type="primary" htmlType="submit">
                         Submit

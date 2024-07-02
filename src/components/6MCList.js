@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Button,
     Tooltip,
@@ -11,15 +11,16 @@ import {
     notification,
     Popconfirm,
     Row,
-    Select,Collapse,
+    Select, Collapse,
     Table
 } from "antd";
 import axiosInstance from "../auth/authHeader";
 import dayjs from "dayjs";
 
 import AuthService from "../auth/AuthService ";
-import { CloudDownloadOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
-const { RangePicker } = DatePicker;
+import {CloudDownloadOutlined, EditOutlined, DeleteOutlined} from "@ant-design/icons";
+
+const {RangePicker} = DatePicker;
 //const { Panel } = Collapse;
 
 const SixMCList = () => {
@@ -32,14 +33,14 @@ const SixMCList = () => {
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-     
+
     const API_URL = process.env.REACT_APP_API_URL;
     //const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
-    
+
     const [trForm] = Form.useForm();
     const [date, setDate] = useState('');
 
-    const SubmitButton = ({ form: trafficForm, children }) => {
+    const SubmitButton = ({form: trafficForm, children}) => {
         const [submittable, setSubmittable] = React.useState(false);
         const values = Form.useWatch([], trafficForm);
         React.useEffect(() => {
@@ -166,8 +167,10 @@ const SixMCList = () => {
         setDate('/' + fromDate + '/' + toDate);
         axiosInstance.get(`${API_URL}/sixmclist/${fromDate}/${toDate}`)
             .then(response => {
-                 setData(response?.data?.content);
+                setData(response?.data?._embedded?.sixMCListDtoses);
                 setLoading(false);
+            }, error => {
+                console.log(error)
             })
             .catch(error => {
                 setLoading(false);
@@ -175,6 +178,7 @@ const SixMCList = () => {
             });
 
     };
+
 
     const onSearchFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
@@ -308,7 +312,7 @@ const SixMCList = () => {
                 {/* eslint-disable jsx-a11y/anchor-is-valid */}
                     <Tooltip title="Update Recored">
                     <a onClick={() => showDrawer(record.id)}>
-                        <EditOutlined style={{ fontSize: '16px'}}/>
+                        <EditOutlined style={{fontSize: '16px'}}/>
                     </a>
                         </Tooltip>
                     {/* eslint-enable jsx-a11y/anchor-is-valid */}
@@ -326,21 +330,21 @@ const SixMCList = () => {
                     >
                         <Tooltip title="Delete Task">
                         <a danger>
-                            <DeleteOutlined style={{ fontSize: '16px', color:"red" }}/>
+                            <DeleteOutlined style={{fontSize: '16px', color: "red"}}/>
                         </a>
                             </Tooltip>
                       </Popconfirm>
-                                        {/*<a onClick={() => deleteById(record.id)}>Delete</a>*/}
-                                        {/* eslint-enable jsx-a11y/anchor-is-valid */}
+                    {/*<a onClick={() => deleteById(record.id)}>Delete</a>*/}
+                    {/* eslint-enable jsx-a11y/anchor-is-valid */}
                                     </span>
-                ),
-            },
-        ];
+            ),
+        },
+    ];
     return (
         <>
             {contextHolder}
 
-            <Row justify="space-between" style={{ marginBottom: '4px' }}>
+            <Row justify="space-between" style={{marginBottom: '4px'}}>
                 <Col span={14}>
                     <Collapse
                         items={[
@@ -366,7 +370,7 @@ const SixMCList = () => {
                                                         }
                                                     ]}
                                                 >
-                                                    <RangePicker />
+                                                    <RangePicker/>
                                                 </Form.Item>
                                             </Col>
                                             <Col span={1}></Col>
@@ -382,22 +386,24 @@ const SixMCList = () => {
                         ]}
                     />
                 </Col>
-                <Col span={5} > {/* Center aligns content */}
+                <Col span={5}> {/* Center aligns content */}
                     <Form.Item name="download file">
                         <Tooltip title="Download File">
                             {listOfRoles && listOfRoles.includes('ROLE_ADMIN') ? (
                                 <a target="_blank" href={`${API_URL}/api/pdf/sixmclist${date}?userName=ROLE_ADMIN`}>
-                                    <CloudDownloadOutlined style={{ fontSize: '30px' }} />
+                                    <CloudDownloadOutlined style={{fontSize: '30px'}}/>
                                 </a>
                             ) : (
-                            <a target="_blank" href={API_URL + "/api/pdf/sixmclist" + date+'?userName='+logedInUser?.username}>
-                                <CloudDownloadOutlined style={{ fontSize: '30px' }} />
-                            </a>
-                                )}
+                                <a target="_blank"
+                                   href={API_URL + "/api/pdf/sixmclist" + date + '?userName=' + logedInUser?.username}>
+                                    <CloudDownloadOutlined style={{fontSize: '30px'}}/>
+                                </a>
+                            )}
                         </Tooltip>
                     </Form.Item>
                 </Col>
-                <Col span={5}></Col> {/* This empty column ensures space between the Download File button and the right edge of the row */}
+                <Col
+                    span={5}></Col> {/* This empty column ensures space between the Download File button and the right edge of the row */}
             </Row>
 
             <Row justify="end" style={{marginBottom: 16}}>

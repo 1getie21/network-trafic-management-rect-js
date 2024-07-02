@@ -303,10 +303,12 @@ const Request = () => {
             dataIndex: 'description',
             key: 'description'
         },
+
         {
             title: 'Priority',
             dataIndex: 'priority',
             key: 'priority',
+
             render: (text, record) => (
                 <>
                     {record?.priority == 'HIGH' && (
@@ -322,6 +324,7 @@ const Request = () => {
 
             )
         },
+
         {
             title: 'Status',
             dataIndex: 'status',
