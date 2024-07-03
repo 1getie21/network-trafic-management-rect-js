@@ -360,51 +360,79 @@ const Request = () => {
                     )}
 
                     <Divider type="vertical"/>
-                    {/* eslint-disable jsx-a11y/anchor-is-valid */}
-                    {(record?.status == 'Pending') && (
-                        <Popconfirm
-                            title="Accept the request"
-                            description="Are you sure to accept this request?"
-                            onConfirm={() => confirmAccept(record.id)}
-                            onCancel={cancel}
-                            okText="Yes"
-                            cancelText="No"
-                        >
-                            <Tooltip title="accept">
-                                <EyeOutlined style={{fontSize: '18px'}}/>
-                            </Tooltip>
-                        </Popconfirm>
+                    {record?.status === 'Pending' && (
+                        <>
+                            {(listOfRoles.includes('ROLE_ADMIN') || listOfRoles.includes('ROLE_MEMBER')) && record?.status === 'Pending' && (
+                                <Popconfirm
+                                    title="Accept the request"
+                                    description="Are you sure to accept this request?"
+                                    onConfirm={() => confirmAccept(record.id)}
+                                    onCancel={cancel}
+                                    okText="Yes"
+                                    cancelText="No"
+                                >
+                                    <Tooltip title="Accept">
+                                        <EyeOutlined style={{ fontSize: '18px' }} />
+                                    </Tooltip>
+                                </Popconfirm>
+                            )}
+                            {listOfRoles.includes('ROLE_USER') && record?.status === 'Pending' && (
+                                <Tooltip title="Accept (Read-Only)">
+                                    <EyeOutlined style={{ fontSize: '18px' }} />
+                                </Tooltip>
+                            )}
+                        </>
                     )}
+                    {/*<Divider type="vertical"/>*/}
+                    {/*/!* eslint-disable jsx-a11y/anchor-is-valid *!/*/}
+                    {/*{(record?.status == 'Pending') && (*/}
+                    {/*    <Popconfirm*/}
+                    {/*        title="Accept the request"*/}
+                    {/*        description="Are you sure to accept this request?"*/}
+                    {/*        onConfirm={() => confirmAccept(record.id)}*/}
+                    {/*        onCancel={cancel}*/}
+                    {/*        okText="Yes"*/}
+                    {/*        cancelText="No"*/}
+                    {/*    >*/}
+                    {/*        <Tooltip title="accept">*/}
+                    {/*            <EyeOutlined style={{fontSize: '18px'}}/>*/}
+                    {/*        </Tooltip>*/}
+                    {/*    </Popconfirm>*/}
+                    {/*)}*/}
+
 
                     <Divider type="vertical"/>
 
-                     <a onClick={() => showDrawer(record.id)}>
-                          <Tooltip title="update record">
-                              <EditOutlined style={{fontSize: '16px'}}/>
-                            </Tooltip>
-                    </a>
-                    {/* eslint-enable jsx-a11y/anchor-is-valid */}
+                    {listOfRoles && listOfRoles.includes('ROLE_USER') ? (
+                        <>
+                            <a onClick={() => showDrawer(record.id)}>
+                                <Tooltip title="Update record">
+                                    <EditOutlined style={{ fontSize: '16px' }} />
+                                </Tooltip>
+                            </a>
+                            <Divider type="vertical"/>
 
-                    <Divider type="vertical"/>
+                            {/* eslint-disable jsx-a11y/anchor-is-valid */}
+                            <Popconfirm
+                                title="Delete the request"
+                                description="Are you sure to delete this request?"
+                                onConfirm={() => confirm(record.id)}
+                                onCancel={cancel}
+                                okText="Yes"
+                                cancelText="No"
+                            >
+                                <Tooltip title="Delete record">
+                                    <DeleteOutlined style={{ fontSize: '17px', color: 'red' }} />
+                                </Tooltip>
+                            </Popconfirm>
+                        </>
+                    ) : null}
 
-                    {/* eslint-disable jsx-a11y/anchor-is-valid */}
-                    <Popconfirm
-                        title="Delete the request"
-                        description="Are you sure to delete this request?"
-                        onConfirm={() => confirm(record.id)}
-                        onCancel={cancel}
-                        okText="Yes"
-                        cancelText="No"
-                    >
-                          <Tooltip title="delete record">
-                                <DeleteOutlined style={{fontSize: '17px', color: "red"}}/>
-                            </Tooltip>
-                        </Popconfirm>
-
-                        </span>
+                </span>
             ),
         },
     ];
+
     return (
         <>
             {contextHolder}
@@ -470,46 +498,8 @@ const Request = () => {
                     span={5}></Col> {/* This empty column ensures space between the Download File button and the right edge of the row */}
             </Row>
 
-
-            {/*<Col span={10} style={{ textAlign: 'center' }}>*/}
-            {/*    <Form.Item>*/}
-            {/*        <Tooltip title="Download File">*/}
-            {/*            <a target="_blank" href={API_URL + "/api/pdf/request" + date + '?userName=' + logedInUser?.username}>*/}
-            {/*                <CloudDownloadOutlined style={{ fontSize: '30px' }} />*/}
-            {/*            </a>*/}
-            {/*        </Tooltip>*/}
-            {/*        &nbsp;&nbsp;&nbsp; /!* Optional spacing between icons *!/*/}
-            {/*        <Tooltip title="Download All Files">*/}
-            {/*            <a target="_blank" href={API_URL + "/api/pdf/request" + date + '?userName=ROLE_ADMIN'}>*/}
-            {/*                <CloudDownloadOutlined style={{ fontSize: '30px' }} />*/}
-            {/*            </a>*/}
-            {/*        </Tooltip>*/}
-            {/*    </Form.Item>*/}
-            {/*</Col>*/}
-            {/*<Col span={8}> /!* Center aligns content *!/*/}
-            {/*    <Form.Item name="download file">*/}
-            {/*        <Tooltip title="Download File">*/}
-            {/*            <a target="_blank"*/}
-            {/*               href={API_URL + "/api/pdf/request" + date + '?userName=' + logedInUser?.username}>*/}
-            {/*                <CloudDownloadOutlined style={{fontSize: '30px'}}/>*/}
-            {/*            </a>*/}
-            {/*        </Tooltip>*/}
-            {/*    </Form.Item>*/}
-            {/*</Col>*/}
-
-            {/*<Col span={5}> /!* Center aligns content *!/ */}
-            {/*        <Form.Item name="download file">*/}
-            {/*        <Tooltip title="Download All File">*/}
-            {/*        <a target="_blank" href={API_URL + "/api/pdf/request" + date + '?userName=ROLE_ADMIN'}>*/}
-            {/*        <CloudDownloadOutlined style={{fontSize: '30px'}} />*/}
-            {/*        </a>*/}
-            {/*        </Tooltip>*/}
-            {/*        </Form.Item> */}
-            {/*</Col>*/}
-
-
             <Row justify="end" style={{marginBottom: 16}}>
-                {listOfRoles && listOfRoles.includes('ROLE_MANAGER') ? (
+                {listOfRoles && listOfRoles.includes('ROLE_USER') ? (
                     <Col>
                         <Button onClick={() => showDrawer(undefined)}>Add New Record</Button>
                     </Col>
@@ -638,24 +628,24 @@ const Request = () => {
                             <Input onChange={handleFileChange} type="file"/>
                         </Form.Item>
 
-                        <Form.Item label="priority" name="priority">
+                        <Form.Item
+                            label="Priority"
+                            name="priority"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please select a priority level',
+                                },
+                            ]}
+                        >
                             <Select
                                 showSearch
                                 placeholder="Select a priority"
                                 optionFilterProp="children"
                                 options={[
-                                    {
-                                        value: 'HIGH',
-                                        label: 'HIGH',
-                                    },
-                                    {
-                                        value: 'MEDIUM',
-                                        label: 'MEDIUM',
-                                    },
-                                    {
-                                        value: 'LOW',
-                                        label: 'LOW',
-                                    },
+                                    { value: 'HIGH', label: 'HIGH' },
+                                    { value: 'MEDIUM', label: 'MEDIUM' },
+                                    { value: 'LOW', label: 'LOW' },
                                 ]}
                             />
                         </Form.Item>
