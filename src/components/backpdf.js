@@ -43,7 +43,7 @@
 //             Document document = new Document(pdf);
 //
 //             // Add image
-//             String imagePath = "\\\\10.10.10.112\\home\\img.png";
+//             String imagePath = "\\\\172.21.22.224\\home\\img.png";
 //             Image img = new Image(ImageDataFactory.create(imagePath));
 //             img.setHorizontalAlignment(HorizontalAlignment.CENTER);
 //             document.add(img);
@@ -115,7 +115,7 @@
 //     Document document = new Document(pdf);
 //
 //     // Add image
-//     String imagePath = "\\\\10.10.10.112\\home\\img.png";
+//     String imagePath = "\\\\172.21.22.224\\home\\img.png";
 //     Image img = new Image(ImageDataFactory.create(imagePath));
 //     img.setHorizontalAlignment(HorizontalAlignment.CENTER);
 //     document.add(img);
@@ -189,7 +189,7 @@
 //         Document document = new Document(pdf);
 //
 //         // Add image
-//         String imagePath = "\\\\10.10.10.112\\home\\img.png";
+//         String imagePath = "\\\\172.21.22.224\\home\\img.png";
 //         Image img = new Image(ImageDataFactory.create(imagePath));
 //         img.setHorizontalAlignment(HorizontalAlignment.CENTER);
 //         document.add(img);

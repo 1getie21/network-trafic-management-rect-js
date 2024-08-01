@@ -27,14 +27,15 @@ const Ftraffics = () => {
 
     const [data, setData] = useState([]);
     const [date, setDate] = useState([]);
-    const [timeTraficName, setTimeTraficName] = useState([]);
+    //const [timeTraficName, setTimeTraficName] = useState([]);
+    const [trafficTimeName, setTrafficTimeName] = useState([]);
     const [dataById, setDataById] = useState(null);
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    const API_URL = "http://localhost:8080";
-    //const API_URL = "http://10.10.10.112:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+    //const API_URL = "http://localhost:8080";
+    const API_URL = "http://172.21.22.224:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [trForm] = Form.useForm();
     const [trSearchForm] = Form.useForm();
     const [selectedTrafficTime, setSelectedTrafficTime] = useState(null);
@@ -165,7 +166,7 @@ const Ftraffics = () => {
     };
 
     const handleCHange = (value) => {
-        setTimeTraficName("/"+value)
+        setTrafficTimeName("/"+value)
         axiosInstance.get(API_URL + "/f-traffics/tr/" + value)
             .then(response => {
                     setData(response?.data?._embedded?.fTrafficDtoses);
@@ -176,7 +177,7 @@ const Ftraffics = () => {
                     openNotificationWithIcon('error', 'Error', error?.message);
                 });
     };
-
+    
     const [sites, setSites] = useState([]);
 
     const getAllSites = () => {
@@ -212,7 +213,7 @@ const Ftraffics = () => {
         if (selectedTrafficTime) {
             window.open(`${API_URL}/api/pdf/${selectedTrafficTime}`, '_blank');
         } else {
-            openNotificationWithIcon(',,');
+            openNotificationWithIcon('error', 'Error', 'Please select a traffic time');
         }
     };
 
@@ -390,27 +391,20 @@ const Ftraffics = () => {
                             {value: '14 O\'clock', label: '14 O\'clock'},
                             {value: '18 O\'clock', label: '18 O\'clock'},
                         ]}
-                        dropdownAlign={{ offset: [0, 4] }} // Optional: Adjust dropdown position if needed
+                        dropdownAlign={{ offset: [0, 4] }} // Optional: Adjust dropdown position if needed,timeTraficName
                     />
                     <Tooltip title="Download Each Time Report">
                         {listOfRoles && listOfRoles.includes('ROLE_ADMIN') ? (
-                            <a target="_blank" href={`${API_URL}/api/pdf${timeTraficName}?userName=ROLE_ADMIN`}>
+                            <a target="_blank" href={`${API_URL}/api/pdf${trafficTimeName}?userName=ROLE_ADMIN`}>
                                 <CloudDownloadOutlined style={{ fontSize: '30px' }} />
                             </a>
                         ) : (
-                            <a target="_blank" href={`${API_URL}/api/pdf${timeTraficName}?userName=${logedInUser?.username}`} style={{ marginLeft: '6px' }}>
+                            <a target="_blank" href={`${API_URL}/api/pdf${trafficTimeName}?userName=${logedInUser?.username}`} style={{ marginLeft: '6px' }}>
                                 <CloudDownloadOutlined style={{ fontSize: '28px' }} />
                             </a>
                         )}
                     </Tooltip>
                 </Col>
-
-                    {/*<Tooltip title="Download Each Time Report">*/}
-                    {/*    <a target="_blank" href={API_URL + "/api/pdf" + timeTraficName+'?userName='+logedInUser?.username} style={{ marginLeft: '6px' }}>*/}
-                    {/*        <CloudDownloadOutlined style={{ fontSize: '28px' }} />*/}
-                    {/*    </a>*/}
-                    {/*</Tooltip>*/}
-
 
                 <Col span={4}>
                     <Button onClick={() => showDrawer(undefined)}>Add New Traffic</Button>
