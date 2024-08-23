@@ -22,8 +22,8 @@ const CheckList = () => {
     const [loading, setLoading] = useState(true);
     const [addNewMode, setAddNewMode] = useState(false);
     const [api, contextHolder] = notification.useNotification();
-    //const API_URL = "http://localhost:8080";
-  const API_URL = "http://172.21.22.224:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
+    //const API_URL = "http://localhost:7070";
+ const API_URL = "http://10.10.10.204:8080/TeamOpsSystem-0.0.1-SNAPSHOT";
     const [trForm] = Form.useForm();
     const [date, setDate] = useState('');
 
